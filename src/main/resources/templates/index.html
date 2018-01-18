@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>跳蚤-大学生二手交易平台</title>      <!-- Bootstrap -->
+    <link href="styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="styles/global.css" rel="stylesheet"/>
+    <link href="styles/index.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+</head>
+
+<body>
+    <div th:replace="fragment/header :: #header"></div>
+    <header id="header" th:remove="all">
+        <nav>
+            <a id="logo"></a>
+            <ul class="top_nav top_ul">
+                <li><a href="#zxfb">最新发布</a></li>
+                <li th:each="category : ${vo.get('categories')}">
+                    <a th:text="${category.categoryName}" th:href="'#'+${categoryStat.index}"></a>
+
+                </li>
+            </ul>
+            <ul class="top_url top_ul">
+                <li><a href="#">发布闲置</a></li>
+                <li><a href="#">个人中心</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div id="content">
+        <div class="show">
+            <div class="banner">
+                <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators" >
+                        <li data-target="#carousel-example-generic" th:each="banner:${vo.get('banners')}" th:class="${bannerStat.index eq 0 ?'active':''}"  th:attr="data-slide-to=${bannerStat.index}" ></li>
+
+                    </ol>
+
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner" role="listbox">
+                        <div th:each="banner:${vo.get('banners')}" th:class="${bannerStat.index eq 0 ?'item active':'item'}">
+                           <img th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${banner.image}" th:alt="${banner.title}"/>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+            <div class="news">
+                <a class="title" href="/announcement/list">平台公告</a>
+                <ul>
+                    <li th:each="announcement:${vo.get('announcements')}"><a th:href="'/announcement/'+${announcement.id}" th:text="${announcement.title}"></a></li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="shops" style="margin-top: 30px;">
+            <div id="zxfb" class="partition row">
+                <div class="partition_title row">
+                    <blockquote>
+                        <a href="#">最新发布</a>
+                    </blockquote>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/mac.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">1285.99</p>
+                                <p class="shop_name">联想笔记本</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2018年1月20日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div th:each="floor:${vo.get('floors')}" th:id="${floorStat.index}" class="partition row">
+                <div class="partition_title row">
+                    <blockquote>
+                        <a th:href="'/category/'+${vo.get('categories')[floorStat.index].id}" th:text="${vo.get('categories')[floorStat.index].categoryName}">类目名</a>
+                    </blockquote>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="tags">
+                            <ul>
+                                <li th:each="tag:${floor.get('tags')}"><a href="#" th:text="${tag.categoryName}">标签名</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/mac.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">1285.99</p>
+                                <p class="shop_name">联想笔记本</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2018年1月20日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="#" class="shop_wrap">
+                            <div class="shop_img">
+                                <img src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+                            </div>
+                            <div class="description">
+                                <p class="shop_price">285.0</p>
+                                <p class="shop_name">iphone5</p>
+                                <div class="" style="overflow: hidden">
+                                    <div class="pull-left date">2017年9月2日</div>
+                                    <div class="pull-right address">湖南理工学院</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div th:replace="fragment/footer :: #footer"></div>
+    <footer id="footer" th:remove="all">
+        <div >Copyright © 2014-2018 闲鱼-大学生二手交易平台  chenny3.cn All Rights Reserved. 备案号：闽ICP备15012807号-1</div>
+    </footer>
+
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<script src="/scripts/tags.js"></script>
+<script src="/scripts/nav.js"></script>
+</body>
+</html>

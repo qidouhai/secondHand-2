@@ -1,0 +1,48 @@
+package cn.chenny3.secondHand.controller;
+
+import cn.chenny3.secondHand.bean.EasyResult;
+import cn.chenny3.secondHand.bean.ViewObject;
+import cn.chenny3.secondHand.service.OSSService;
+import cn.chenny3.secondHand.util.UeditorUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+
+
+@Controller
+@RequestMapping("/upload")
+public class UploadController extends BaseController{
+    @Autowired
+    private OSSService ossService;
+
+    @RequestMapping("/img/{type}")
+    @ResponseBody
+    public Object uploadImg(@PathVariable("type") String type, @RequestPart("img") MultipartFile multipartFile){
+        try {
+            if("banner".equals(type)){
+                String fileName = ossService.saveImage(multipartFile,"img/banner/");
+                return new EasyResult(0,fileName);
+            }else if("goods".equals(type)){
+                String fileName = ossService.saveImage(multipartFile,"img/goods/");
+                return new EasyResult(0,fileName);
+            }else if("avatar".equals(type)){
+                String fileName = ossService.saveImage(multipartFile,"img/avatar/");
+                return new EasyResult(0,fileName);
+            }else if("ueditor".equals(type)){
+                String fileName = ossService.saveImage(multipartFile,"img/other/");
+                return new UeditorUtil.UeditorUploadResult(
+                        "SUCCESS",
+                        "http://secondhand-oss.oss-cn-beijing.aliyuncs.com/"+fileName,
+                        fileName.substring(fileName.lastIndexOf("/")),
+                        fileName.substring(fileName.lastIndexOf("/"))
+                );
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new EasyResult(1,"上传错误，"+e.getMessage());
+        }
+        return new EasyResult(1,"上传非法操作");
+    }
+}

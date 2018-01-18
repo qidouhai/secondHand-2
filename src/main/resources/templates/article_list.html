@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>闲鱼-大学生二手交易平台</title>      <!-- Bootstrap -->
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/global.css" rel="stylesheet"/>
+
+    <link href="/styles/article_list.css" rel="stylesheet"/>
+    <link href="/styles/font-awesome.min.css" rel="stylesheet"/>
+    <link href="/styles/pageHelper.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+</head>
+<style>
+
+</style>
+<body>
+<div th:replace="fragment/header :: #header"></div>
+
+<div id="content">
+    <div class="partition_title row">
+        <blockquote>
+            <a href="#">官方公告</a>
+        </blockquote>
+        <ul id="article_list">
+            <li th:each="item:${vo.get('pageHelper').contents}">
+                <div class="title_wrap">
+                    <a class="title" href="#" th:href="'/announcement/'+${item.id}" th:text="${item.title}">SpringBoot中映射路径匹配保存,想不开，居然这也报错</a>
+                </div>
+                <p th:text="${item.content}">碰到这个问题，可能在SpringMVC中也会有吧。不过没验证了，废话不多说，直接看错误日志，这问题解决后都有点恶心</p>
+                <div class="date"><i class="fa fa-calendar" aria-hidden="true"></i><span th:text="${#dates.format(item.created, 'yyyy年MM月dd日 HH:mm:ss')}">2017年9月22日 14:22:36</span></div>
+            </li>
+
+        </ul>
+        <div id="pageHelper">
+            <a class="first" th:href="'/announcement/list/1/'+${vo.get('pageHelper').pageSize}">首页</a>
+            <a class="pre" th:href="'/announcement/list/'+${vo.get('pageHelper').pre}+'/'+${vo.get('pageHelper').pageSize}">上一页</a>
+            <input type="number" class="curPage" th:value="${vo.get('pageHelper').curPage}" value="1" />/<span th:text="${vo.get('pageHelper').last}"></span>
+            <a class="next" th:href="'/announcement/list/'+${vo.get('pageHelper').next}+'/'+${vo.get('pageHelper').pageSize}" href="#">下一页</a>
+            <a class="last" th:href="'/announcement/list/'+${vo.get('pageHelper').last}+'/'+${vo.get('pageHelper').pageSize}" href="#">尾页</a>
+        </div>
+    </div>
+</div>
+<div th:replace="fragment/footer :: #footer"></div>
+
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<script src="/scripts/tags.js"></script>
+<script src="/scripts/nav.js"></script>
+</body>
+</html>

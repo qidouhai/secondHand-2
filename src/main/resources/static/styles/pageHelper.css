@@ -1,0 +1,13 @@
+#pageHelper{
+    width: 300px;
+    margin: 0 auto;
+}
+#pageHelper input{
+    width: 40px;
+}
+#pageHelper a{
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+    padding: 0 8px;
+}

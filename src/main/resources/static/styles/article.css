@@ -1,0 +1,34 @@
+blockquote{
+    border-left-color:#ffda44;
+    margin-bottom: 15px;
+}
+blockquote a{
+    color: #000;
+    font-weight: bold;
+    text-decoration: none;
+}
+blockquote a:hover{
+    color: #ffcc00;
+    font-weight: bold;
+
+}
+.title_wrap{
+    margin-bottom: 15px;
+}
+.title_wrap>a{
+
+    font-size: 24px;
+    font-weight: bold;
+    color: #c19b8d;
+    text-decoration: none;
+
+
+}
+
+
+.date{
+   margin-bottom: 30px;
+}
+.date>i{
+    margin-right: 4px;
+}

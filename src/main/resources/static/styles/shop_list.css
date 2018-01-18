@@ -1,0 +1,56 @@
+.shops {
+    margin-bottom: 40px;
+}
+
+#condition {
+    width: 1160px;
+    height: auto;
+    padding: 10px 15px;
+    border: 1px solid #dbdbdb;
+    margin: 0 auto;
+}
+#condition .row {
+    border-bottom: 1px dotted #dbdbdb;
+    margin-top: 10px;
+    height: auto;
+    line-height: 40px;
+    overflow: hidden;
+}
+
+#condition .row  ul {
+    overflow: hidden;
+    float: left;
+    margin-left: 0;
+    padding-left: 0;
+    max-width: 1045px;
+    height: auto;
+}
+
+#condition .row > span {
+    float: left;
+    margin-right: 35px;
+    font-weight: bold;
+}
+#condition .row li {
+    float: left;
+    list-style-type: none;
+    padding-right: 18px;
+
+}
+
+#condition .row li a {
+    color: #000;
+}
+
+#condition .row:first-child {
+    padding-top: 0px;
+}
+
+#condition .row:last-child {
+    border-bottom: none;
+}
+
+.highlight{
+    color: #ffda44!important;
+    font-weight: bold;
+}

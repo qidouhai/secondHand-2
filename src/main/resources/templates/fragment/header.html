@@ -1,0 +1,23 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<header id="header">
+    <nav>
+        <a id="logo" href="/"></a>
+        <ul id="topnav" class="top_nav top_ul">
+
+            <li th:each="category : ${vo.get('categories')}">
+                <a th:text="${category.categoryName}" th:href="'#'+${categoryStat.index}"></a>
+
+            </li>
+        </ul>
+        <ul class="top_url top_ul">
+            <li><a href="fabu">发布闲置</a></li>
+            <li><a href="ger">个人中心</a></li>
+        </ul>
+    </nav>
+
+</header>
+</body>
+</html>
