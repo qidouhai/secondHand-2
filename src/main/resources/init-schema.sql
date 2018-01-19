@@ -64,3 +64,17 @@ create TABLE `content`(
   created datetime DEFAULT NULL COMMENT '创建时间',
   updated datetime DEFAULT NULL COMMENT '修改时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+Drop table if EXISTS `comment`;
+CREATE TABLE `comment`(
+  id int auto_increment primary key ,
+  content TEXT not NULL COMMENT '回复内容',
+  user_id int not NULL COMMENT '回复人id',
+  parent_id int not null COMMENT '被回复的留言id, 0代表是一级留言，1代表是二级留言，回复别人的留言',
+  is_parent int not null COMMENT '此留言是否有其他人回复，0代表有，1代表没有',
+  entity_id int not null ,
+  entity_type int not null,
+  status int(1) DEFAULT 1,
+  created datetime DEFAULT NULL COMMENT '创建时间',
+  updated datetime DEFAULT NULL COMMENT '修改时间'
+)
