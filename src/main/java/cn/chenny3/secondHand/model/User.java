@@ -22,7 +22,7 @@ public class User extends Base{
     private String wechat;
     private String alipay;
     private String email;
-    private int status;
+    private Integer status;
 
     public int getId() {
         return id;
@@ -128,11 +128,11 @@ public class User extends Base{
         this.email = email;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
 public interface CommentService {
     int addComment(Comment comment);
     Comment selectComment(int commentId);
-    List<Comment> selectComments(int entityId, int entityType);
+    List<Comment> selectComments(int entityId, int entityType,int parentId);
     int updateComment(Comment comment);
     int updateStatus(int id,int status);
     int selectCount(int entityId,int entityType,int parentId);

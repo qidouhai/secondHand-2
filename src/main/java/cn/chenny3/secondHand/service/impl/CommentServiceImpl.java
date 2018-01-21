@@ -6,6 +6,7 @@ import cn.chenny3.secondHand.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public int addComment(Comment comment) {
         comment.setStatus(1);
+        comment.setIsParent(1);
         comment.setCreated(new Date());
         comment.setUpdated(comment.getCreated());
         return commentDao.addComment(comment);
@@ -28,8 +30,9 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> selectComments(int entityId, int entityType) {
-        return commentDao.selectComments(entityId,entityType);
+    public List<Comment> selectComments(int entityId, int entityType,int parentId) {
+        List<Comment> comments = commentDao.selectComments(entityId, entityType, parentId);
+        return comments==null||comments.size()==0? Collections.emptyList():comments;
     }
 
     @Override

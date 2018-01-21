@@ -1,6 +1,6 @@
 package cn.chenny3.secondHand.model;
 
-import javax.validation.constraints.Max;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -8,17 +8,18 @@ public class Comment extends Base{
     private int id;
     @NotNull
     private String content;
-    @Min(1)
-    private int parentId;
     @Min(0)
-    @Max(1)
+    private int parentId;
+
     private int isParent;
     @Min(1)
     private int entityId;
     @Min(1)
     private int entityType;
-    @Min(1)
-    private int userId;
+
+    private User fromUser;
+
+    private User toUser;
 
     private int status;
 
@@ -70,12 +71,20 @@ public class Comment extends Base{
         this.entityType = entityType;
     }
 
-    public int getUserId() {
-        return userId;
+    public User getFromUser() {
+        return fromUser;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setFromUser(User fromUser) {
+        this.fromUser = fromUser;
+    }
+
+    public User getToUser() {
+        return toUser;
+    }
+
+    public void setToUser(User toUser) {
+        this.toUser = toUser;
     }
 
     public int getStatus() {
@@ -86,17 +95,5 @@ public class Comment extends Base{
         this.status = status;
     }
 
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", content='" + content + '\'' +
-                ", parentId=" + parentId +
-                ", isParent=" + isParent +
-                ", entityId=" + entityId +
-                ", entityType=" + entityType +
-                ", userId=" + userId +
-                ", status=" + status +
-                '}';
-    }
+
 }

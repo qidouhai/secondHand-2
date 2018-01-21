@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService{
         user.setPassword(SecondHandUtil.MD5(user.getPassword()+user.getSalt()));
         user.setStatus(1);
         user.setCreated(new Date());
-        user.setUpdated(user.getUpdated());
+        user.setUpdated(user.getCreated());
         return userDao.addUser(user);
     }
 

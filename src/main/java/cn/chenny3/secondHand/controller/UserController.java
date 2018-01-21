@@ -1,5 +1,6 @@
 package cn.chenny3.secondHand.controller;
 
+import cn.chenny3.secondHand.bean.EasyResult;
 import cn.chenny3.secondHand.bean.ViewObject;
 import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.service.UserService;
@@ -21,60 +22,53 @@ public class UserController extends BaseController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ViewObject addUser(@Valid User user, BindingResult bindingResult) {
-        ViewObject vo = new ViewObject();
+    public EasyResult addUser(@Valid User user, BindingResult bindingResult) {
+        EasyResult result = new EasyResult();
         try {
             if (bindingResult.hasErrors()) {
-                vo.put("code", 1);
-                vo.put("value", objectErrorsToString(bindingResult));
-                return vo;
+                result.setCode( 1);
+                result.setMsg(objectErrorsToString(bindingResult));
+                return result;
             }
 
             userService.addUser(user);
-            vo.put("code", 0);
-            vo.put("value", "保存成功");
+            result.setCode(0);
+            result.setMsg("保存成功");
         } catch (Exception e) {
             logger.error(e.getMessage());
-            vo.put("code", 1);
-            vo.put("value", "保存错误");
+            result.setCode(1);
+            result.setMsg("保存错误");
         }
-        return vo;
+        return result;
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ViewObject deleteUser(@PathVariable("id") int userId) {
-        ViewObject vo = new ViewObject();
+    public EasyResult deleteUser(@PathVariable("id") int userId) {
         try{
             if(userId <= 0){
-                vo.put("code", 1);
-                vo.put("value", "请求参数非法");
-                return vo;
+                return new EasyResult(1,"请求参数非法");
             }
             userService.deleteUser(userId);
-            vo.put("code", 0);
-            vo.put("value", "删除成功");
+            return new EasyResult(0,"删除成功");
         }catch (Exception e){
             logger.error(e.getMessage());
-            vo.put("code", 1);
-            vo.put("value", "删除失败");
+            return new EasyResult(1,"删除失败");
         }
-        return vo;
     }
 
     @RequestMapping(value = "{id}",method = RequestMethod.GET)
     @ResponseBody
-    public ViewObject selectUser(@PathVariable("id") int userId) {
-        ViewObject vo = new ViewObject();
+    public EasyResult selectUser(@PathVariable("id") int userId) {
         try{
             if(userId <= 0){
-                return vo.build(1,"请求参数非法");
+                return new EasyResult(1,"请求参数非法");
             }
             User user = userService.selectUser(userId);
-            return vo.build(0,user);
+            return new EasyResult(0,user);
         }catch (Exception e){
             logger.error(e.getMessage());
-            return vo.build(1,"查询失败");
+            return new EasyResult(0,"查询失败");
         }
     }
 }

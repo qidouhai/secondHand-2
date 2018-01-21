@@ -11,6 +11,45 @@ function keyUP(t) {
     }
 }
 
+
+//初始化评论数据
+function initCommentData() {
+    //清空已有评论数据
+    $('.comment-show').empty();
+    //向后台请求新数据
+    $.get('/comment', {"goodsId": $('#entityId').val()}, function (result) {
+        if (result.code == 0) {//异步请求成功到有效数据
+            $.each(result.msg, function (i, item) {//result.msg
+                //创建评论条
+                var comment = item.main;//result.msg.main
+                var headUrl = "http://secondhand-oss.oss-cn-beijing.aliyuncs.com/" + comment.fromUser.headUrl + "?x-oss-process=style/48_size";
+                var content = comment.content;
+                var created = comment.created;
+                oHtml = '<div class="comment-show-con clearfix" conversationId="' + comment.id + '"><div class="comment-show-con-img pull-left"><img src="' + headUrl + '" alt=""/></div> <div class="comment-show-con-list pull-left clearfix"><div class="pl-text clearfix"> <a href="/user/' + comment.fromUser.id + '" class="comment-size-name">' + comment.fromUser.name + ' : </a> <span class="my-pl-con">&nbsp;' + content + '</span> </div> <div class="date-dz"> <span class="date-dz-left pull-left comment-time">' + created + '</span> <div class="date-dz-right pull-right comment-pl-block"><a href="javascript:;" class="removeBlock hidden">删除</a> <a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left" userId="' + comment.fromUser.id + '">回复</a> <span class="pull-left date-dz-line hidden">|</span> <a href="javascript:;" class="date-dz-z pull-left hidden"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">666</i>)</a> </div> </div><div class="hf-list-con"></div></div> </div>';
+
+                if (comment.content.replace(/(^\s*)|(\s*$)/g, "") != '') {
+                    $('.comment-show').append(oHtml);
+                    $('.commentAll').siblings('.flex-text-wrap').find('.comment-input').prop('value', '').siblings('pre').find('span').text('');
+                }
+                ;
+                //创建评论回复块
+                $.each(item.reply, function (i, item) {
+                    var comment = item;//result.msg.main
+                    var headUrl = "http://secondhand-oss.oss-cn-beijing.aliyuncs.com/" + comment.fromUser.headUrl + "?x-oss-process=style/48_size";
+                    var from_name = comment.fromUser.name;
+                    var to_name = comment.toUser.name;
+                    var content = comment.content;
+                    var created = comment.created;
+                    var oAt = ' 回复 <a href="/user/' + comment.toUser.id + '" class="atName">@' + to_name + '</a> : ' + content;
+                    var oHtml = '<div class="all-pl-con"><div class="pl-text hfpl-text clearfix"><a href="/user/' + comment.fromUser.id + '" class="comment-size-name">' + from_name + ' : </a><span class="my-pl-con">' + oAt + '</span></div><div class="date-dz"> <span class="date-dz-left pull-left comment-time">' + created + '</span> <div class="date-dz-right pull-right comment-pl-block"> <a href="javascript:;" class="removeBlock hidden">删除</a> <a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left" userId="' + comment.fromUser.id + '">回复</a> <span class="pull-left date-dz-line hidden">|</span> <a href="javascript:;" class="date-dz-z pull-left hidden"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">666</i>)</a> </div> </div></div>';
+                    $('.comment-show-con:last').find('.hf-list-con').css('display', 'block').prepend(oHtml);
+
+                })
+            });
+        }
+    }, 'json');
+}
+
 //点击评论创建评论条
 $('.commentAll').on('click', '.plBtn', function () {
     var myDate = new Date();
@@ -29,15 +68,37 @@ $('.commentAll').on('click', '.plBtn', function () {
     //获取输入内容
     var oSize = $(this).siblings('.flex-text-wrap').find('.comment-input').val();
     console.log(oSize);
-    //动态创建评论模块
-    oHtml = '<div class="comment-show-con clearfix"><div class="comment-show-con-img pull-left"><img src="/images/header-img-comment_03.png" alt=""></div> <div class="comment-show-con-list pull-left clearfix"><div class="pl-text clearfix"> <a href="#" class="comment-size-name">David Beckham : </a> <span class="my-pl-con">&nbsp;' + oSize + '</span> </div> <div class="date-dz"> <span class="date-dz-left pull-left comment-time">' + now + '</span> <div class="date-dz-right pull-right comment-pl-block"><a href="javascript:;" class="removeBlock">删除</a> <a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span class="pull-left date-dz-line">|</span> <a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">666</i>)</a> </div> </div><div class="hf-list-con"></div></div> </div>';
-    if (oSize.replace(/(^\s*)|(\s*$)/g, "") != '') {
-        $(this).parents('.reviewArea ').siblings('.comment-show').prepend(oHtml);
-        $(this).siblings('.flex-text-wrap').find('.comment-input').prop('value', '').siblings('pre').find('span').text('');
-    }
+   //提交评论
+    var entityId = $('#entityId').val();
+    var entityType = $('#entityType').val();
+    var toUserId = $('#userId').val();
+    $.post(
+        "/comment/",
+        {
+            'content': oSize,
+            'parentId': 0,
+            'entityId': entityId,
+            'entityType': entityType,
+            'fromUser.id': 2,
+            'toUser.id': toUserId
+        },
+        function (result) {
+            if(result.code==1){//评论创建失败
+                alert(result.msg);
+            }else{
+                //清除评论框数据
+                $('.reviewArea').find('.comment-input').val('');
+                //重新初始化评论数据
+                initCommentData();
+
+            }
+        },
+        'json');
 });
 //点击回复动态创建回复块
 $('.comment-show').on('click', '.pl-hf', function () {
+    //todo:清除页面上已有的动态评论块
+
     //获取回复人的名字
     var fhName = $(this).parents('.date-dz-right').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').html();
     //回复@
@@ -52,7 +113,11 @@ $('.comment-show').on('click', '.pl-hf', function () {
         $(this).parents('.date-dz-right').siblings('.hf-con').find('.pre').css('padding', '6px 15px');
         //console.log($(this).parents('.date-dz-right').siblings('.hf-con').find('.pre'))
         //input框自动聚焦
-        $(this).parents('.date-dz-right').siblings('.hf-con').find('.hf-input').val('').focus().val(fhN);
+        $(this).parents('.date-dz-right').siblings('.hf-con').find('.hf-input').val('').focus().attr("placeholder",fhN);
+        $(this).parents('.date-dz-right').siblings('.hf-con').find('.hf-input').change(function () {
+            $(this).val()
+            var reg=/^/;
+        });
     } else {
         $(this).addClass('hf-con-block');
         $(this).parents('.date-dz-right').siblings('.hf-con').remove();
@@ -61,6 +126,7 @@ $('.comment-show').on('click', '.pl-hf', function () {
 //评论回复块创建
 $('.comment-show').on('click', '.hf-pl', function () {
     var oThis = $(this);
+    console.log(oThis);
     var myDate = new Date();
     //获取当前年
     var year = myDate.getFullYear();
@@ -76,41 +142,42 @@ $('.comment-show').on('click', '.hf-pl', function () {
     var now = year + '-' + month + "-" + date + " " + h + ':' + m + ":" + s;
     //获取输入内容
     var oHfVal = $(this).siblings('.flex-text-wrap').find('.hf-input').val();
-    console.log(oHfVal)
     var oHfName = $(this).parents('.hf-con').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').html();
-    var oAllVal = '回复@' + oHfName;
+    var oAllVal = '回复@' + oHfName+' :';
+    //输入内容首尾空格去除trim()
+    oHfVal=$.trim(oHfVal);
+    var reg = new RegExp("^回复@"+oHfName+" : .*\\S$");
     if (oHfVal.replace(/^ +| +$/g, '') == '' || oHfVal == oAllVal) {
-
-    } else {
-        $.getJSON("/json/pl.json", function (data) {
-            var oAt = '';
-            var oHf = '';
-            $.each(data, function (n, v) {
-                delete v.hfContent;
-                delete v.atName;
-                var arr;
-                var ohfNameArr;
-                if (oHfVal.indexOf("@") == -1) {
-                    data['atName'] = '';
-                    data['hfContent'] = oHfVal;
-                } else {
-                    arr = oHfVal.split(':');
-                    ohfNameArr = arr[0].split('@');
-                    data['hfContent'] = arr[1];
-                    data['atName'] = ohfNameArr[1];
+        console.log("无效输入");
+    } else {//验证内容为有效数据
+        console.log('conversationId:' + oThis.parents('.hf-con').parents('.comment-show-con').attr('conversationId'));
+        console.log('toUserId:' + oThis.parents('.hf-con').parents('.date-dz').find('.comment-pl-block').find('.date-dz-pl').attr('userId'));
+        //当前评论块的会话id
+        var conversationId = oThis.parents('.hf-con').parents('.comment-show-con').attr('conversationId');
+        //被追评人id
+        var toUserId = oThis.parents('.hf-con').parents('.date-dz').find('.comment-pl-block').find('.date-dz-pl').attr('userId');
+        var entityId = $('#entityId').val();
+        var entityType = $('#entityType').val();
+        $.post(
+            "/comment/",
+            {
+                'content': oHfVal,
+                'parentId': conversationId,
+                'entityId': entityId,
+                'entityType': entityType,
+                'fromUser.id': 2,
+                'toUser.id': toUserId
+            },
+            function (result) {
+                if(result.code==1){//评论创建失败
+                    alert(result.msg);
+                }else{
+                    //重新初始化评论数据
+                    initCommentData();
                 }
+            },
+            'json');
 
-                if (data.atName == '') {
-                    oAt = data.hfContent;
-                } else {
-                    oAt = '回复<a href="#" class="atName">@' + data.atName + '</a> : ' + data.hfContent;
-                }
-                oHf = data.hfName;
-            });
-
-            var oHtml = '<div class="all-pl-con"><div class="pl-text hfpl-text clearfix"><a href="#" class="comment-size-name">我的名字 : </a><span class="my-pl-con">' + oAt + '</span></div><div class="date-dz"> <span class="date-dz-left pull-left comment-time">' + now + '</span> <div class="date-dz-right pull-right comment-pl-block"> <a href="javascript:;" class="removeBlock">删除</a> <a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span class="pull-left date-dz-line">|</span> <a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">666</i>)</a> </div> </div></div>';
-            oThis.parents('.hf-con').parents('.comment-show-con-list').find('.hf-list-con').css('display', 'block').prepend(oHtml) && oThis.parents('.hf-con').siblings('.date-dz-right').find('.pl-hf').addClass('hf-con-block') && oThis.parents('.hf-con').remove();
-        });
     }
 });
 //删除评论块
@@ -140,3 +207,4 @@ $('.comment-show').on('click', '.date-dz-z', function () {
         $(this).find('.date-dz-z-click-red').addClass('red');
     }
 })
+

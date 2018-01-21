@@ -44,20 +44,22 @@
 </header>
 <div id="content">
     <ol class="breadcrumb">
-        <li><a href="#" th:text="${vo.get('topCategory').categoryName}" th:href="'/'+${vo.get('topCategory').id}">闲置数码</a></li>
+        <li><a href="#" th:text="${vo.get('topCategory').categoryName}"
+               th:href="'/'+${vo.get('topCategory').id}">闲置数码</a></li>
         <li><a href="#" th:text="${vo.get('tag').categoryName}" th:href="'/'+${vo.get('tag').id}">笔记本</a></li>
         <li class="active">当前</li>
     </ol>
     <div id="topbar">
         <div id="seller-info">
-            <img src="/images/touxiang.jpg" th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${vo.get('owner').headUrl}"/>
+            <img src="/images/touxiang.jpg"
+                 th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${vo.get('owner').headUrl}+'?x-oss-process=style/40_size'"/>
             <span id="name" th:text="${vo.get('owner').name}">马云</span>
         </div>
         <div id="see" class="other">
             <h5>宝贝浏览次数</h5>
             <span th:text="${vo.get('goods').viewNum}">15</span>
         </div>
-        <div  class="other">
+        <div class="other">
             <h5>最近编辑</h5>
             <span th:text="${#dates.format(vo.get('goods').created, 'yyyy年MM月dd日 HH:mm:ss')}">2018-01-10 16:25</span>
         </div>
@@ -70,7 +72,9 @@
             <a href="javascript:void(0);" class="prev"><img src="/images/slide/prev.png"/></a>
             <a href="javascript:void(0);" class="next"><img src="/images/slide/next.png"/></a>
             <ul class="big">
-                <li th:each="image:${vo.get('goods').imageArr}"><img th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${image}"  src="/images/slide/a1.jpg"/></li>
+                <li th:each="image:${vo.get('goods').imageArr}"><img
+                        th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${image}"
+                        src="/images/slide/a1.jpg"/></li>
                 <li th:remove="all"><img src="/images/slide/a2.jpg"/></li>
                 <li th:remove="all"><img src="/images/slide/a3.jpg"/></li>
                 <li th:remove="all"><img src="/images/slide/a4.jpg"/></li>
@@ -78,7 +82,9 @@
             </ul>
 
             <ol class="small">
-                <li th:each="image:${vo.get('goods').imageArr}"><img th:style="${imageStat.index} eq 0?'opacity:1':''" th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${image}"  src="/images/slide/a1.jpg"/></li>
+                <li th:each="image:${vo.get('goods').imageArr}"><img th:style="${imageStat.index} eq 0?'opacity:1':''"
+                                                                     th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${image}"
+                                                                     src="/images/slide/a1.jpg"/></li>
                 <li th:remove="all"><img src="/images/slide/a2.jpg"/></li>
                 <li th:remove="all"><img src="/images/slide/a3.jpg"/></li>
                 <li th:remove="all"><img src="/images/slide/a4.jpg"/></li>
@@ -86,13 +92,16 @@
             </ol>
         </div>
         <div class="detail">
+            <input type="hidden" id="entityId" th:value="${vo.get('goods').id}"/>
+            <input type="hidden" id="entityType" value="1" />
+            <input type="hidden" id="userId" th:value="${vo.get('owner').id}" />
             <div class="name"><span th:text="${vo.get('goods').goodsName}">联想笔记本电脑</span>
                 <div class="sell_out">已出售</div>
             </div>
             <div class="price_wrap">
                 <span class="price" th:text="${#numbers.formatDecimal(vo.get('goods').price/100.0,0,2)}">3299.28</span>
                 <s th:if="${vo.get('goods').bargain } eq 0">可讲价</s>
-                <span th:if="${vo.get('goods').bargain}  eq 1" >可讲价</span>
+                <span th:if="${vo.get('goods').bargain}  eq 1">可讲价</span>
             </div>
             <div class="postion">
                 <i class="fa fa-map-marker" aria-hidden="true"></i>湖南理工学院南院13栋
@@ -116,9 +125,12 @@
             </div>
             <div class="util">
                 <ul>
-                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/share.png" alt="分享"/>分享</a></li>
-                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/collect.png" alt="收藏/取消收藏"/>收藏</a></li>
-                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/top.png" alt="点赞/取消点赞"/>点赞</a></li>
+                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/share.png" alt="分享"/>分享</a>
+                    </li>
+                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/collect.png" alt="收藏/取消收藏"/>收藏</a>
+                    </li>
+                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/top.png"
+                                                                         alt="点赞/取消点赞"/>点赞</a></li>
                 </ul>
             </div>
             <div class="pay_method">
@@ -155,9 +167,11 @@
     <div>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">宝贝介绍</a></li>
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">宝贝介绍</a>
+            </li>
             <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">留言</a></li>
-            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">安全保障</a></li>
+            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">安全保障</a>
+            </li>
         </ul>
 
         <!-- Tab panes -->
@@ -172,31 +186,14 @@
                 <div class="commentAll">
                     <!--评论区域 begin-->
                     <div class="reviewArea clearfix">
-                        <textarea class="content comment-input" placeholder="Please enter a comment&hellip;" onkeyup="keyUP(this)"></textarea>
+                        <textarea class="content comment-input" placeholder="Please enter a comment&hellip;"
+                                  onkeyup="keyUP(this)"></textarea>
                         <a href="javascript:;" class="plBtn">评论</a>
                     </div>
                     <!--评论区域 end-->
                     <!--回复区域 begin-->
                     <div class="comment-show">
-                        <div class="comment-show-con clearfix">
-                            <div class="comment-show-con-img pull-left"><img src="/images/header-img-comment_03.png" alt=""/></div>
-                            <div class="comment-show-con-list pull-left clearfix">
-                                <div class="pl-text clearfix">
-                                    <a href="#" class="comment-size-name">张三 : </a>
-                                    <span class="my-pl-con">&nbsp;来啊 造作啊!</span>
-                                </div>
-                                <div class="date-dz">
-                                    <span class="date-dz-left pull-left comment-time">2017-5-2 11:11:39</span>
-                                    <div class="date-dz-right pull-right comment-pl-block">
-                                        <a href="javascript:;" class="removeBlock">删除</a>
-                                        <a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a>
-                                        <span class="pull-left date-dz-line">|</span>
-                                        <a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">666</i>)</a>
-                                    </div>
-                                </div>
-                                <div class="hf-list-con"></div>
-                            </div>
-                        </div>
+
                     </div>
                     <!--回复区域 end-->
                 </div>
@@ -220,6 +217,11 @@
 <script src="/scripts/move1.js"></script>
 <script type="text/javascript" src="/scripts/jquery.flexText.js"></script>
 <script type="text/javascript" src="/scripts/comment.js"></script>
-
+<script>
+    //初始化评论
+    $(function () {
+        initCommentData();
+    });
+</script>
 </body>
 </html>

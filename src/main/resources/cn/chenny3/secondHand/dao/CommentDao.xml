@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.chenny3.secondHand.dao.CommentDao">
+    <sql id="table">comment</sql>
+    <resultMap id="commentMap" type="comment">
+        <association property="fromUser" javaType="user">
+            <result property="id" column="from_id"></result>
+            <result property="name" column="from_name"></result>
+            <result property="headUrl" column="from_head_url"></result>
+        </association>
+        <association property="toUser" javaType="user">
+            <result property="id" column="to_id"></result>
+            <result property="name" column="to_name"></result>
+            <result property="headUrl" column="to_head_url"></result>
+        </association>
+    </resultMap>
+
+    <update id="updateComment">
+        UPDATE
+        <include refid="table"/>
+        <set>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="isParent!=0">
+                is_parent=#{isParent},
+            </if>
+
+            <if test="updated != null">
+                updated=#{updated},
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <select id="selectComments" resultMap="commentMap">
+        SELECT
+            comment.*,
+            user_from.name     'from_name',
+            user_from.head_url 'from_head_url',
+            user_to.name       'to_name',
+            user_to.head_url   'to_head_url'
+        FROM
+            COMMENT comment
+            INNER JOIN
+            user user_from
+            INNER JOIN
+            user user_to
+                ON
+                    comment.from_id = user_from.id
+                    AND
+                    comment.to_id = user_to.id
+        WHERE
+            parent_id = #{parentId}
+            AND entity_id = #{entityId}
+            AND entity_type = #{entityType}
+        ORDER BY
+            comment.created DESC;
+    </select>
+
+    <select id="selectComment" resultMap="commentMap">
+        SELECT
+            comment.*,
+            user_from.name     'from_name',
+            user_from.head_url 'from_head_url',
+            user_to.name       'to_name',
+            user_to.head_url   'to_head_url'
+        FROM
+            COMMENT comment
+            INNER JOIN
+            user user_from
+            INNER JOIN
+            user user_to
+                ON
+                    comment.from_id = user_from.id
+                    AND
+                    comment.to_id = user_to.id
+        WHERE
+            comment.id = #{id}
+            AND entity_id = #{entityId}
+            AND entity_type = #{entityType}
+        ORDER BY
+            comment.created DESC;
+    </select>
+</mapper>

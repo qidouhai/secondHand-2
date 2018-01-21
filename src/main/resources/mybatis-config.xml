@@ -15,8 +15,12 @@
         This setting forces generated keys to be used if set to true,
          as some drivers deny compatibility but still work -->
         <setting name="useGeneratedKeys" value="true"/>
+        <!--自动映射-->
+        <setting name="autoMappingBehavior" value="FULL"/>
     </settings>
 
     <!-- Continue going here -->
-
+    <typeAliases>
+        <package name="cn.chenny3.secondHand.model"></package>
+    </typeAliases>
 </configuration>
