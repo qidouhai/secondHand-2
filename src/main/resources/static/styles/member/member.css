@@ -1,0 +1,28 @@
+.m_left {
+    width: 221px;
+    overflow: hidden;
+    padding: 5px;
+    float: left;
+}
+.m_right {
+    width: 930px;
+    min-height: 690px;
+    background-color: #FFF;
+    float: right;
+    display: inline;
+    margin: 5px;
+
+    -webkit-box-shadow: 0 0 5px #e0e0e0;
+    -moz-box-shadow: 0 0 5px #e0e0e0;
+    box-shadow: 0 0 5px #e0e0e0;
+}
+
+.bg_color {
+    background-color: #f6f6f6;
+}
+
+.center{
+    width: 870px;
+    margin: 0 auto;
+    display: block;
+}

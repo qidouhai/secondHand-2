@@ -1,0 +1,77 @@
+
+.m_des {
+    overflow: hidden;
+    margin-top: 50px;
+    padding-bottom: 30px;
+    margin-bottom: 20px;
+    border-bottom: 1px dotted #b6b6b6;
+}
+
+.m_user {
+    height: 20px;
+    line-height: 20px;
+    overflow: hidden;
+    color: #3e3e3e;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.m_notice {
+    height: 35px;
+    line-height: 35px;
+    overflow: hidden;
+    background: url(/images/member/n_not.png) no-repeat left center;
+    font-size: 12px;
+    padding-left: 32px;
+}
+
+.mem_t {
+    width: 850px;
+    height: 50px;
+    margin: 0 auto;
+    line-height: 50px;
+    overflow: hidden;
+    color: #333333;
+    font-size: 16px;
+}
+
+.mem_tit {
+    width: 930px;
+    height: 50px;
+    line-height: 50px;
+    overflow: hidden;
+    color: #333333;
+    font-size: 16px;
+}
+table{
+    font-size: 12px;
+}
+table.mon_tab{
+    background-color:#f6f6f6;
+}
+table.mon_tab tr td{
+    border-collapse:collapse; border-bottom:1px solid #FFF; padding:5px 25px;
+}
+table.mon_tab tr td span{
+    font-weight:bold; font-family:"宋体"; color:#ff4e00;
+}
+
+table.acc_tab{
+    background-color:#f6f6f6; font-family:"宋体";
+}
+table.acc_tab tr td{
+    border-collapse:collapse; border-bottom:1px dotted #b6b6b6; padding:7px 25px;
+}
+table.acc_tab tr td.td_l{
+    background-color:#f7ece8; width:110px; font-family:"Microsoft YaHei";
+}
+table.acc_tab tr td.b_none{
+    border-bottom:0;
+}
+
+table.order_tab{
+    border-collapse:collapse; border:1px solid #eaeaea;
+}
+table.order_tab tr td{
+    border-collapse:collapse; border:1px solid #eaeaea; padding:5px 10px;
+}

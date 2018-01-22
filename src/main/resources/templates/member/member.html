@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>管理中心</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/global.css" rel="stylesheet"/>
+    <link href="/styles/member/member.css" rel="stylesheet"/>
+    <link href="/styles/member/menu.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/styles/demo.css"/>
+    <link href="/styles/font-awesome.min.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+</head>
+<body class="bg_color">
+<div th:replace="/fragment/header :: #header"></div>
+<div class="container " style="margin-top: 50px;padding: 0px;">
+    <!--用户中心 开始 -->
+    <div class="m_left">
+        <div class="left_menu">
+            <div class="left_n">管理中心</div>
+            <div class="left_m">
+                <div class="left_m_t t_bg1">订单中心</div>
+                <ul>
+                    <li><a href="javascript:void(0);">我的订单</a></li>
+                </ul>
+            </div>
+            <div class="left_m">
+                <div class="left_m_t t_bg2">会员中心</div>
+                <ul>
+                    <li><a href="javascript:void(0);" onclick="setIframeSrc('user',this)" class="now">用户信息</a></li>
+                    <li><a href="javascript:void(0);" onclick="setIframeSrc('address_list',this)">收货地址</a></li>
+                    <li><a href="javascript:void(0);">我的收藏</a></li>
+                    <li><a href="javascript:void(0);">我的留言</a></li>
+                </ul>
+            </div>
+            <div class="left_m">
+                <div class="left_m_t t_bg3">账户中心</div>
+                <ul>
+                    <li><a href="javascript:void(0);">账户安全</a></li>
+                </ul>
+            </div>
+            <div class="left_m">
+                <div class="left_m_t t_bg4">其他功能</div>
+                <ul>
+                    <li><a href="javascript:void(0);">用户公告</a></li>
+                    <li><a href="javascript:void(0);">我的举报</a></li>
+                    <li><a href="javascript:void(0);">我的建议</a></li>
+                </ul>
+            </div>
+            <div class="left_m">
+                <div class="left_m_t">管理操作</div>
+                <ul>
+                    <li><a href="javascript:void(0);">后台面板</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <iframe id="external-frame" class="m_right" src="/member/user"  scrolling="no" frameborder="0"></iframe>
+    <!--用户中心 结束 -->
+
+</div>
+<div th:replace="/fragment/footer :: #footer"></div>
+
+</body>
+
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<script>
+    //指定iframe src属性的重置
+    function setIframeSrc(target,obj){
+        //重新设置样式
+        $("a[class='now']").removeClass('now');
+        $(obj).addClass('now');
+        //刷新iframe的src地址
+        $("#external-frame").attr("src", '/member/'+target);
+        //重置高度
+        setIframeHeight(document.getElementById('external-frame'));
+    }
+
+    //实现iframe高度随内容高度自适应
+    function setIframeHeight(iframe) {
+        if (iframe) {
+            var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+            if (iframeWin.document.body) {
+                iframe.height =iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+                iframe.height = parseInt(iframe.height);
+
+            }
+        }
+    };
+
+    window.onload = function () {
+        setIframeHeight(document.getElementById('external-frame'));
+    };
+</script>
+
+</html>

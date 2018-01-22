@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>管理中心</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/member/member.css" rel="stylesheet"/>
+    <link href="/styles/member/address_list.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+</head>
+<body>
+<p></p>
+<div class="mem_tit">收货地址</div>
+<div class="address">
+    <div class="a_close"><a href="#"><img src="/images/member/a_close.png"/></a></div>
+    <table border="0" class="add_t" align="center" style="width:98%; margin:10px auto;" cellspacing="0"
+           cellpadding="0">
+        <tbody>
+        <tr>
+            <td colspan="2" style="font-size:14px; color:#ff4e00;">杨杨公司</td>
+        </tr>
+        <tr>
+            <td align="right" width="80">收货人姓名：</td>
+            <td>杨杨</td>
+        </tr>
+        <tr>
+            <td align="right">配送区域：</td>
+            <td>四川成都市武侯区三环以内</td>
+        </tr>
+        <tr>
+            <td align="right">详细地址：</td>
+            <td>科华北路66号世外桃源写字楼3楼</td>
+        </tr>
+        <tr>
+            <td align="right">手机：</td>
+            <td>12345678998</td>
+        </tr>
+        <tr>
+            <td align="right">电话：</td>
+            <td>028-12345678</td>
+        </tr>
+        <tr>
+            <td align="right">电子邮箱：</td>
+            <td>123456789@qq.com</td>
+        </tr>
+        <tr>
+            <td align="right">标志建筑：</td>
+            <td>世外桃源</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p align="right">
+        <a href="#" style="color:#ff4e00;">设为默认</a>&nbsp; &nbsp; &nbsp; &nbsp; <a href="#"
+                                                                                  style="color:#ff4e00;">编辑</a>&nbsp;
+        &nbsp; &nbsp; &nbsp;
+    </p>
+
+</div>
+
+<div class="mem_tit">
+    <a href="#"><img src="/images/member/add_ad.jpg"/></a>
+</div>
+<table border="0" class="add_tab center"  cellspacing="0" cellpadding="0">
+    <tbody>
+    <tr>
+        <td width="135" align="right">配送地区</td>
+        <td colspan="3" style="font-family:'宋体';">
+            <input type="hidden" name="country"/>
+            <div class="jslct" style="z-index: 0;">
+                <div class="jslct_t"><em>请选择...</em></div>
+                <dl style="width: 100px; overflow-x: hidden; overflow-y: auto; height: auto; display: none;">
+                    <dd val="0" class="noborder jslcted" style="width: 117px;">请选择...</dd>
+                    <dd val="1" style="width: 117px;" class="">中国</dd>
+                    <dd val="2" style="width: 117px;">中国</dd>
+                    <dd val="3" style="width: 117px;">中国</dd>
+                    <dd val="4" style="width: 117px;">中国</dd>
+                </dl>
+            </div>
+            <input type="hidden" name="province"/>
+            <div class="jslct" style="z-index: 0;">
+                <div class="jslct_t"><em>请选择...</em></div>
+                <dl style="width: 100px; overflow-x: hidden; overflow-y: auto; display: none;">
+                    <dd val="0" class="noborder jslcted" style="width: 117px;">请选择...</dd>
+                    <dd val="1" style="width: 117px;">四川</dd>
+                    <dd val="2" style="width: 117px;">重庆</dd>
+                    <dd val="3" style="width: 117px;">北京</dd>
+                    <dd val="4" style="width: 117px;">云南</dd>
+                </dl>
+            </div>
+            <input type="hidden" name="city"/>
+            <div class="jslct" style="z-index: 0;">
+                <div class="jslct_t"><em>请选择...</em></div>
+                <dl style="width: 100px; overflow-x: hidden; overflow-y: auto; display: none;">
+                    <dd val="0" class="noborder jslcted" style="width: 117px;">请选择...</dd>
+                    <dd val="1" style="width: 117px;">成都</dd>
+                    <dd val="2" style="width: 117px;">宜宾</dd>
+                    <dd val="3" style="width: 117px;">南充</dd>
+                    <dd val="4" style="width: 117px;">绵阳</dd>
+                </dl>
+            </div>
+            <input type="hidden" name="area"/>
+            <div class="jslct" style="z-index: 0;">
+                <div class="jslct_t"><em>请选择...</em></div>
+                <dl style="width: 100px; overflow-x: hidden; overflow-y: auto; display: none;">
+                    <dd val="0" class="noborder jslcted" style="width: 117px;">请选择...</dd>
+                    <dd val="1" style="width: 117px;">武侯区</dd>
+                    <dd val="2" style="width: 117px;">成华区</dd>
+                    <dd val="3" style="width: 117px;">锦江区</dd>
+                    <dd val="4" style="width: 117px;">青羊区</dd>
+                </dl>
+            </div>
+            （必填）
+        </td>
+    </tr>
+    <tr>
+        <td align="right">收货人姓名</td>
+        <td style="font-family:'宋体';"><input type="text" value="姓名" class="add_ipt"/>（必填）</td>
+        <td align="right">电子邮箱</td>
+        <td style="font-family:'宋体';"><input type="text" value="12345678@qq.com" class="add_ipt"/>（必填）</td>
+    </tr>
+    <tr>
+        <td align="right">详细地址</td>
+        <td style="font-family:'宋体';"><input type="text" value="世外桃源" class="add_ipt"/>（必填）</td>
+        <td align="right">邮政编码</td>
+        <td style="font-family:'宋体';"><input type="text" value="610000" class="add_ipt"/></td>
+    </tr>
+    <tr>
+        <td align="right">手机</td>
+        <td style="font-family:'宋体';"><input type="text" value="1361234587" class="add_ipt"/>（必填）</td>
+        <td align="right">电话</td>
+        <td style="font-family:'宋体';"><input type="text" value="028-12345678" class="add_ipt"/></td>
+    </tr>
+    <tr>
+        <td align="right">标志建筑</td>
+        <td style="font-family:'宋体';"><input type="text" value="世外桃源大酒店" class="add_ipt"/></td>
+        <td align="right">最佳送货时间</td>
+        <td style="font-family:'宋体';"><input type="text" value="" class="add_ipt"/></td>
+    </tr>
+    </tbody>
+</table>
+<p align="right" class="center" style="height: 25px;margin-top: 10px;">
+    <a href="#">删除</a>&nbsp; &nbsp; <a href="#" class="add_b">确认修改</a>
+</p>
+</body>
+
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+
+</html>

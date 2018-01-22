@@ -79,4 +79,14 @@ CREATE TABLE `comment`(
   status int(1) DEFAULT 1,
   created datetime DEFAULT NULL COMMENT '创建时间',
   updated datetime DEFAULT NULL COMMENT '修改时间'
-)
+);
+
+CREATE TABLE `login_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `login_time` datetime NOT NULL,
+  `ip` varchar(15) NOT NULL,
+  `address` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+

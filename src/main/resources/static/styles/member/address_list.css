@@ -1,0 +1,232 @@
+* {
+    font-size: 12px;
+}
+
+.mem_tit {
+    width: 870px;
+    margin: 0 auto;
+    height: 32px;
+    overflow: hidden;
+    color: #333333;
+    font-size: 16px;
+}
+
+.address {
+    width: 870px;
+    margin: 0 auto;
+    overflow: hidden;
+    margin-bottom: 30px;
+    padding: 10px;
+    border: 1px solid #eaeaea;
+    position: relative;
+}
+
+.a_close {
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    position: absolute;
+    right: 25px;
+    top: 15px;
+}
+
+table.add_t tr td {
+    padding: 5px 10px;
+}
+
+table.add_tab {
+    border-collapse: collapse;
+    border: 1px solid #eaeaea;
+}
+
+table.add_tab tr td {
+    border-collapse: collapse;
+    border: 1px solid #eaeaea;
+    padding: 8px 10px;
+}
+
+.add_tab .jslct {
+    width: 108px;
+    height: 23px;
+    line-height: 23px;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    color: #555555;
+    font-size: 12px;
+    font-family: "宋体";
+    position: relative;
+    z-index: 0;
+    vertical-align: middle;
+    cursor: default;
+    background: url(/images/member/d_arrow.png) no-repeat 88px center;
+    background-color: #f6f6f6;
+    float: left;
+    border: 1px solid #d9d9d9;
+    margin-right: 10px;
+}
+
+.add_tab .jslct_hover {
+    border: 1px solid #d9d9d9;
+}
+
+.add_tab .jslct div.jslct_t {
+    padding: 0 25px 0 5px;
+    line-height: 23px;
+    height: 23px;
+    position: relative;
+    z-index: 2;
+    *display: block !important;
+    *display: inline;
+    zoom: 1;
+}
+
+.add_tab .jslct em {
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    line-height: 23px;
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.add_tab .jslct dl, .add_tab .jslct dl dd {
+    padding: 0;
+    margin: 0;
+    list-style: none
+}
+
+.add_tab .jslct dl {
+    background: #f6f6f6;
+    position: absolute;
+    top: 23px;
+    left: -1px;
+    border: 1px solid #d9d9d9;
+    cursor: default;
+    line-height: 22px;
+    padding: 4px 4px 4px 4px;
+    z-index: 1;
+    display: none;
+    width: 100px;
+}
+
+.add_tab .jslct_hover dl {
+    border: 1px solid #d9d9d9 !important
+}
+
+.add_tab .jslct dl dd {
+    padding: 0px 4px 2px 4px;
+    *padding: 2px 4px 0 4px;
+    border-top: 1px dotted #ccc !important;
+    border-top: 1px dotted #d9d9d9;
+    white-space: nowrap;
+    background: #f6f6f6;
+    cursor: pointer;
+    *border-left: 1px solid #fff;
+}
+
+.add_tab .jslct dl dd.hover {
+    background: #666;
+    color: #fff;
+}
+
+.add_tab .jslct .jslcted {
+    background: #efefef;
+}
+
+.add_tab .jslct dl dd.noborder {
+    border: none !important
+}
+
+.add_ipt {
+    width: 176px;
+    height: 23px;
+    line-height: 23px \9;
+    overflow: hidden;
+    background-color: #f6f6f6;
+    color: #555555;
+    font-size: 12px;
+    font-family: "宋体";
+    padding: 0 10px;
+    border: 1px solid #d9d9d9;
+}
+
+a.add_b {
+    width: 90px;
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+    background-color: #ff4e00;
+    color: #FFF;
+    font-size: 12px;
+    font-family: "宋体";
+    text-align: center;
+    margin-left: 10px;
+    border: 0;
+    cursor: pointer;
+    float: right;
+}
+
+.sm_img {
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    float: left;
+    display: inline;
+    margin-right: 10px;
+    border: 1px solid #eaeaea;
+}
+
+.add_txt {
+    width: 690px;
+    height: 70px;
+    line-height: 22px \9;
+    overflow: hidden;
+    background-color: #f6f6f6;
+    color: #555555;
+    font-size: 12px;
+    font-family: "宋体";
+    padding: 10px;
+    border: 1px solid #d9d9d9;
+}
+
+.r_rad {
+    float: left;
+    padding-top: 1px;
+    margin-right: 2px;
+}
+
+.r_txt {
+    float: left;
+    line-height: 22px;
+    margin-right: 15px;
+}
+
+.btn_tj {
+    width: auto;
+    height: 25px;
+    line-height: 25px \9;
+    overflow: hidden;
+    background-color: #ff4e00;
+    color: #FFF;
+    font-size: 12px;
+    font-family: "宋体";
+    text-align: center;
+    padding: 0 18px;
+    border: 0;
+    cursor: pointer;
+}
+
+.code_ipt {
+    width: 475px;
+    height: 23px;
+    line-height: 23px \9;
+    overflow: hidden;
+    color: #555555;
+    font-size: 12px;
+    font-family: "Microsoft YaHei";
+    padding: 0 10px;
+    border: 1px solid #eaeaea;
+}
