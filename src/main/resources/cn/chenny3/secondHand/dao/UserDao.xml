@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.chenny3.secondHand.dao.UserDao">
+    <sql id="table">user</sql>
+
+
+    <update id="updateUser">
+        UPDATE
+        <include refid="table"/>
+        <set>
+            <if test="headUrl != null">
+                head_url=#{headUrl},
+            </if>
+            <if test="password != null">
+                password=#{password},
+            </if>
+            <if test="phone != null">
+                phone=#{phone},
+            </if>
+            <if test="qq != null">
+                qq=#{qq},
+            </if>
+            <if test="wechat != null">
+                wechat=#{wechat},
+            </if>
+            <if test="alipay != null">
+                alipay=#{alipay},
+            </if>
+            <if test="email != null">
+                email=#{email},
+            </if>
+            <if test="authenticateId > 0">
+                authenticate_id=#{authenticateId},
+            </if>
+             updated=#{updated}
+        </set>
+        WHERE id=#{id}
+    </update>
+
+
+</mapper>

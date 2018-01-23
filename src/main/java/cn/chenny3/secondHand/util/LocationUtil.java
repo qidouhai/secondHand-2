@@ -3,27 +3,26 @@ package cn.chenny3.secondHand.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
 
+@Component
 public class LocationUtil {
-    private static final OkHttpClient client = new OkHttpClient();
+    @Autowired
+    private OkHttpEngine okHttpEngine;
 
-    public static String getRealLocation(String ip) throws IOException {
+    public String getRealLocation(String ip) throws IOException {
         String address = null;
-        RequestBody formBody = new FormBody.Builder()
-                .add("ak", "kWEveobogqxAR2IkycfjIkMXgkUyuM21")
-                .add("ip", ip)
-                .add("coor", "gcj02")
-                .build();
-        Request request = new Request.Builder()
-                .url("http://api.map.baidu.com/location/ip")
-                .post(formBody)
-                .build();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("ak", "kWEveobogqxAR2IkycfjIkMXgkUyuM21");
+        params.put("ip", ip);
+        params.put("coor", "gcj02");
 
-        Response response = null;
+        Response response = okHttpEngine.syncPost("http://api.map.baidu.com/location/ip", params);
 
-        response = client.newCall(request).execute();
         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
         String content = response.body().string();
         ObjectMapper objectMapper = new ObjectMapper();

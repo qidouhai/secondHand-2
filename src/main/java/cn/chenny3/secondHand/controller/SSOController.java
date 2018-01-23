@@ -34,12 +34,10 @@ public class SSOController extends BaseController{
             //todo:跳转到信息完善页面
             user.setHeadUrl("img/avatar/c8eb62d426f146ed91e737c14bd1fb90.png");
             String randomStr= UUID.randomUUID().toString().replace("-","");
-            user.setStuId(randomStr.substring(0,10));
-            user.setDeptName("计算机学院");
-            user.setSubjectName("计算机科学与技术");
-            user.setQq(user.getStuId());
-            user.setWechat(user.getStuId());
-            user.setAlipay(user.getStuId());
+
+            user.setQq(randomStr.substring(0,10));
+            user.setWechat(user.getQq());
+            user.setAlipay(user.getQq());
 
             userService.addUser(user);
 

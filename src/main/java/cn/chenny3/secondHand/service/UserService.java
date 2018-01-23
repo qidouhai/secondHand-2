@@ -8,6 +8,8 @@ public interface UserService {
     User selectUser(int id);
     int selectCount(int status);
     int updateStatus(int id,int status);
-
+    int updateUser(User user);
     void deleteUser(int userId);
+
+    void updateAuthenticateStatus(User user);
 }

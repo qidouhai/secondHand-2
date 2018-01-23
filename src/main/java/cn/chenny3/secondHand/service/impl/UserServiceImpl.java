@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService{
         user.setSalt(salt);
         user.setPassword(SecondHandUtil.MD5(user.getPassword()+user.getSalt()));
         user.setStatus(1);
+        user.setAuthenticateId(0);
         user.setCreated(new Date());
         user.setUpdated(user.getCreated());
         return userDao.addUser(user);
@@ -42,7 +43,21 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public int updateUser(User user) {
+        user.setUpdated(new Date());
+        return userDao.updateUser(user);
+    }
+
+    @Override
     public void deleteUser(int userId) {
         userDao.updateStatus(userId,0);
+    }
+
+    @Override
+    public void updateAuthenticateStatus(User user) {
+        User temp = new User();
+        temp.setId(user.getId());
+        temp.setAuthenticateId(user.getAuthenticateId());
+        updateUser(temp);
     }
 }

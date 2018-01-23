@@ -1,22 +1,22 @@
 Drop table  IF EXISTS `user`;
-create table `user`(
-  id int auto_increment PRIMARY key,
-  name varchar(20) not null ,
-  head_url varchar(60),
-  password varchar(32) not null,
-  salt VARCHAR(32) not null,
-  stu_id varchar(11) UNIQUE ,
-  dept_name varchar(30) ,
-  subject_name varchar(20) ,
-  phone varchar(11) UNIQUE ,
-  qq varchar(10) UNIQUE,
-  wechat varchar(20) UNIQUE,
-  alipay varchar(20) UNIQUE,
-  email VARCHAR(30) UNIQUE not NULL ,
-  status int(1)  DEFAULT 1,
-  created datetime DEFAULT NULL COMMENT '创建时间',
-  updated datetime DEFAULT NULL COMMENT '修改时间'
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `head_url` varchar(60) DEFAULT NULL,
+  `password` varchar(32) NOT NULL,
+  `salt` varchar(32) NOT NULL,
+  `phone` varchar(11) DEFAULT NULL,
+  `qq` varchar(10) DEFAULT NULL,
+  `wechat` varchar(20) DEFAULT NULL,
+  `alipay` varchar(20) DEFAULT NULL,
+  `email` varchar(30) NOT NULL,
+  `authenticate_id` int(11) DEFAULT NULL COMMENT '认证id',
+  `status` int(1) DEFAULT '1',
+  `created` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
 
 Drop table if EXISTS `goods`;
 create TABLE `goods`(
@@ -90,3 +90,17 @@ CREATE TABLE `login_record` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE `user_authenticate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `stu_id` varchar(11) NOT NULL COMMENT '学号',
+  `name` varchar(10) NOT NULL COMMENT '真实姓名',
+  `sex` varchar(1) NOT NULL COMMENT '性别',
+  `school_name` varchar(15) NOT NULL COMMENT '高校名',
+  `dept_name` varchar(20) NOT NULL COMMENT '院部名',
+  `subject_name` varchar(20) NOT NULL COMMENT '专业名',
+  `class_name` varchar(20) NOT NULL COMMENT '班级名',
+  `register_year` int(4) NOT NULL COMMENT '注册时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `stu_id` (`stu_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

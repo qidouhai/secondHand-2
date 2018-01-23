@@ -11,17 +11,12 @@ public class User extends Base{
     private String password;
     private String salt;
     @NotNull
-    private String stuId;
-    @NotNull
-    private String deptName;
-    @NotNull
-    private String subjectName;
-    @NotNull
     private String phone;
     private String qq;
     private String wechat;
     private String alipay;
     private String email;
+    private int authenticateId;
     private Integer status;
 
     public int getId() {
@@ -64,30 +59,6 @@ public class User extends Base{
         this.salt = salt;
     }
 
-    public String getStuId() {
-        return stuId;
-    }
-
-    public void setStuId(String stuId) {
-        this.stuId = stuId;
-    }
-
-    public String getDeptName() {
-        return deptName;
-    }
-
-    public void setDeptName(String deptName) {
-        this.deptName = deptName;
-    }
-
-    public String getSubjectName() {
-        return subjectName;
-    }
-
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
-    }
-
     public String getPhone() {
         return phone;
     }
@@ -128,31 +99,19 @@ public class User extends Base{
         this.email = email;
     }
 
+    public int getAuthenticateId() {
+        return authenticateId;
+    }
+
+    public void setAuthenticateId(int authenticateId) {
+        this.authenticateId = authenticateId;
+    }
+
     public Integer getStatus() {
         return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", headUrl='" + headUrl + '\'' +
-                ", password='" + password + '\'' +
-                ", salt='" + salt + '\'' +
-                ", stuId='" + stuId + '\'' +
-                ", deptName='" + deptName + '\'' +
-                ", subjectName='" + subjectName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", qq='" + qq + '\'' +
-                ", wechat='" + wechat + '\'' +
-                ", alipay='" + alipay + '\'' +
-                ", email='" + email + '\'' +
-                ", status=" + status +
-                '}';
     }
 }

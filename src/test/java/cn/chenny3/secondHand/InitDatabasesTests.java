@@ -36,9 +36,7 @@ public class InitDatabasesTests {
         user.setPassword("sads");
         user.setSalt("dsdsds");
         user.setHeadUrl("headurl");
-        user.setStuId("14142400755");
-        user.setDeptName("计算机学院");
-        user.setSubjectName("计算机科学与技术");
+
         user.setAlipay("alipay");
         user.setWechat("wexin");
         user.setEmail("1017097573@qq.com");

@@ -15,12 +15,14 @@ import java.util.List;
 public class LoginRecordServiceImpl implements LoginRecordService{
     @Autowired
     private LoginRecordDao loginRecordDao;
+    @Autowired
+    private LocationUtil locationUtil;
     @Override
     public int addLoginRecord(LoginRecord loginRecord) {
         //通过ip地址获取真实地理位置
         String location="";
         try {
-             location = LocationUtil.getRealLocation(loginRecord.getIp());
+             location = locationUtil.getRealLocation(loginRecord.getIp());
         } catch (IOException e) {
             e.printStackTrace();
         }
