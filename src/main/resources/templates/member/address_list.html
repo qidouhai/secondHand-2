@@ -23,15 +23,8 @@
            cellpadding="0">
         <tbody>
         <tr>
-            <td colspan="2" style="font-size:14px; color:#ff4e00;">杨杨公司</td>
-        </tr>
-        <tr>
-            <td align="right" width="80">收货人姓名：</td>
-            <td>杨杨</td>
-        </tr>
-        <tr>
-            <td align="right">配送区域：</td>
-            <td>四川成都市武侯区三环以内</td>
+            <td align="right" width="100">收货人姓名：</td>
+            <td th:text="${vo.get('user').name}">杨杨</td>
         </tr>
         <tr>
             <td align="right">详细地址：</td>
@@ -39,20 +32,13 @@
         </tr>
         <tr>
             <td align="right">手机：</td>
-            <td>12345678998</td>
-        </tr>
-        <tr>
-            <td align="right">电话：</td>
-            <td>028-12345678</td>
+            <td th:text="${vo.get('user').phone}">12345678998</td>
         </tr>
         <tr>
             <td align="right">电子邮箱：</td>
-            <td>123456789@qq.com</td>
+            <td th:text="${vo.get('user').email}">123456789@qq.com</td>
         </tr>
-        <tr>
-            <td align="right">标志建筑：</td>
-            <td>世外桃源</td>
-        </tr>
+
         </tbody>
     </table>
 
@@ -64,10 +50,10 @@
 
 </div>
 
-<div class="mem_tit">
+<div class="mem_tit" th:remove="all">
     <a href="#"><img src="/images/member/add_ad.jpg"/></a>
 </div>
-<table border="0" class="add_tab center"  cellspacing="0" cellpadding="0">
+<table border="0" class="add_tab center"  cellspacing="0" cellpadding="0" th:remove="all">
     <tbody>
     <tr>
         <td width="135" align="right">配送地区</td>
@@ -145,7 +131,7 @@
     </tr>
     </tbody>
 </table>
-<p align="right" class="center" style="height: 25px;margin-top: 10px;">
+<p align="right" class="center" style="height: 25px;margin-top: 10px;" th:remove="all">
     <a href="#">删除</a>&nbsp; &nbsp; <a href="#" class="add_b">确认修改</a>
 </p>
 </body>

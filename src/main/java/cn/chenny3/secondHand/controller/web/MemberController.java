@@ -58,6 +58,22 @@ public class MemberController extends BaseController {
 
     }
 
+    @RequestMapping(value = "address_list", method = RequestMethod.GET)
+    public String addressList(Model model, HttpSession httpSession) {
+        User user = (User) httpSession.getAttribute("user");
+        if (user == null) {
+            return "login";
+        } else {
+
+            ViewObject viewObject = new ViewObject();
+            viewObject.put("user", user);
+            model.addAttribute("vo", viewObject);
+            return "member/address_list";
+        }
+
+    }
+
+
     @RequestMapping("ip")
     @ResponseBody
     public String getIp(HttpServletRequest request) {
