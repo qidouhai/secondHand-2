@@ -13,7 +13,7 @@
     <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
 </head>
-<body>
+<body th:with="isAuthenticate=${vo.get('user').authenticateId}">
 <div class="m_des">
     <table border="0" style="width:850px; line-height:22px;margin: 0 auto" cellspacing="0" cellpadding="0">
         <tbody>
@@ -22,17 +22,17 @@
             <td style="padding-left: 25px;">
                 <div class="m_user" th:text="${vo.get('user').name}">TRACY</div>
                 <p style="font-size: 12px;">
-                <div>等级：<span>实名用户</span></div>
+                <div>等级：<span th:text="${isAuthenticate &gt; 0?'认证用户':'未认证用户'}">实名用户</span></div>
                 <div th:if="${#arrays.length(vo.get('loginRecords')) &gt; 1}" style="overflow: hidden">
                     <div class="pull-left">上次登录时间:<span th:text="${#dates.format(vo.get('loginRecords')[1].loginTime, 'yyyy年MM月dd日 HH:mm:ss')}">2015-09-28 18:19:47</span></div>
                     <div class="pull-left" style="margin-left: 20px;">上次登录ip地址:<span th:text="${vo.get('loginRecords')[1].ip}+'('+${vo.get('loginRecords')[1].address}+')'">192.168.158.250</span></div>
                 </div>
                 <div style="overflow: hidden">
                     <div class="pull-left">本次登录时间:<span th:text="${#dates.format(vo.get('loginRecords')[0].loginTime, 'yyyy年MM月dd日 HH:mm:ss')}">2015-09-28 18:19:47</span></div>
-                    <div class="pull-left" style="margin-left: 20px;">本次登录ip地址:<span th:text="${vo.get('loginRecords')[1].ip}+'('+${vo.get('loginRecords')[0].address}+')'">192.168.158.250</span></div>
+                    <div class="pull-left" style="margin-left: 20px;">本次登录ip地址:<span th:text="${vo.get('loginRecords')[0].ip}+'('+${vo.get('loginRecords')[0].address}+')'">192.168.158.250</span></div>
                 </div>
                 <div>您还没有通过邮件认证 <a href="#" style="color:#ff4e00;">点此发送认证邮件</a></div>
-                <div>您还没有通过实名认证 <a href="#" style="color:#ff4e00;">点此关联身份信息</a></div>
+                <div th:if="${isAuthenticate eq 0}">您还没有通过实名认证 <a href="#" style="color:#ff4e00;"  data-toggle="modal" data-target="#authenticateModel">点此关联身份信息</a></div>
                 </p>
                 <div class="m_notice hidden">
                     用户中心公告！
@@ -59,32 +59,70 @@
 <table border="0" class="mon_tab" style="width:850px; line-height:22px;margin: 0 auto" cellspacing="0" cellpadding="0">
     <tbody>
     <tr>
-        <td>用户ID：<span style="color:#555555;" th:text="${vo.get('user').id}">12345678</span></td>
+        <td>用户ID：<span style="color:#555555;" th:text="${vo.get('user').id}" >12345678</span></td>
         <td>用户名：<span style="color:#555555;" th:text="${vo.get('user').name}">TRACY</span></td>
         <td>电子邮箱：<span style="color:#555555;" th:text="${vo.get('user').email}">1017097573@qq.com</span></td>
 
     </tr>
     <tr>
-        <td>学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<span style="color:#555555;" th:text="${vo.get('user').stuId}">1861111111</span></td>
-        <td>真实姓名：<span style="color:#555555;" th:text="${vo.get('user').name}">马化腾</span></td>
+        <td>学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').stuId:'未知'}">1861111111</span></td>
+        <td>真实姓名：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').name:'未知'}">马化腾</span></td>
     </tr>
     <tr>
-        <td>院&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系：<span style="color:#555555;" th:text="${vo.get('user').deptName}">计算机学院</span></td>
-        <td>专&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;业：<span style="color:#555555;" th:text="${vo.get('user').subjectName}">计算机科学与技术</span></td>
-        <td>级&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<span style="color:#555555;" >2014</span></td>
+        <td>院&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').deptName:'未知'}">计算机学院</span></td>
+        <td>专&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;业：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').subjectName:'未知'}">计算机科学与技术</span></td>
+        <td>级&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').registerYear:'未知'}" >2014</span></td>
     </tr>
     <tr>
         <td>联系电话：<span style="color:#555555;" th:text="${vo.get('user').phone}">15576064301</span></td>
         <td>宿舍住址：<span style="color:#555555;">湖南理工学院南院13栋</span></td>
         <td>注册时间：<span style="color:#555555;" th:text="${#dates.format(vo.get('user').created,'yyyy-MM-dd')}">2015-10-10</span></td>
-
     </tr>
     </tbody>
 </table>
+<div id="authenticateModel" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">信息门户真实身份确认</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="authenticateInfoInput" class="form-control" placeholder="请输入JESSIONID"/>
+                <div style="font-size: 12px;">
+                    <a href="#"  data-toggle="modal" data-target="#helpModel">阅读获取湖南理工学院信息门户网站JESSIONID教程</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="commitAuthenticateInfoBtn">提交认证信息</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="helpModel" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-lg" role="document" style="width: 780px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="helpModelLabel">帮助信息</h4>
+            </div>
+            <div class="modal-body">
+                <p>第一步：</p>
+                <img src="/images/tutorial/pic1.png" width="740"/>
+                <p>第二步：</p>
+                <img src="/images/tutorial/pic2.png" width="740"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">已清楚</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 
 <script src="/scripts/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/scripts/bootstrap.min.js"></script>
-
+<script src="/scripts/member/authenticate.js"></script>
 </html>
