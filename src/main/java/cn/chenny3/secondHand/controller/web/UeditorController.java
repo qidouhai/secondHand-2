@@ -1,6 +1,6 @@
 package cn.chenny3.secondHand.controller.web;
 
-import cn.chenny3.secondHand.util.UeditorUtil;
+import cn.chenny3.secondHand.commons.utils.UeditorUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

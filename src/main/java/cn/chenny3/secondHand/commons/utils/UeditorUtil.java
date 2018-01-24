@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.util;
+package cn.chenny3.secondHand.commons.utils;
 
 public class UeditorUtil {
     public static String config="{\n" +

@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.bean;
+package cn.chenny3.secondHand.commons.result;
 
 
 public class EasyResult {

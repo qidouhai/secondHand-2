@@ -1,7 +1,6 @@
 package cn.chenny3.secondHand.controller;
 
-import cn.chenny3.secondHand.bean.EasyResult;
-import cn.chenny3.secondHand.bean.ViewObject;
+import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package cn.chenny3.secondHand.controller.web;
 
-import cn.chenny3.secondHand.bean.ViewObject;
+import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.LoginRecord;
 import cn.chenny3.secondHand.model.User;

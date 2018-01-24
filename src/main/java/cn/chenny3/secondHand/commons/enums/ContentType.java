@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.bean;
+package cn.chenny3.secondHand.commons.enums;
 
 /**
  * Content 内容的类型

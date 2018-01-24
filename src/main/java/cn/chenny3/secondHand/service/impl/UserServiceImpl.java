@@ -3,7 +3,7 @@ package cn.chenny3.secondHand.service.impl;
 import cn.chenny3.secondHand.dao.UserDao;
 import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.service.UserService;
-import cn.chenny3.secondHand.util.SecondHandUtil;
+import cn.chenny3.secondHand.commons.utils.SecondHandUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

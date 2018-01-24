@@ -1,12 +1,10 @@
 package cn.chenny3.secondHand.controller.web;
 
-import cn.chenny3.secondHand.bean.ContentType;
-import cn.chenny3.secondHand.bean.PageHelper;
-import cn.chenny3.secondHand.bean.ViewObject;
+import cn.chenny3.secondHand.commons.enums.ContentType;
+import cn.chenny3.secondHand.commons.bean.PageHelper;
+import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.controller.BaseController;
-import cn.chenny3.secondHand.model.Category;
 import cn.chenny3.secondHand.model.Content;
-import cn.chenny3.secondHand.service.CategoryService;
 import cn.chenny3.secondHand.service.ContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

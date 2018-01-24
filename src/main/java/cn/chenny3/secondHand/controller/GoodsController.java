@@ -1,11 +1,10 @@
 package cn.chenny3.secondHand.controller;
 
-import cn.chenny3.secondHand.bean.EasyResult;
-import cn.chenny3.secondHand.bean.ViewObject;
+import cn.chenny3.secondHand.commons.result.EasyResult;
+import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.model.Category;
 import cn.chenny3.secondHand.model.Goods;
 import cn.chenny3.secondHand.model.User;
-import cn.chenny3.secondHand.service.CategoryService;
 import cn.chenny3.secondHand.service.GoodsService;
 import cn.chenny3.secondHand.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

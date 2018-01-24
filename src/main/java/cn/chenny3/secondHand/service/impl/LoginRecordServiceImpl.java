@@ -3,7 +3,7 @@ package cn.chenny3.secondHand.service.impl;
 import cn.chenny3.secondHand.dao.LoginRecordDao;
 import cn.chenny3.secondHand.model.LoginRecord;
 import cn.chenny3.secondHand.service.LoginRecordService;
-import cn.chenny3.secondHand.util.LocationUtil;
+import cn.chenny3.secondHand.commons.utils.LocationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

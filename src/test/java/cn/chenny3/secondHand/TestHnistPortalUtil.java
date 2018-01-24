@@ -1,17 +1,12 @@
 package cn.chenny3.secondHand;
 
 import cn.chenny3.secondHand.model.UserAuthenticate;
-import cn.chenny3.secondHand.util.HnistPortalUtil;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import okhttp3.*;
+import cn.chenny3.secondHand.commons.utils.HnistPortalUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.io.IOException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

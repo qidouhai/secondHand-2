@@ -1,10 +1,8 @@
 package cn.chenny3.secondHand.controller;
 
-import cn.chenny3.secondHand.bean.EasyResult;
+import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.model.Category;
 import cn.chenny3.secondHand.service.CategoryService;
-import cn.chenny3.secondHand.util.SecondHandUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;

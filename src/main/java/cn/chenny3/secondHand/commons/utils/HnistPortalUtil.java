@@ -1,7 +1,6 @@
-package cn.chenny3.secondHand.util;
+package cn.chenny3.secondHand.commons.utils;
 
 import cn.chenny3.secondHand.model.UserAuthenticate;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import okhttp3.Response;

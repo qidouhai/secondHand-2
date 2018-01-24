@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.util;
+package cn.chenny3.secondHand.commons.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

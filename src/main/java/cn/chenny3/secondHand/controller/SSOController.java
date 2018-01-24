@@ -1,13 +1,11 @@
 package cn.chenny3.secondHand.controller;
 
-import cn.chenny3.secondHand.bean.EasyResult;
-import cn.chenny3.secondHand.bean.ViewObject;
-import cn.chenny3.secondHand.model.Base;
+import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.model.LoginRecord;
 import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.service.LoginRecordService;
 import cn.chenny3.secondHand.service.UserService;
-import cn.chenny3.secondHand.util.SecondHandUtil;
+import cn.chenny3.secondHand.commons.utils.SecondHandUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
