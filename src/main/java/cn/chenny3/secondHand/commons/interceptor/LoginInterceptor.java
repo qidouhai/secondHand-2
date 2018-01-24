@@ -16,6 +16,13 @@ import javax.servlet.http.HttpSession;
 public class LoginInterceptor implements HandlerInterceptor{
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //todo:需改进
+        String requestURI = request.getRequestURI();
+        String method=request.getMethod();
+        if(requestURI.matches("/goods/[0-9]+")&&method.equalsIgnoreCase("get")){
+            return true;
+        }
+
         HttpSession session = request.getSession();
         User user= (User) session.getAttribute("user");
         //如果session中不存在用户会话信息
