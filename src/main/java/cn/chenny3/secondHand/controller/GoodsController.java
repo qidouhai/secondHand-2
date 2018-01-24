@@ -73,11 +73,11 @@ public class GoodsController extends BaseController{
                 owner.setPassword("");
                 owner.setSalt("");
 
-                ViewObject viewObject=new ViewObject();
-                viewObject.put("goods",goods);
-                viewObject.put("owner",owner);
-                viewObject.put("topCategory",categoryService.selectCategory(goods.getCategoryId()));
-                viewObject.put("tag",categoryService.selectCategory(goods.getSubCategoryId()));
+                ViewObject viewObject=new ViewObject().
+                        put("goods",goods).
+                        put("owner",owner).
+                        put("topCategory",categoryService.selectCategory(goods.getCategoryId())).
+                        put("tag",categoryService.selectCategory(goods.getSubCategoryId()));
                 model.addAttribute("vo",viewObject);
                 return "shop_detail";
             }

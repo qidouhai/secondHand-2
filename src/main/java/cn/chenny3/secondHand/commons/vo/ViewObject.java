@@ -11,8 +11,9 @@ public class ViewObject {
     private Map<String,Object> map=new HashMap<String,Object>();
 
 
-    public void put(String key, Object value){
+    public ViewObject put(String key, Object value){
         map.put(key,value);
+        return this;
     }
 
     public Object get(String key){

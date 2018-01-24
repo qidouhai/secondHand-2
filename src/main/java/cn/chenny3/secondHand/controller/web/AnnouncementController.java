@@ -40,9 +40,8 @@ public class AnnouncementController extends BaseController{
         PageHelper<Content> pageHelper = new PageHelper<>();
         pageHelper.setCurPage(curPage);
         pageHelper.setPageSize(pageSize);
-        ViewObject vo = new ViewObject();
-        vo.put("pageHelper",pageHelper);
-        model.addAttribute("vo",vo);
+
+        model.addAttribute("vo",new ViewObject().put("pageHelper",pageHelper));
 
 
         //查询内容数量
@@ -54,8 +53,6 @@ public class AnnouncementController extends BaseController{
         }
         List<Content> contents = contentService.selectContents(ContentType.ANNOUNCEMENT, curPage, pageSize);
         pageHelper.setContents(contents);
-
-
         return "article_list";
     }
 
@@ -65,9 +62,7 @@ public class AnnouncementController extends BaseController{
         if(announcement==null){
             return "redirect:/404.html";
         }
-        ViewObject vo = new ViewObject();
-        vo.put("announcement",announcement);
-        model.addAttribute("vo",vo);
+        model.addAttribute("vo",new ViewObject().put("announcement",announcement));
         return "article_detail";
     }
 }

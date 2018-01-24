@@ -29,24 +29,22 @@ public class IndexController extends BaseController{
 
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model){
-        ViewObject vo = new ViewObject();
-
         //查询banner
         List<Content> banners = contentService.selectContents(ContentType.BANNER, 1, 3);
-        vo.put("banners",banners);
         //查询官方公告
         List<Content> announcements = contentService.selectContents(ContentType.ANNOUNCEMENT, 1, 7);
-        vo.put("announcements",announcements);
         //todo:查询每个分类的标签、热门商品
-        List<Category> categories = categoryService.getNavCategories();
         List<ViewObject> floors=new ArrayList<ViewObject>();
-        for(Category category:categories){
+        for(Category category:categoryService.getNavCategories()){
             ViewObject floor = new ViewObject();
             floor.put("tags",categoryService.selectCategoriesByParentId(category.getId()));
             floor.put("goods",goodsService.selectHotGoodsList(category.getId(),9));
             floors.add(floor);
         }
-        vo.put("floors",floors);
+        ViewObject vo = new ViewObject().
+                put("banners",banners).
+                put("announcements",announcements).
+                put("floors",floors);
         model.addAttribute("vo",vo);
         return "index";
     }

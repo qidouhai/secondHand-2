@@ -33,7 +33,7 @@ public class MemberController extends BaseController {
     UserHolder userHolder;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String view(Model model) {
+    public String view() {
         return "member/member";
     }
 
@@ -44,16 +44,16 @@ public class MemberController extends BaseController {
         List<LoginRecord> loginRecords = loginRecordService.selectLastLoginRecord(user.getId());
         //获取当前用户的身份认证信息
         UserAuthenticate userAuthenticate = authenticateService.selectAuthenticate(user.getAuthenticateId());
-        ViewObject viewObject = new ViewObject();
-        viewObject.put("loginRecords", loginRecords);
-        viewObject.put("userAuthenticateInfo", userAuthenticate);
+        ViewObject viewObject = new ViewObject().
+                put("loginRecords", loginRecords).
+                put("userAuthenticateInfo", userAuthenticate);
         model.addAttribute("vo", viewObject);
         return "member/user";
 
     }
 
     @RequestMapping(value = "address_list", method = RequestMethod.GET)
-    public String addressList(Model model, HttpSession httpSession) {
+    public String addressList() {
         return "member/address_list";
     }
 
@@ -64,8 +64,5 @@ public class MemberController extends BaseController {
         return request.getRemoteAddr();
     }
 
-    @RequestMapping(value = "address_list")
-    public String addressList() {
-        return "member/address_list";
-    }
+
 }
