@@ -1,5 +1,6 @@
 package cn.chenny3.secondHand.controller;
 
+import cn.chenny3.secondHand.commons.bean.UserHolder;
 import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.model.Category;
@@ -26,6 +27,8 @@ public class GoodsController extends BaseController{
     private GoodsService goodsService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserHolder userHolder;
 
 
     @RequestMapping(value = "addView" ,method = RequestMethod.GET)
@@ -45,6 +48,7 @@ public class GoodsController extends BaseController{
             if(bindingResult.hasErrors()){
                 return new EasyResult(1,objectErrorsToString(bindingResult));
             }
+            goods.setOwnerId(userHolder.get().getId());
             goodsService.addGoods(goods);
             return new EasyResult(0,goods.getId());
         }catch (Exception e){

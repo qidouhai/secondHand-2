@@ -18,8 +18,6 @@ public class GoodsServiceImpl implements GoodsService{
     public int addGoods(Goods goods) {
         goods.setCreated(new Date());
         goods.setUpdated(goods.getCreated());
-        //todo 商品发布所属人 需补充
-        goods.setOwnerId(1);
         return goodsDao.addGoods(goods);
     }
 
