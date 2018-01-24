@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService{
         user.setPassword(SecondHandUtil.MD5(user.getPassword()+user.getSalt()));
         user.setStatus(1);
         user.setAuthenticateId(0);
+        user.setAddressId(0);
         user.setCreated(new Date());
         user.setUpdated(user.getCreated());
         return userDao.addUser(user);

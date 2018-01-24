@@ -16,6 +16,7 @@ public class User extends Base{
     private String wechat;
     private String alipay;
     private String email;
+    private int addressId;
     private int authenticateId;
     private Integer status;
 
@@ -105,6 +106,14 @@ public class User extends Base{
 
     public void setAuthenticateId(int authenticateId) {
         this.authenticateId = authenticateId;
+    }
+
+    public int getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
     public Integer getStatus() {

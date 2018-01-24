@@ -6,9 +6,9 @@ import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.LoginRecord;
 import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.model.UserAuthenticate;
+import cn.chenny3.secondHand.service.AddressService;
 import cn.chenny3.secondHand.service.LoginRecordService;
 import cn.chenny3.secondHand.service.UserAuthenticateService;
-import cn.chenny3.secondHand.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,8 +26,6 @@ public class MemberController extends BaseController {
     @Autowired
     private LoginRecordService loginRecordService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private UserAuthenticateService authenticateService;
     @Autowired
     UserHolder userHolder;
@@ -38,7 +36,7 @@ public class MemberController extends BaseController {
     }
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
-    public String userInfo(Model model, HttpSession httpSession) {
+    public String userInfo(Model model) {
         User user = userHolder.get();
         //获取当前用户上次和本次的登陆记录
         List<LoginRecord> loginRecords = loginRecordService.selectLastLoginRecord(user.getId());
@@ -52,10 +50,6 @@ public class MemberController extends BaseController {
 
     }
 
-    @RequestMapping(value = "address_list", method = RequestMethod.GET)
-    public String addressList() {
-        return "member/address_list";
-    }
 
 
     @RequestMapping("ip")

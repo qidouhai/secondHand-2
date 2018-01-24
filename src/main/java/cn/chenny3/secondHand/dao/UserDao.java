@@ -10,10 +10,10 @@ import org.apache.ibatis.annotations.*;
 public interface UserDao {
 
     String TABLE_NAME="user";
-    String INSERT_FIEDS="name,head_url,password,salt,phone,qq,wechat,alipay,email,authenticate_id,status,created,updated";
+    String INSERT_FIEDS="name,head_url,password,salt,phone,qq,wechat,alipay,email,authenticate_id,address_id,status,created,updated";
     String SELECT_FIEDS="id,"+INSERT_FIEDS;
 
-    @Insert({"insert into ",TABLE_NAME," ( ",INSERT_FIEDS," ) ","values ( #{name},#{headUrl},#{password},#{salt},#{phone},#{qq},#{wechat},#{alipay},#{email},#{authenticateId},#{status},#{created},#{updated} )"})
+    @Insert({"insert into ",TABLE_NAME," ( ",INSERT_FIEDS," ) ","values ( #{name},#{headUrl},#{password},#{salt},#{phone},#{qq},#{wechat},#{alipay},#{email},#{authenticateId},#{addressId},#{status},#{created},#{updated} )"})
     @Options(keyProperty="id",keyColumn="id",useGeneratedKeys=true)
     int addUser(User user);
     @Select({"select ",SELECT_FIEDS," from ",TABLE_NAME," where id = #{id} and status = 1"})

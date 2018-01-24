@@ -33,6 +33,9 @@
             <if test="authenticateId > 0">
                 authenticate_id=#{authenticateId},
             </if>
+            <if test="addressId > 0">
+                address_id=#{addressId},
+            </if>
              updated=#{updated}
         </set>
         WHERE id=#{id}

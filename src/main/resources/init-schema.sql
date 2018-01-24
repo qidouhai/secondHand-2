@@ -18,6 +18,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 
+
 Drop table if EXISTS `goods`;
 create TABLE `goods`(
   id int AUTO_INCREMENT PRIMARY KEY ,
@@ -81,6 +82,7 @@ CREATE TABLE `comment`(
   updated datetime DEFAULT NULL COMMENT '修改时间'
 );
 
+Drop table if EXISTS `login_record`;
 CREATE TABLE `login_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -90,7 +92,7 @@ CREATE TABLE `login_record` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-
+Drop table if EXISTS `user_authenticate`;
 CREATE TABLE `user_authenticate` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `stu_id` varchar(11) NOT NULL COMMENT '学号',
@@ -104,3 +106,16 @@ CREATE TABLE `user_authenticate` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `stu_id` (`stu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+Drop table if EXISTS `address`;
+CREATE TABLE `address` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `area` varchar(20) NOT NULL COMMENT '区域',
+  `hostel_id` varchar(20) NOT NULL COMMENT '宿舍栋号',
+  `house_id` int(11) NOT NULL COMMENT '门牌号',
+  `status` int(11) DEFAULT '1',
+  `created` datetime NOT NULL,
+  `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+

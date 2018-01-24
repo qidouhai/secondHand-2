@@ -3,8 +3,10 @@ package cn.chenny3.secondHand.controller;
 import cn.chenny3.secondHand.commons.bean.UserHolder;
 import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.commons.vo.ViewObject;
+import cn.chenny3.secondHand.model.Address;
 import cn.chenny3.secondHand.model.Goods;
 import cn.chenny3.secondHand.model.User;
+import cn.chenny3.secondHand.service.AddressService;
 import cn.chenny3.secondHand.service.CategoryService;
 import cn.chenny3.secondHand.service.GoodsService;
 import cn.chenny3.secondHand.service.UserService;
@@ -30,6 +32,8 @@ public class GoodsController extends BaseController{
     private UserHolder userHolder;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private AddressService addressService;
 
     @RequestMapping(value = "addView" ,method = RequestMethod.GET)
     public String addView(Model model){
@@ -70,10 +74,13 @@ public class GoodsController extends BaseController{
                 //抹掉安全相关信息
                 owner.setPassword("");
                 owner.setSalt("");
+                //查询商品归属人地址信息
+                Address address = addressService.select(owner.getAddressId());
 
                 ViewObject viewObject=new ViewObject().
                         put("goods",goods).
                         put("owner",owner).
+                        put("address",address).
                         put("topCategory",categoryService.selectCategory(goods.getCategoryId())).
                         put("tag",categoryService.selectCategory(goods.getSubCategoryId()));
                 model.addAttribute("vo",viewObject);

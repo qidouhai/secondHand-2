@@ -30,7 +30,7 @@ public class UserAuthenticateController extends BaseController{
 
     @RequestMapping(value = "member/authenticate",method = RequestMethod.POST)
     @ResponseBody
-    public EasyResult authenticate(@RequestParam("jsessionId")String hnistJsessionId, HttpSession httpSession){
+    public EasyResult authenticate(@RequestParam("jsessionId")String hnistJsessionId){
         try {
             User user= userHolder.get();
             if (user.getAuthenticateId()>0) {

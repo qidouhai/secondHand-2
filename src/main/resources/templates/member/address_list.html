@@ -28,7 +28,12 @@
         </tr>
         <tr>
             <td align="right">详细地址：</td>
-            <td>科华北路66号世外桃源写字楼3楼</td>
+            <td th:with="address=${vo.get('address')}">
+                <span>湖南理工学院</span>
+                <span th:text="${address.area}">南院</span>
+                <span th:text="${address.hostelId}">13</span>栋
+                <span th:text="${address.houseId}">204</span>
+            </td>
         </tr>
         <tr>
             <td align="right">手机：</td>

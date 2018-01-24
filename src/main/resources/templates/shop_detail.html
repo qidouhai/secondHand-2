@@ -103,8 +103,12 @@
                 <s th:if="${vo.get('goods').bargain } eq 0">可讲价</s>
                 <span th:if="${vo.get('goods').bargain}  eq 1">可讲价</span>
             </div>
-            <div class="postion">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>湖南理工学院南院13栋
+            <div class="postion" th:with="address=${vo.get('address')}">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>湖南理工学院</span>
+                <span th:text="${address.area}">南院</span>
+                <span th:text="${address.hostelId}">13</span>栋
+                <span th:text="${address.houseId}">204</span>
             </div>
             <div class="seller-info">>&nbsp;卖家信息</div>
             <div class="contact">
