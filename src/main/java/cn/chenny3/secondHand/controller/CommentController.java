@@ -1,7 +1,7 @@
 package cn.chenny3.secondHand.controller;
 
-import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.commons.enums.EntityType;
+import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.model.Comment;
 import cn.chenny3.secondHand.service.CommentService;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 
 import java.util.*;
 

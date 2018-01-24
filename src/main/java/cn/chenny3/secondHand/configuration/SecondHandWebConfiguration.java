@@ -5,7 +5,6 @@ import cn.chenny3.secondHand.commons.interceptor.PassportInterceptor;
 import cn.chenny3.secondHand.commons.interceptor.ViewInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 @Configuration

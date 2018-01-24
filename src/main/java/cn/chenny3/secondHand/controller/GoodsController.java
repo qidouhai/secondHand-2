@@ -3,7 +3,6 @@ package cn.chenny3.secondHand.controller;
 import cn.chenny3.secondHand.commons.bean.UserHolder;
 import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.commons.vo.ViewObject;
-import cn.chenny3.secondHand.model.Category;
 import cn.chenny3.secondHand.model.Goods;
 import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.service.CategoryService;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("goods")

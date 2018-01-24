@@ -1,11 +1,14 @@
 package cn.chenny3.secondHand.controller;
 
 import cn.chenny3.secondHand.commons.result.EasyResult;
-import cn.chenny3.secondHand.service.OSSService;
 import cn.chenny3.secondHand.commons.utils.UeditorUtil;
+import cn.chenny3.secondHand.service.OSSService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 

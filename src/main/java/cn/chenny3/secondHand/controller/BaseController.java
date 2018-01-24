@@ -1,15 +1,9 @@
 package cn.chenny3.secondHand.controller;
 
-import cn.chenny3.secondHand.model.Category;
-import cn.chenny3.secondHand.service.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-
-import java.util.List;
 
 public abstract class BaseController {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
