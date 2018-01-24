@@ -6,6 +6,7 @@ import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.model.Category;
 import cn.chenny3.secondHand.model.Goods;
 import cn.chenny3.secondHand.model.User;
+import cn.chenny3.secondHand.service.CategoryService;
 import cn.chenny3.secondHand.service.GoodsService;
 import cn.chenny3.secondHand.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,11 @@ public class GoodsController extends BaseController{
     private UserService userService;
     @Autowired
     private UserHolder userHolder;
-
+    @Autowired
+    private CategoryService categoryService;
 
     @RequestMapping(value = "addView" ,method = RequestMethod.GET)
     public String addView(Model model){
-        ViewObject vo=new ViewObject();
-        List<Category> categories = categoryService.selectCategoriesByParentId(0);
-        vo.put("categories",categories);
-        model.addAttribute("vo",vo);
         return "addGoods";
     }
 
@@ -80,7 +78,6 @@ public class GoodsController extends BaseController{
                 viewObject.put("owner",owner);
                 viewObject.put("topCategory",categoryService.selectCategory(goods.getCategoryId()));
                 viewObject.put("tag",categoryService.selectCategory(goods.getSubCategoryId()));
-                viewObject.put("categories",getNavCategories());
                 model.addAttribute("vo",viewObject);
                 return "shop_detail";
             }

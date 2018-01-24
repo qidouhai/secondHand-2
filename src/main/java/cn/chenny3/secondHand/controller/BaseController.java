@@ -14,8 +14,6 @@ import java.util.List;
 public abstract class BaseController {
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    protected CategoryService categoryService;
 
     public String objectErrorsToString(BindingResult bindingResult) {
 
@@ -29,9 +27,4 @@ public abstract class BaseController {
         return stringBuilder.toString();
 
     }
-
-    public List<Category> getNavCategories(){
-        return categoryService.selectCategoriesByParentId(0);
-    }
-
 }

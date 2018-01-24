@@ -5,6 +5,7 @@ import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.Category;
 import cn.chenny3.secondHand.model.Content;
+import cn.chenny3.secondHand.service.CategoryService;
 import cn.chenny3.secondHand.service.ContentService;
 import cn.chenny3.secondHand.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +24,21 @@ public class IndexController extends BaseController{
     private GoodsService goodsService;
     @Autowired
     private ContentService contentService;
+    @Autowired
+    private CategoryService categoryService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model){
         ViewObject vo = new ViewObject();
-        List<Category> categories = categoryService.selectCategoriesByParentId(0);
-        vo.put("categories",getNavCategories());
+
         //查询banner
         List<Content> banners = contentService.selectContents(ContentType.BANNER, 1, 3);
         vo.put("banners",banners);
         //查询官方公告
         List<Content> announcements = contentService.selectContents(ContentType.ANNOUNCEMENT, 1, 7);
         vo.put("announcements",announcements);
+        //todo:查询每个分类的标签、热门商品
+        List<Category> categories = categoryService.getNavCategories();
         List<ViewObject> floors=new ArrayList<ViewObject>();
         for(Category category:categories){
             ViewObject floor = new ViewObject();

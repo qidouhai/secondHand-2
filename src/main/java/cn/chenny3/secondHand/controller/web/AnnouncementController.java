@@ -44,8 +44,7 @@ public class AnnouncementController extends BaseController{
         vo.put("pageHelper",pageHelper);
         model.addAttribute("vo",vo);
 
-        //头部导航
-        vo.put("categories",getNavCategories());
+
         //查询内容数量
         int count = contentService.selectCount(ContentType.ANNOUNCEMENT);
         pageHelper.setCount(count);
@@ -62,14 +61,11 @@ public class AnnouncementController extends BaseController{
 
     @RequestMapping("announcement/{id}")
     public String detail(@PathVariable int id, Model model){
-        ViewObject vo = new ViewObject();
-        //头部导航
-        vo.put("categories",getNavCategories());
-
         Content announcement = contentService.selectContent(id);
         if(announcement==null){
             return "redirect:/404.html";
         }
+        ViewObject vo = new ViewObject();
         vo.put("announcement",announcement);
         model.addAttribute("vo",vo);
         return "article_detail";

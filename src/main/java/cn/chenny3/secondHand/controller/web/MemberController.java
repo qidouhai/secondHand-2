@@ -34,9 +34,6 @@ public class MemberController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model) {
-        ViewObject viewObject = new ViewObject();
-        viewObject.put("categories", categoryService.selectCategoriesByParentId(0));
-        model.addAttribute("vo", viewObject);
         return "member/member";
     }
 

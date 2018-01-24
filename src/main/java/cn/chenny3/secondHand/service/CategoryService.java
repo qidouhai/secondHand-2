@@ -9,4 +9,5 @@ public interface CategoryService {
     int selectCount(int status);
     int updateStatus(int id,int status);
     List<Category> selectCategoriesByParentId(int parentId);
+    List<Category> getNavCategories();
 }
