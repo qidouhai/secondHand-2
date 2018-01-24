@@ -1,6 +1,7 @@
 package cn.chenny3.secondHand.commons.interceptor;
 
 import cn.chenny3.secondHand.commons.bean.UserHolder;
+import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * 作用:
@@ -35,7 +37,13 @@ public class PassportInterceptor implements HandlerInterceptor{
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         if(modelAndView!=null&&userHolder.get()!=null){
-            modelAndView.addObject("user",userHolder.get());
+            Map<String, Object> model = modelAndView.getModel();
+            ViewObject vo = (ViewObject) model.get("vo");
+            if (vo == null) {
+                vo = new ViewObject();
+            }
+            vo.put("user",userHolder.get());
+            model.put("vo",vo);
         }
     }
 
