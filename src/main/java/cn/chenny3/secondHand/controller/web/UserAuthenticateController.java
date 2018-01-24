@@ -1,5 +1,6 @@
 package cn.chenny3.secondHand.controller.web;
 
+import cn.chenny3.secondHand.commons.bean.UserHolder;
 import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.User;
@@ -24,15 +25,14 @@ public class UserAuthenticateController extends BaseController{
     private HnistPortalUtil hnistPortalUtil;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserHolder userHolder;
 
     @RequestMapping(value = "member/authenticate",method = RequestMethod.POST)
     @ResponseBody
     public EasyResult authenticate(@RequestParam("jsessionId")String hnistJsessionId, HttpSession httpSession){
         try {
-            User user= (User) httpSession.getAttribute("user");
-            if (user == null) {
-                return new EasyResult(1,"请先登录后认证");
-            }
+            User user= userHolder.get();
             if (user.getAuthenticateId()>0) {
                 return new EasyResult(1,"用户已认证，无需操作");
             }

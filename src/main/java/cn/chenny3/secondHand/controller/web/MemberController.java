@@ -1,5 +1,6 @@
 package cn.chenny3.secondHand.controller.web;
 
+import cn.chenny3.secondHand.commons.bean.UserHolder;
 import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.LoginRecord;
@@ -28,6 +29,8 @@ public class MemberController extends BaseController {
     private UserService userService;
     @Autowired
     private UserAuthenticateService authenticateService;
+    @Autowired
+    UserHolder userHolder;
 
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model) {
@@ -39,38 +42,22 @@ public class MemberController extends BaseController {
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public String userInfo(Model model, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        if (user == null) {
-            return "login";
-        } else {
-            int userId = user.getId();
-            //获取当前用户上次和本次的登陆记录
-            List<LoginRecord> loginRecords = loginRecordService.selectLastLoginRecord(userId);
-            //获取当前用户的身份认证信息
-            UserAuthenticate userAuthenticate = authenticateService.selectAuthenticate(user.getAuthenticateId());
-            ViewObject viewObject = new ViewObject();
-            viewObject.put("loginRecords", loginRecords);
-            viewObject.put("user", user);
-            viewObject.put("userAuthenticateInfo", userAuthenticate);
-            model.addAttribute("vo", viewObject);
-            return "member/user";
-        }
+        User user = userHolder.get();
+        //获取当前用户上次和本次的登陆记录
+        List<LoginRecord> loginRecords = loginRecordService.selectLastLoginRecord(user.getId());
+        //获取当前用户的身份认证信息
+        UserAuthenticate userAuthenticate = authenticateService.selectAuthenticate(user.getAuthenticateId());
+        ViewObject viewObject = new ViewObject();
+        viewObject.put("loginRecords", loginRecords);
+        viewObject.put("userAuthenticateInfo", userAuthenticate);
+        model.addAttribute("vo", viewObject);
+        return "member/user";
 
     }
 
     @RequestMapping(value = "address_list", method = RequestMethod.GET)
     public String addressList(Model model, HttpSession httpSession) {
-        User user = (User) httpSession.getAttribute("user");
-        if (user == null) {
-            return "login";
-        } else {
-
-            ViewObject viewObject = new ViewObject();
-            viewObject.put("user", user);
-            model.addAttribute("vo", viewObject);
-            return "member/address_list";
-        }
-
+        return "member/address_list";
     }
 
 
