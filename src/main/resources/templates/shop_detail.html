@@ -96,6 +96,7 @@
             <input type="hidden" id="entityId" th:value="${vo.get('goods').id}"/>
             <input type="hidden" id="entityType" value="1"/>
             <input type="hidden" id="userId" th:value="${vo.get('owner').id}"/>
+            <input type="hidden" id="isLogin" th:value="${vo.get('user') ne null}"/>
             <div class="name"><span th:text="${vo.get('goods').goodsName}">联想笔记本电脑</span>
                 <div class="sell_out">已出售</div>
             </div>
@@ -131,7 +132,7 @@
             <div class="util">
                 <ul>
                     <li>
-                        <a href="#" th:href="${vo.get('goods').id}">
+                        <a href="javascript:void(0)" onclick="requiredLogin()">
                             <img src="/images/util/share.png" alt="分享"/>
                             <span>分享</span>
                         </a>
@@ -140,7 +141,7 @@
                         <a href="javascript:void(0)" onclick="collect(this)">
                             <img th:src="${vo.get('user') eq null?'/images/util/un_collect.png': collectFlag?'/images/util/collect.png':'/images/util/un_collect.png'}"
                                  src="/images/util/un_collect.png" alt="收藏/取消收藏"/>
-                            <span th:if="${vo.get('user') eq null}" onclick="alert('请先登录')">收藏</span>
+                            <span th:if="${vo.get('user') eq null}">收藏</span>
                             <span th:if="${vo.get('user') ne null}" th:text="${collectFlag?'取消收藏':'收藏'}">收藏</span>
                         </a>
                         <input type="hidden" th:value="${collectFlag}" id="collectFlag"/>
@@ -149,7 +150,7 @@
                         <a href="javascript:void(0)" onclick="hot(this)">
                             <img th:src="${vo.get('user') eq null?'/images/util/un_top.png': hotFlag ? '/images/util/top.png':'/images/util/un_top.png'}"
                                  src="/images/util/un_top.png" alt="点赞/取消点赞"/>
-                            <span th:if="${vo.get('user') eq null}" onclick="alert('请先登录')">点赞</span>
+                            <span th:if="${vo.get('user') eq null}">点赞</span>
                             <span th:if="${vo.get('user') ne null}" th:text="${hotFlag?'取消点赞':'点赞'}">点赞</span>
                         </a>
                         <input type="hidden" th:value="${hotFlag}" id="hotFlag"/>
@@ -241,83 +242,95 @@
 <script type="text/javascript" src="/scripts/jquery.flexText.js"></script>
 <script type="text/javascript" src="/scripts/comment.js"></script>
 <script>
-    //初始化评论
+
     $(function () {
+        //初始化评论
         initCommentData();
+
     });
 
     //收藏代码
     function collect(obj) {
-        var url="/goods/collect/"+$('#entityId').val();
-       if($('#collectFlag').val()=='true'){//取消收藏
-           $.ajax({
-               'url':url,
-               'type':"delete",
-               'dataType':'json',
-               'success':function (result) {
-                    if(result.code==0){//成功
+        if($('#isLogin').val()=='false'){
+            requiredLogin();
+        }
+        var url = "/goods/collect/" + $('#entityId').val();
+        if ($('#collectFlag').val() == 'true') {//取消收藏
+            $.ajax({
+                'url': url,
+                'type': "delete",
+                'dataType': 'json',
+                'success': function (result) {
+                    if (result.code == 0) {//成功
                         //修改标志
                         $('#collectFlag').val('false');
                         //修改文字
                         $($(obj).find('span')[0]).text('收藏');
                         //修改图片
-                        $($(obj).find('img')[0]).attr('src','/images/util/un_collect.png');
-                    }else{
+                        $($(obj).find('img')[0]).attr('src', '/images/util/un_collect.png');
+                    } else {
                         alert(result.msg);
                     }
-               }
-           });
-       }else{ //收藏
-           $.post(url,null,function (result) {
-               if(result.code==0){//成功
-                   //修改标志
-                   $('#collectFlag').val('true');
-                   //修改文字
-                   $($(obj).find('span')[0]).text('取消收藏');
-                   //修改图片
-                   $($(obj).find('img')[0]).attr('src','/images/util/collect.png');
-               }else{
-                   alert(result.msg);
-               }
-           },'json');
-       }
+                }
+            });
+        } else { //收藏
+            $.post(url, null, function (result) {
+                if (result.code == 0) {//成功
+                    //修改标志
+                    $('#collectFlag').val('true');
+                    //修改文字
+                    $($(obj).find('span')[0]).text('取消收藏');
+                    //修改图片
+                    $($(obj).find('img')[0]).attr('src', '/images/util/collect.png');
+                } else {
+                    alert(result.msg);
+                }
+            }, 'json');
+        }
     }
 
     //点赞代码
     function hot(obj) {
-        var url="/goods/hot/"+$('#entityId').val();
-        if($('#hotFlag').val()=='true'){//取消代码
+        if($('#isLogin').val()=='false'){
+            requiredLogin();
+        }
+        var url = "/goods/hot/" + $('#entityId').val();
+        if ($('#hotFlag').val() == 'true') {//取消代码
             $.ajax({
-                'url':url,
-                'type':"delete",
-                'dataType':'json',
-                'success':function (result) {
-                    if(result.code==0){//成功
+                'url': url,
+                'type': "delete",
+                'dataType': 'json',
+                'success': function (result) {
+                    if (result.code == 0) {//成功
                         //修改标志
                         $('#hotFlag').val('false');
                         //修改文字
                         $($(obj).find('span')[0]).text('点赞');
                         //修改图片
-                        $($(obj).find('img')[0]).attr('src','/images/util/un_top.png');
-                    }else{
+                        $($(obj).find('img')[0]).attr('src', '/images/util/un_top.png');
+                    } else {
                         alert(result.msg);
                     }
                 }
             });
-        }else{ //代码
-            $.post(url,null,function (result) {
-                if(result.code==0){//成功
+        } else { //代码
+            $.post(url, null, function (result) {
+                if (result.code == 0) {//成功
                     //修改标志
                     $('#hotFlag').val('true');
                     //修改文字
                     $($(obj).find('span')[0]).text('取消点赞');
                     //修改图片
-                    $($(obj).find('img')[0]).attr('src','/images/util/top.png');
-                }else{
+                    $($(obj).find('img')[0]).attr('src', '/images/util/top.png');
+                } else {
                     alert(result.msg);
                 }
-            },'json');
+            }, 'json');
         }
+    }
+
+    function requiredLogin() {
+        alert('请先登录');
     }
 </script>
 </body>
