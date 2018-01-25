@@ -38,7 +38,7 @@ public class PageHelper<T> {
     }
 
     public int getNext() {
-        return curPage<getLast()?curPage+1:last;
+        return curPage<getLast()?curPage+1:getLast();
     }
 
     public void setNext(int next) {

@@ -88,4 +88,8 @@ public class RedisAdapter {
     public Long zrem(String key,String... member){
         return getOpsForZSet().remove(key,member);
     }
+
+    public Long zrank(String key,String memeber){
+        return getOpsForZSet().rank(key,memeber);
+    }
 }

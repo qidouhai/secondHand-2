@@ -1,15 +1,14 @@
 package cn.chenny3.secondHand.controller.web;
 
+import cn.chenny3.secondHand.commons.bean.PageHelper;
 import cn.chenny3.secondHand.commons.bean.UserHolder;
+import cn.chenny3.secondHand.commons.enums.ContentType;
 import cn.chenny3.secondHand.commons.result.EasyResult;
 import cn.chenny3.secondHand.commons.utils.RedisAdapter;
 import cn.chenny3.secondHand.commons.utils.RedisKeyUtil;
 import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.controller.BaseController;
-import cn.chenny3.secondHand.model.Goods;
-import cn.chenny3.secondHand.model.LoginRecord;
-import cn.chenny3.secondHand.model.User;
-import cn.chenny3.secondHand.model.UserAuthenticate;
+import cn.chenny3.secondHand.model.*;
 import cn.chenny3.secondHand.service.AddressService;
 import cn.chenny3.secondHand.service.GoodsService;
 import cn.chenny3.secondHand.service.LoginRecordService;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,117 +60,51 @@ public class MemberController extends BaseController {
         return "member/user";
 
     }
-    @RequestMapping(value = "/collect/{goodsId}", method = RequestMethod.POST)
-    @ResponseBody
-    public EasyResult collect(@PathVariable("goodsId") int goodsId) {
-        try {
-            String userCollectKey = RedisKeyUtil.getUserCollectKey(userHolder.get().getId());
-            String goodsCollectKey = RedisKeyUtil.getGoodsCollectKey(goodsId);
-            if (redisAdapter.sIsMember(userCollectKey, String.valueOf(goodsId))) {
-                return new EasyResult(1, "不能重复收藏同一件商品");
-            }
-            //增加收藏量
-            redisAdapter.incr(goodsCollectKey);
-            goodsService.updateCollectNum(goodsId, 1);
-            //保存当前用户的收藏记录
-            redisAdapter.sadd(
-                    userCollectKey,
-                    String.valueOf(goodsId)
-            );
-            return new EasyResult(0, "收藏成功");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new EasyResult(1, "收藏失败");
-        }
-    }
 
-    @RequestMapping(value = "/collect/{goodsId}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public EasyResult cancalCollect(@PathVariable("goodsId") int goodsId) {
-        try {
-            String userCollectKey = RedisKeyUtil.getUserCollectKey(userHolder.get().getId());
-            String goodsCollectKey = RedisKeyUtil.getGoodsCollectKey(goodsId);
-            if (!redisAdapter.sIsMember(userCollectKey, String.valueOf(goodsId))) {
-                return new EasyResult(1, "不能取消收藏没有收藏过的商品");
-            }
-            //减少收藏量
-            redisAdapter.decr(goodsCollectKey);
-            goodsService.updateCollectNum(goodsId, -1);
-            //保存当前用户的收藏记录
-            redisAdapter.srem(
-                    userCollectKey,
-                    String.valueOf(goodsId)
-            );
-            return new EasyResult(0, "取消收藏成功");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new EasyResult(1, "取消收藏失败");
+    @RequestMapping(value = {"collect", "collect/{curPage}", "collect/{curPage}/{pageSize}"}, method = RequestMethod.GET)
+    public String mycollect(@PathVariable(required = false) Integer curPage,
+                            @PathVariable(required = false) Integer pageSize,
+                            Model model) {
+        //当前页，页大小初始化
+        if (curPage == null) {
+            curPage = 1;
         }
-    }
+        if (pageSize == null) {
+            pageSize = 8;
+        }
+        //值检测
+        if (curPage <= 0 || pageSize <= 0) {
+            return "redirect:/404.html";
+        }
 
-    @RequestMapping(value = "/hot/{goodsId}", method = RequestMethod.POST)
-    @ResponseBody
-    public EasyResult hot(@PathVariable("goodsId") int goodsId) {
-        try {
-            String userHotKey = RedisKeyUtil.getUserHotKey(userHolder.get().getId());
-            String goodsHotKey = RedisKeyUtil.getGoodsHotKey(goodsId);
-            if (redisAdapter.sIsMember(userHotKey, String.valueOf(goodsId))) {
-                return new EasyResult(1, "不能重复点赞同一件商品");
-            }
-            //增加点赞量
-            redisAdapter.incr(goodsHotKey);
-            goodsService.updateHotNum(goodsId, 1);
-            //保存当前用户的点赞记录
-            redisAdapter.sadd(
-                    userHotKey,
-                    String.valueOf(goodsId)
-            );
-            return new EasyResult(0, "点赞成功");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new EasyResult(1, "点赞失败");
-        }
-    }
+        //模型数据初始化
+        PageHelper<Goods> pageHelper = new PageHelper<>();
+        pageHelper.setCurPage(curPage);
+        pageHelper.setPageSize(pageSize);
+        model.addAttribute("vo",new ViewObject().put("pageHelper",pageHelper));
 
-    @RequestMapping(value = "/hot/{goodsId}", method = RequestMethod.DELETE)
-    @ResponseBody
-    public EasyResult cancalHot(@PathVariable("goodsId") int goodsId) {
-        try {
-            String userHotKey = RedisKeyUtil.getUserHotKey(userHolder.get().getId());
-            String goodsHotKey = RedisKeyUtil.getGoodsHotKey(goodsId);
-            if (!redisAdapter.sIsMember(userHotKey, String.valueOf(goodsId))) {
-                return new EasyResult(1, "不能取消点赞没有点赞过的商品");
-            }
-            //增加点赞量
-            redisAdapter.decr(goodsHotKey);
-            goodsService.updateHotNum(goodsId, -1);
-            //保存当前用户的点赞记录
-            redisAdapter.srem(
-                    userHotKey,
-                    String.valueOf(goodsId)
-            );
-            return new EasyResult(0, "取消点赞成功");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new EasyResult(1, "取消点赞失败");
-        }
-    }
-    @RequestMapping(value = "collect", method = RequestMethod.GET)
-    public String mycollect(Model model) {
+        //查询出我的收藏中所有商品的id，并按时间倒序排序
         String userCollectKey = RedisKeyUtil.getUserCollectKey(userHolder.get().getId());
-        String[] arr =redisAdapter.scard(userCollectKey).toArray(new String[0]);
-
+        String[] arr = redisAdapter.zrevrange(userCollectKey, 0, -1).toArray(new String[0]);
+        //数组为空，直接跳到页面
         if (arr == null || arr.length == 0) {
             return "member/collect";
         }
-        Integer[] goodsIds = new Integer[arr.length];
-        //类型转换
-        for(int i=0;i<arr.length;i++){
-            goodsIds[i]=Integer.valueOf(arr[i]);
+
+        //查询内容数量
+        int count = arr.length;
+        pageHelper.setCount(count);
+
+        //计算起始量
+        int start=(curPage-1)*pageSize;
+        //查询当前页的所有商品数据
+        List<Goods> goodsList = new ArrayList<>();
+        for (int i = start; i < count&&i<(start+pageSize); i++) {
+            goodsList.add(goodsService.selectGoods(Integer.valueOf(arr[i])));
         }
-        List<Goods> goodsList = goodsService.selectGoodsList(goodsIds);
-        ViewObject viewObject=new ViewObject().put("goodsList",goodsList);
-        model.addAttribute("vo",viewObject);
+
+        pageHelper.setContents(goodsList);
+
         return "member/collect";
     }
 

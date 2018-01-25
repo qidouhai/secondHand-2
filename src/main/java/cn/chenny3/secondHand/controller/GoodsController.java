@@ -92,8 +92,8 @@ public class GoodsController extends BaseController {
                 //如果客户端处于登录状态，查询是否收藏、点赞此商品
                 if (userHolder.get() != null) {
                     int userId=userHolder.get().getId();
-                    viewObject.put("collectFlag",redisAdapter.sIsMember(RedisKeyUtil.getUserCollectKey(userId),String.valueOf(id)));
-                    viewObject.put("hotFlag",redisAdapter.sIsMember(RedisKeyUtil.getUserHotKey(userId),String.valueOf(id)));
+                    viewObject.put("collectFlag",redisAdapter.zrank(RedisKeyUtil.getUserCollectKey(userId),String.valueOf(id))!=null);
+                    viewObject.put("hotFlag",redisAdapter.zrank(RedisKeyUtil.getUserHotKey(userId),String.valueOf(id))!=null);
                 }
                 model.addAttribute("vo", viewObject);
                 return "shop_detail";
@@ -111,16 +111,17 @@ public class GoodsController extends BaseController {
         try {
             String userCollectKey = RedisKeyUtil.getUserCollectKey(userHolder.get().getId());
             String goodsCollectKey = RedisKeyUtil.getGoodsCollectKey(goodsId);
-            if (redisAdapter.sIsMember(userCollectKey, String.valueOf(goodsId))) {
+            if (redisAdapter.zrank(userCollectKey,String.valueOf(goodsId))!=null) {
                 return new EasyResult(1, "不能重复收藏同一件商品");
             }
             //增加收藏量
             redisAdapter.incr(goodsCollectKey);
             goodsService.updateCollectNum(goodsId, 1);
             //保存当前用户的收藏记录
-            redisAdapter.sadd(
+            redisAdapter.zadd(
                     userCollectKey,
-                    String.valueOf(goodsId)
+                    String.valueOf(goodsId),
+                    System.currentTimeMillis()
             );
             return new EasyResult(0, "收藏成功");
         } catch (Exception e) {
@@ -135,14 +136,14 @@ public class GoodsController extends BaseController {
         try {
             String userCollectKey = RedisKeyUtil.getUserCollectKey(userHolder.get().getId());
             String goodsCollectKey = RedisKeyUtil.getGoodsCollectKey(goodsId);
-            if (!redisAdapter.sIsMember(userCollectKey, String.valueOf(goodsId))) {
+            if (redisAdapter.zrank(userCollectKey,String.valueOf(goodsId))==null) {
                 return new EasyResult(1, "不能取消收藏没有收藏过的商品");
             }
             //减少收藏量
             redisAdapter.decr(goodsCollectKey);
             goodsService.updateCollectNum(goodsId, -1);
-            //保存当前用户的收藏记录
-            redisAdapter.srem(
+            //删除当前用户的收藏记录
+            redisAdapter.zrem(
                     userCollectKey,
                     String.valueOf(goodsId)
             );
@@ -159,16 +160,17 @@ public class GoodsController extends BaseController {
         try {
             String userHotKey = RedisKeyUtil.getUserHotKey(userHolder.get().getId());
             String goodsHotKey = RedisKeyUtil.getGoodsHotKey(goodsId);
-            if (redisAdapter.sIsMember(userHotKey, String.valueOf(goodsId))) {
+            if (redisAdapter.zrank(userHotKey, String.valueOf(goodsId))!=null) {
                 return new EasyResult(1, "不能重复点赞同一件商品");
             }
             //增加点赞量
             redisAdapter.incr(goodsHotKey);
             goodsService.updateHotNum(goodsId, 1);
             //保存当前用户的点赞记录
-            redisAdapter.sadd(
+            redisAdapter.zadd(
                     userHotKey,
-                    String.valueOf(goodsId)
+                    String.valueOf(goodsId),
+                    System.currentTimeMillis()
             );
             return new EasyResult(0, "点赞成功");
         } catch (Exception e) {
@@ -183,14 +185,14 @@ public class GoodsController extends BaseController {
         try {
             String userHotKey = RedisKeyUtil.getUserHotKey(userHolder.get().getId());
             String goodsHotKey = RedisKeyUtil.getGoodsHotKey(goodsId);
-            if (!redisAdapter.sIsMember(userHotKey, String.valueOf(goodsId))) {
+            if (redisAdapter.zrank(userHotKey, String.valueOf(goodsId))==null) {
                 return new EasyResult(1, "不能取消点赞没有点赞过的商品");
             }
             //增加点赞量
             redisAdapter.decr(goodsHotKey);
             goodsService.updateHotNum(goodsId, -1);
             //保存当前用户的点赞记录
-            redisAdapter.srem(
+            redisAdapter.zrem(
                     userHotKey,
                     String.valueOf(goodsId)
             );
