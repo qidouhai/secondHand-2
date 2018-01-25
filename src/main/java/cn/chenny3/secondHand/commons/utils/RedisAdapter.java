@@ -24,6 +24,12 @@ public class RedisAdapter {
         return getOpsForSet().add(key, value);
     }
 
+    public Long srem(String key,String value){
+        return getOpsForSet().remove(key,value);
+    }
+    public Boolean sIsMember(String key,String value){
+        return getOpsForSet().isMember(key,value);
+    }
     public Long incr(String key) {
         return getOpsForValue().increment(key, 1);
     }

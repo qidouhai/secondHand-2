@@ -13,6 +13,10 @@ public class RedisKeyUtil {
         return OBJ_USER+SPLIT+BIZ_COLLECT_NUM+SPLIT+userId;
     }
 
+    public static String getUserHotKey(int userId){
+        return OBJ_USER+SPLIT+BIZ_HOT_NUMS+SPLIT+userId;
+    }
+
     public static String getGoodsCollectKey(int goodsId){
         return OBJ_GOODS+SPLIT+BIZ_COLLECT_NUM+SPLIT+goodsId;
     }
