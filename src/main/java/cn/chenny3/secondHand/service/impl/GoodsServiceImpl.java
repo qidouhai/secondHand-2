@@ -37,18 +37,18 @@ public class GoodsServiceImpl implements GoodsService{
     }
 
     @Override
-    public int updateViewNum(int id, int viewNum) {
-        return goodsDao.updateViewNum(id, viewNum);
+    public int updateViewNum(int id,int step) {
+        return goodsDao.updateViewNum(id,step);
     }
 
     @Override
-    public int updateCollectNum(int id, int collectNum) {
-        return goodsDao.updateCollectNum(id, collectNum);
+    public int updateCollectNum(int id, int step) {
+        return goodsDao.updateCollectNum(id, step);
     }
 
     @Override
-    public int updateHotNum(int id, int hotNum) {
-        return goodsDao.updateHotNum(id, hotNum);
+    public int updateHotNum(int id, int step) {
+        return goodsDao.updateHotNum(id, step);
     }
 
     @Override

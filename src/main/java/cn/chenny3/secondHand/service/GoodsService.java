@@ -11,9 +11,9 @@ public interface GoodsService {
     Goods selectGoods(int id);
     int selectCount(int status);
     int updateStatus(int id,int status);
-    int updateViewNum(int id,int viewNum);
-    int updateCollectNum(int id,int collectNum);
-    int updateHotNum(int id, int hotNum);
+    int updateViewNum(int id,int step);
+    int updateCollectNum(int id,int step);
+    int updateHotNum(int id, int step);
     List<Goods> selectGoodsBySubCategoryId(int subCategoryId);
     List<Goods> selectGoodsByCategoryId(int categoryId);
     List<Goods> selectHotGoodsList(int categoryId, int maxSize);

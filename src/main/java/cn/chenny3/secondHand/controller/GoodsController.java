@@ -68,7 +68,7 @@ public class GoodsController extends BaseController{
             if(goods!=null){
                 //添加访问量
                 goods.setViewNum(goods.getViewNum()+1);
-                goodsService.updateViewNum(goods.getId(),goods.getViewNum());
+                goodsService.updateViewNum(goods.getId(),1);
                 //查询商品归属人
                 User owner = userService.selectUser(goods.getOwnerId());
                 //抹掉安全相关信息

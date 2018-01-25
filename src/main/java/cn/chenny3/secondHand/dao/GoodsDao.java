@@ -20,12 +20,12 @@ public interface GoodsDao {
     int selectCount(int status);
     @Update({"update ", TABLE_NAME, " set status=#{status} where id=#{id}"})
     int updateStatus(@Param("id") int id, @Param("status") int status);
-    @Update({"update ", TABLE_NAME, " set view_num=#{viewNum} where id=#{id}"})
-    int updateViewNum(@Param("id") int id, @Param("viewNum") int viewNum);
-    @Update({"update ", TABLE_NAME, " set collect_num=#{collectNum} where id=#{id}"})
-    int updateCollectNum(@Param("id") int id, @Param("collectNum") int collectNum);
-    @Update({"update ", TABLE_NAME, " set hot_num=#{hotNum} where id=#{id}"})
-    int updateHotNum(@Param("id") int id, @Param("hotNum") int hotNum);
+    @Update({"update ", TABLE_NAME, " set view_num=view_num+#{step} where id=#{id}"})
+    int updateViewNum(@Param("id") int id, @Param("step") int step);
+    @Update({"update ", TABLE_NAME, " set collect_num=collect_num+#{step} where id=#{id}"})
+    int updateCollectNum(@Param("id") int id, @Param("step") int step);
+    @Update({"update ", TABLE_NAME, " set hot_num=hot_num+#{step} where id=#{id}"})
+    int updateHotNum(@Param("id") int id, @Param("step") int step);
     @Select({"select ",SELECT_FIEDS," from ",TABLE_NAME," where sub_category_id = #{subCategoryId}"})
     List<Goods> selectGoodsBySubCategoryId(@Param("subCategoryId") int subCategoryId);
     @Select({"select ",SELECT_FIEDS," from ",TABLE_NAME," where category_id = #{categoryId}"})

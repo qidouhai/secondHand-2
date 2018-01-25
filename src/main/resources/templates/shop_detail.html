@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
     <title>闲鱼-大学生二手交易平台</title>      <!-- Bootstrap -->
     <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
@@ -131,9 +132,9 @@
                 <ul>
                     <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/share.png" alt="分享"/>分享</a>
                     </li>
-                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/collect.png" alt="收藏/取消收藏"/>收藏</a>
+                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/un_collect.png" alt="收藏/取消收藏"/>收藏</a>
                     </li>
-                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/top.png"
+                    <li><a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/un_top.png"
                                                                          alt="点赞/取消点赞"/>点赞</a></li>
                 </ul>
             </div>
