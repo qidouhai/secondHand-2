@@ -13,14 +13,14 @@
     <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
 </head>
-<body th:with="isAuthenticate=${vo.get('user').authenticateId}">
+<body th:with="isAuthenticate=${vo.get('user').authenticateId},user=${vo.get('user')}">
 <div class="m_des">
     <table border="0" style="width:850px; line-height:22px;margin: 0 auto" cellspacing="0" cellpadding="0">
         <tbody>
         <tr valign="top">
             <td width="115"><img src="http://secondhand-oss.oss-cn-beijing.aliyuncs.com/img/avatar/c8eb62d426f146ed91e737c14bd1fb90.png?x-oss-process=style/90_size" width="90" height="90"/></td>
             <td style="padding-left: 25px;">
-                <div class="m_user" th:text="${vo.get('user').name}">TRACY</div>
+                <div class="m_user" th:text="${user.name}">TRACY</div>
                 <p style="font-size: 12px;">
                 <div>等级：<span th:text="${isAuthenticate &gt; 0?'认证用户':'未认证用户'}">实名用户</span></div>
                 <div th:if="${#arrays.length(vo.get('loginRecords')) &gt; 1}" style="overflow: hidden">
@@ -59,9 +59,9 @@
 <table border="0" class="mon_tab" style="width:850px; line-height:22px;margin: 0 auto" cellspacing="0" cellpadding="0">
     <tbody>
     <tr>
-        <td>用户ID：<span style="color:#555555;" th:text="${vo.get('user').id}" >12345678</span></td>
-        <td>用户名：<span style="color:#555555;" th:text="${vo.get('user').name}">TRACY</span></td>
-        <td>电子邮箱：<span style="color:#555555;" th:text="${vo.get('user').email}">1017097573@qq.com</span></td>
+        <td>用户ID：<span style="color:#555555;" th:text="${user.id}" >12345678</span></td>
+        <td>用户名：<span style="color:#555555;" th:text="${user.name}">TRACY</span></td>
+        <td>电子邮箱：<span style="color:#555555;" th:text="${user.email}">1017097573@qq.com</span></td>
 
     </tr>
     <tr>
@@ -74,9 +74,20 @@
         <td>级&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').registerYear:'未知'}" >2014</span></td>
     </tr>
     <tr>
-        <td>联系电话：<span style="color:#555555;" th:text="${vo.get('user').phone}">15576064301</span></td>
+        <td>联系电话：<span style="color:#555555;" th:text="${user.phone}">15576064301</span></td>
         <td>宿舍住址：<span style="color:#555555;">湖南理工学院南院13栋</span></td>
-        <td>注册时间：<span style="color:#555555;" th:text="${#dates.format(vo.get('user').created,'yyyy-MM-dd')}">2015-10-10</span></td>
+        <td>注册时间：<span style="color:#555555;" th:text="${#dates.format(user.created,'yyyy-MM-dd')}">2015-10-10</span></td>
+    </tr>
+    </tbody>
+</table>
+<div class="mem_t">其他信息</div>
+<table border="0" class="mon_tab" style="width:850px; line-height:22px;margin: 0 auto" cellspacing="0" cellpadding="0">
+    <tbody>
+    <tr>
+        <td>QQ：<span style="color:#555555;" th:text="${user.qq ne null?user.qq:'未知'}" >12345678</span></td>
+        <td>微信：<span style="color:#555555;" th:text="${user.wechat ne null?user.wechat:'未知'}">TRACY</span></td>
+        <td>支付宝：<span style="color:#555555;" th:text="${user.alipay ne null?user.alipay:'未知'}">1017097573@qq.com</span></td>
+
     </tr>
     </tbody>
 </table>
