@@ -33,10 +33,10 @@
             <div class="left_m">
                 <div class="left_m_t t_bg2">会员中心</div>
                 <ul>
-                    <li><a href="javascript:void(0);" onclick="setIframeSrc('user',this)" class="now">用户信息</a></li>
-                    <li><a href="javascript:void(0);" onclick="setIframeSrc('address',this)">收货地址</a></li>
-                    <li><a href="javascript:void(0);">我的收藏</a></li>
-                    <li><a href="javascript:void(0);">我的留言</a></li>
+                    <li><a href="#user" onclick="setIframeSrc(this)" class="now">用户信息</a></li>
+                    <li><a href="#address" onclick="setIframeSrc(this)">收货地址</a></li>
+                    <li><a href="#">我的收藏</a></li>
+                    <li><a href="#">我的留言</a></li>
                 </ul>
             </div>
             <div class="left_m">
@@ -62,7 +62,7 @@
 
         </div>
     </div>
-    <iframe id="external-frame" class="m_right" src="/member/user"  scrolling="no" frameborder="0"></iframe>
+    <iframe id="external-frame" class="m_right"   scrolling="no" frameborder="0"></iframe>
     <!--用户中心 结束 -->
 
 </div>
@@ -75,12 +75,13 @@
 <script src="/scripts/bootstrap.min.js"></script>
 <script>
     //指定iframe src属性的重置
-    function setIframeSrc(target,obj){
+    function setIframeSrc(obj){
         //重新设置样式
         $("a[class='now']").removeClass('now');
         $(obj).addClass('now');
         //刷新iframe的src地址
-        $("#external-frame").attr("src", '/member/'+target);
+        var hrefVal=$(obj).attr('href');
+        $("#external-frame").attr("src", '/member/'+hrefVal.substring(1,hrefVal.length));
         //重置高度
         setIframeHeight(document.getElementById('external-frame'));
     }
@@ -99,6 +100,15 @@
 
     window.onload = function () {
         setIframeHeight(document.getElementById('external-frame'));
+        //获取url中锚点
+        var mao=window.location.hash;
+        if(mao==''||mao==null){
+            mao='#user';//默认锚点
+        }
+        //获取锚点对应的a标签
+        var tag=$("a[href='"+mao+"']");
+        //指定iframe中的内容
+        setIframeSrc(tag);
     };
 </script>
 
