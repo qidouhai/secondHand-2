@@ -1,10 +1,7 @@
 package cn.chenny3.secondHand.commons.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -20,6 +17,14 @@ public class RedisAdapter {
 
     private ValueOperations<String, String> getOpsForValue() {
         return redisTemplate.opsForValue();
+    }
+
+    private ListOperations<String,String> getOpsForList(){
+        return redisTemplate.opsForList();
+    }
+
+    private ZSetOperations<String,String> getOpsForZSet(){
+        return redisTemplate.opsForZSet();
     }
 
     public Long sadd(String key, String value) {
@@ -60,5 +65,27 @@ public class RedisAdapter {
         return getOpsForSet().members(key);
     }
 
+    public Long lpush(String key,String value){
+        return getOpsForList().leftPush(key,value);
+    }
 
+    public Long rpush(String key,String value){
+        return getOpsForList().rightPush(key,value);
+    }
+
+    public Boolean zadd(String key,String value,double score){
+        return getOpsForZSet().add(key,value,score);
+    }
+
+    public Set<String> zrange(String key,int start,int end){
+        return getOpsForZSet().range(key,start,end);
+    }
+
+    public Set<String> zrevrange(String key,int start,int end){
+        return getOpsForZSet().reverseRange(key,start,end);
+    }
+
+    public Long zrem(String key,String... member){
+        return getOpsForZSet().remove(key,member);
+    }
 }
