@@ -146,7 +146,7 @@
                         <input type="hidden" th:value="${collectFlag}" id="collectFlag"/>
                     </li>
                     <li th:with="hotFlag=${vo.get('hotFlag')}">
-                        <a href="javascript:void(0)">
+                        <a href="javascript:void(0)" onclick="hot(this)">
                             <img th:src="${vo.get('user') eq null?'/images/util/un_top.png': hotFlag ? '/images/util/top.png':'/images/util/un_top.png'}"
                                  src="/images/util/un_top.png" alt="点赞/取消点赞"/>
                             <span th:if="${vo.get('user') eq null}" onclick="alert('请先登录')">点赞</span>
@@ -283,6 +283,42 @@
        }
     }
 
+    //点赞代码
+    function hot(obj) {
+        var url="/goods/hot/"+$('#entityId').val();
+        if($('#hotFlag').val()=='true'){//取消代码
+            $.ajax({
+                'url':url,
+                'type':"delete",
+                'dataType':'json',
+                'success':function (result) {
+                    if(result.code==0){//成功
+                        //修改标志
+                        $('#hotFlag').val('false');
+                        //修改文字
+                        $($(obj).find('span')[0]).text('点赞');
+                        //修改图片
+                        $($(obj).find('img')[0]).attr('src','/images/util/un_top.png');
+                    }else{
+                        alert(result.msg);
+                    }
+                }
+            });
+        }else{ //代码
+            $.post(url,null,function (result) {
+                if(result.code==0){//成功
+                    //修改标志
+                    $('#hotFlag').val('true');
+                    //修改文字
+                    $($(obj).find('span')[0]).text('取消点赞');
+                    //修改图片
+                    $($(obj).find('img')[0]).attr('src','/images/util/top.png');
+                }else{
+                    alert(result.msg);
+                }
+            },'json');
+        }
+    }
 </script>
 </body>
 </html>

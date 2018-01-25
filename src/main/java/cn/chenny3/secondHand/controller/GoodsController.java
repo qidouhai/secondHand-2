@@ -152,4 +152,52 @@ public class GoodsController extends BaseController {
             return new EasyResult(1, "取消收藏失败");
         }
     }
+
+    @RequestMapping(value = "/hot/{goodsId}", method = RequestMethod.POST)
+    @ResponseBody
+    public EasyResult hot(@PathVariable("goodsId") int goodsId) {
+        try {
+            String userHotKey = RedisKeyUtil.getUserHotKey(userHolder.get().getId());
+            String goodsHotKey = RedisKeyUtil.getGoodsHotKey(goodsId);
+            if (redisAdapter.sIsMember(userHotKey, String.valueOf(goodsId))) {
+                return new EasyResult(1, "不能重复点赞同一件商品");
+            }
+            //增加点赞量
+            redisAdapter.incr(goodsHotKey);
+            goodsService.updateHotNum(goodsId, 1);
+            //保存当前用户的点赞记录
+            redisAdapter.sadd(
+                    userHotKey,
+                    String.valueOf(goodsId)
+            );
+            return new EasyResult(0, "点赞成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new EasyResult(1, "点赞失败");
+        }
+    }
+
+    @RequestMapping(value = "/hot/{goodsId}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public EasyResult cancalHot(@PathVariable("goodsId") int goodsId) {
+        try {
+            String userHotKey = RedisKeyUtil.getUserHotKey(userHolder.get().getId());
+            String goodsHotKey = RedisKeyUtil.getGoodsHotKey(goodsId);
+            if (!redisAdapter.sIsMember(userHotKey, String.valueOf(goodsId))) {
+                return new EasyResult(1, "不能取消点赞没有点赞过的商品");
+            }
+            //增加点赞量
+            redisAdapter.decr(goodsHotKey);
+            goodsService.updateHotNum(goodsId, -1);
+            //保存当前用户的点赞记录
+            redisAdapter.srem(
+                    userHotKey,
+                    String.valueOf(goodsId)
+            );
+            return new EasyResult(0, "取消点赞成功");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return new EasyResult(1, "取消点赞失败");
+        }
+    }
 }
