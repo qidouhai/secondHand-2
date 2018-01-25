@@ -2,6 +2,8 @@ package cn.chenny3.secondHand.controller;
 
 import cn.chenny3.secondHand.commons.bean.UserHolder;
 import cn.chenny3.secondHand.commons.result.EasyResult;
+import cn.chenny3.secondHand.commons.utils.RedisAdapter;
+import cn.chenny3.secondHand.commons.utils.RedisKeyUtil;
 import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.model.Address;
 import cn.chenny3.secondHand.model.Goods;
@@ -34,6 +36,8 @@ public class GoodsController extends BaseController{
     private CategoryService categoryService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private RedisAdapter redisAdapter;
 
     @RequestMapping(value = "addView" ,method = RequestMethod.GET)
     public String addView(Model model){
@@ -67,6 +71,7 @@ public class GoodsController extends BaseController{
             Goods goods=goodsService.selectGoods(id);
             if(goods!=null){
                 //添加访问量
+                redisAdapter.incr(RedisKeyUtil.getGoodsViewKey(id));
                 goods.setViewNum(goods.getViewNum()+1);
                 goodsService.updateViewNum(goods.getId(),1);
                 //查询商品归属人
