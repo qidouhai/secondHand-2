@@ -17,4 +17,5 @@ public interface GoodsService {
     List<Goods> selectGoodsBySubCategoryId(int subCategoryId);
     List<Goods> selectGoodsByCategoryId(int categoryId);
     List<Goods> selectHotGoodsList(int categoryId, int maxSize);
+    List<Goods> selectGoodsList(Integer goodsIds[]);
 }

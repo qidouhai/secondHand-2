@@ -31,4 +31,5 @@ public interface GoodsDao {
     @Select({"select ",SELECT_FIEDS," from ",TABLE_NAME," where category_id = #{categoryId}"})
     List<Goods> selectGoodsByCategoryId(@Param("categoryId") int categoryId);
 
+    List<Goods> selectGoodsList(Integer goodsIds[]);
 }

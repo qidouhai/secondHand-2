@@ -101,7 +101,7 @@
                 <div class="sell_out">已出售</div>
             </div>
             <div class="price_wrap">
-                <span class="price" th:text="${#numbers.formatDecimal(vo.get('goods').price/100.0,0,2)}">3299.28</span>
+                <span class="price" th:text="${#numbers.formatDecimal(vo.get('goods').price/100.0,0,2)}+'￥'">3299.28</span>
                 <s th:if="${vo.get('goods').bargain } eq 0">可讲价</s>
                 <span th:if="${vo.get('goods').bargain}  eq 1">可讲价</span>
             </div>

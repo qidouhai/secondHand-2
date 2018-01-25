@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
 @Component
 public class RedisAdapter {
     @Autowired
@@ -52,6 +54,10 @@ public class RedisAdapter {
 
     public void del(String key) {
         redisTemplate.delete(key);
+    }
+
+    public Set<String> scard(String key){
+        return getOpsForSet().members(key);
     }
 
 

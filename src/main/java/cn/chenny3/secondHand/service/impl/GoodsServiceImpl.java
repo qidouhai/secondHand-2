@@ -65,4 +65,9 @@ public class GoodsServiceImpl implements GoodsService{
     public List<Goods> selectHotGoodsList(int categoryId, int maxSize) {
         return null;
     }
+
+    @Override
+    public List<Goods> selectGoodsList(Integer goodsIds[]){
+        return goodsDao.selectGoodsList(goodsIds);
+    }
 }
