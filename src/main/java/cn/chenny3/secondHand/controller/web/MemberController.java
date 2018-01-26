@@ -4,6 +4,7 @@ import cn.chenny3.secondHand.commons.bean.PageHelper;
 import cn.chenny3.secondHand.commons.bean.UserHolder;
 import cn.chenny3.secondHand.commons.enums.ContentType;
 import cn.chenny3.secondHand.commons.result.EasyResult;
+import cn.chenny3.secondHand.commons.result.PaginationResult;
 import cn.chenny3.secondHand.commons.utils.RedisAdapter;
 import cn.chenny3.secondHand.commons.utils.RedisKeyUtil;
 import cn.chenny3.secondHand.commons.vo.ViewObject;
@@ -16,10 +17,7 @@ import cn.chenny3.secondHand.service.UserAuthenticateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -70,7 +68,7 @@ public class MemberController extends BaseController {
             curPage = 1;
         }
         if (pageSize == null) {
-            pageSize = 8;
+            pageSize = 9;
         }
         //值检测
         if (curPage <= 0 || pageSize <= 0) {
@@ -81,7 +79,7 @@ public class MemberController extends BaseController {
         PageHelper<Goods> pageHelper = new PageHelper<>();
         pageHelper.setCurPage(curPage);
         pageHelper.setPageSize(pageSize);
-        model.addAttribute("vo",new ViewObject().put("pageHelper",pageHelper));
+        model.addAttribute("vo", new ViewObject().put("pageHelper", pageHelper));
 
         //查询出我的收藏中所有商品的id，并按时间倒序排序
         String userCollectKey = RedisKeyUtil.getUserCollectKey(userHolder.get().getId());
@@ -96,10 +94,10 @@ public class MemberController extends BaseController {
         pageHelper.setCount(count);
 
         //计算起始量
-        int start=(curPage-1)*pageSize;
+        int start = (curPage - 1) * pageSize;
         //查询当前页的所有商品数据
         List<Goods> goodsList = new ArrayList<>();
-        for (int i = start; i < count&&i<(start+pageSize); i++) {
+        for (int i = start; i < count && i < (start + pageSize); i++) {
             goodsList.add(goodsService.selectGoods(Integer.valueOf(arr[i])));
         }
 
@@ -107,6 +105,63 @@ public class MemberController extends BaseController {
 
         return "member/collect";
     }
+
+    @RequestMapping(value = "/suggest", method = RequestMethod.GET)
+    public String suggest() {
+        return "member/suggest";
+    }
+
+    @RequestMapping(value = "/safe", method = RequestMethod.GET)
+    public String safe() {
+        return "member/safe";
+    }
+
+    @RequestMapping(value = "/mygoods", method = RequestMethod.GET)
+    public String myGoodsView() {
+        return "member/mygoods";
+    }
+
+    @RequestMapping(value = "/mygoods", method = RequestMethod.POST)
+    @ResponseBody
+    public PaginationResult myGoods(@RequestParam(value = "pageNumber") Integer curPage,
+                                    @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                                    @RequestParam(value = "searchText", required = false) String search,
+                                    @RequestParam(value = "sortOrder", required = false) String order,
+                                    @RequestParam(required = false) Integer status,
+                                    Model model) {
+        if (curPage == null || curPage <= 0) {
+            curPage = 1;
+        }
+        if (pageSize == null || pageSize <= 0) {
+            pageSize = 8;
+        }
+        if (order == null) {
+            order = "desc";
+        } else {
+            if (order.trim().equals("")) {
+                order = "desc";
+            } else if (!equals("desc") && !order.equals("asc")) {
+                order = "desc";
+            }
+
+        }
+        if (search != null) {
+            search = search.trim();
+        }
+        if (status != null) {
+            if (status != 1 && status != 2) {
+                status = null;
+            }
+        }
+        int ownerId = userHolder.get().getId();
+        int count = goodsService.selectMyGoodsCount(search, status, ownerId);
+        List<Goods> rows = Collections.emptyList();
+        if (count > 0) {
+            rows = goodsService.selectMyGoods(curPage, pageSize, search, order, status, ownerId);
+        }
+        return new PaginationResult<Goods>(count, rows);
+    }
+
 
     @RequestMapping("ip")
     @ResponseBody

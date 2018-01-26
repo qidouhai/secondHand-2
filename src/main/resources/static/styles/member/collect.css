@@ -1,16 +1,16 @@
 
 * {
     font-size: 12px;
-    color: #55555;
-    font-family: '宋体';
-    margin-top: 5px;
 }
 
 body {
     padding: 0px 20px;
+    overflow: hidden;
 }
 
 .mem_tit {
+    width: 880px;
+    margin: 0px auto;
     height: 50px;
     line-height: 50px;
     overflow: hidden;
@@ -51,4 +51,11 @@ a {
     color: #555555;
     text-decoration: none;
     cursor: pointer;
+}
+
+#pageHelper{
+    position: fixed;
+    bottom: 20px;
+    width: 880px!important;
+    text-align: center;
 }

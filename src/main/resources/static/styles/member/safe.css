@@ -1,0 +1,34 @@
+.mem_tit {
+    width: 880px;
+    margin: 0px auto;
+    height: 50px;
+    line-height: 50px;
+    overflow: hidden;
+    color: #333333;
+    font-size: 16px;
+}
+form{
+    width: 740px;
+    margin: 0 auto;
+}
+.m_des {
+    overflow: hidden;
+    margin-top: 30px;
+    padding-bottom: 30px;
+
+    border-bottom: 1px dotted #b6b6b6;
+}
+.btn_tj {
+    width: auto;
+    height: 25px;
+    line-height: 25px\9;
+    overflow: hidden;
+    background-color: #ff4e00;
+    color: #FFF;
+    font-size: 12px;
+    font-family: "宋体";
+    text-align: center;
+    padding: 0 18px;
+    border: 0;
+    cursor: pointer;
+}

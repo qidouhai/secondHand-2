@@ -32,4 +32,15 @@ public interface GoodsDao {
     List<Goods> selectGoodsByCategoryId(@Param("categoryId") int categoryId);
 
     List<Goods> selectGoodsList(Integer goodsIds[]);
+
+    List<Goods> selectMyGoods(@Param("offset")Integer offset,
+                              @Param("limit")Integer limit,
+                              @Param("search")String search,
+                              @Param("order")String order,
+                              @Param("status")Integer status,
+                              @Param("ownerId")Integer ownerId);
+
+    int selectMyGoodsCount(@Param("search")String search,
+                           @Param("status")Integer status,
+                           @Param("ownerId")Integer ownerId);
 }

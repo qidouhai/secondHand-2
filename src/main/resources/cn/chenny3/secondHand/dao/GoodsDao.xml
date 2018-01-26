@@ -17,5 +17,37 @@
 
     </select>
 
+    <select id="selectMyGoods" resultType="goods">
+        select id,goods_name,category_id,sub_category_id,price,images,detail,inventory,bargain,view_num,collect_num,hot_num,owner_id,status,created,updated
+        from <include refid="table"></include>
+        <where>
+            owner_id = #{ownerId}
+            <if test="search neq null and search neq ''">
+                and goods_name like "%"#{search}"%"
+            </if>
+            <choose>
+                <when test="status neq null"> and status = #{status}</when>
+                <otherwise> and status > 0</otherwise>
+            </choose>
+        </where>
+        <if test="order neq null and order neq ''">
+            order by created ${order}
+        </if>
+        limit #{offset},#{limit}
+    </select>
 
+    <select id="selectMyGoodsCount" resultType="int">
+        select count(1)
+        from <include refid="table"></include>
+        <where>
+            owner_id = #{ownerId}
+            <if test="search neq null and search neq ''">
+                and goods_name like "%"#{search}"%"
+            </if>
+            <choose>
+                <when test="status neq null"> and status = #{status}</when>
+                <otherwise> and status > 0</otherwise>
+            </choose>
+        </where>
+    </select>
 </mapper>

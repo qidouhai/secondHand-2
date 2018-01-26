@@ -70,4 +70,14 @@ public class GoodsServiceImpl implements GoodsService{
     public List<Goods> selectGoodsList(Integer goodsIds[]){
         return goodsDao.selectGoodsList(goodsIds);
     }
+
+    @Override
+    public List<Goods> selectMyGoods(Integer curPage, Integer pageSize, String search, String order, Integer status, int ownerId) {
+        return goodsDao.selectMyGoods((curPage-1)*pageSize,pageSize,search,order,status,ownerId);
+    }
+
+    @Override
+    public int selectMyGoodsCount(String search, Integer status, int ownerId) {
+        return goodsDao.selectMyGoodsCount(search,status,ownerId);
+    }
 }
