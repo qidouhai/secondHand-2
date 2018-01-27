@@ -6,28 +6,32 @@
 
 
     <select id="selectGoodsList" resultType="goods">
-      select id,goods_name,category_id,sub_category_id,price,images,detail,inventory,bargain,view_num,collect_num,hot_num,owner_id,status,created,updated
-      from <include refid="table"></include>
+        select
+        id,goods_name,category_id,sub_category_id,price,images,detail,inventory,bargain,view_num,collect_num,hot_num,owner_id,status,created,updated
+        from
+        <include refid="table"></include>
         <where>
             id in
             <foreach collection="array" item="item" open="(" close=")" separator=",">
-              #{item}
+                #{item}
             </foreach>
         </where>
 
     </select>
 
     <select id="selectMyGoods" resultType="goods">
-        select id,goods_name,category_id,sub_category_id,price,images,detail,inventory,bargain,view_num,collect_num,hot_num,owner_id,status,created,updated
-        from <include refid="table"></include>
+        select
+        id,goods_name,category_id,sub_category_id,price,images,detail,inventory,bargain,view_num,collect_num,hot_num,owner_id,status,created,updated
+        from
+        <include refid="table"></include>
         <where>
             owner_id = #{ownerId}
             <if test="search neq null and search neq ''">
                 and goods_name like "%"#{search}"%"
             </if>
             <choose>
-                <when test="status neq null"> and status = #{status}</when>
-                <otherwise> and status > 0</otherwise>
+                <when test="status neq null">and status = #{status}</when>
+                <otherwise>and status > 0</otherwise>
             </choose>
         </where>
         <if test="order neq null and order neq ''">
@@ -38,22 +42,24 @@
 
     <select id="selectMyGoodsCount" resultType="int">
         select count(1)
-        from <include refid="table"></include>
+        from
+        <include refid="table"></include>
         <where>
             owner_id = #{ownerId}
             <if test="search neq null and search neq ''">
                 and goods_name like "%"#{search}"%"
             </if>
             <choose>
-                <when test="status neq null"> and status = #{status}</when>
-                <otherwise> and status > 0</otherwise>
+                <when test="status neq null">and status = #{status}</when>
+                <otherwise>and status > 0</otherwise>
             </choose>
         </where>
     </select>
-    
+
     <select id="selectRecentPublishGoods" resultType="goods">
         select id,goods_name,category_id,sub_category_id,price,images,created
-        from <include refid="table"></include>
+        from
+        <include refid="table"></include>
         <where>
             <if test="categoryId != 0">
                 category_id = #{categoryId}
@@ -64,25 +70,26 @@
             and status=1
         </where>
         order by created DESC
-        limit #{maxSize}
+        limit #{offset},#{limit}
     </select>
 
     <select id="selectGoodsByScore" resultType="goods">
         SELECT
-        id,goods_name,category_id,sub_category_id,price,images,created,IFNULL(comment_count.count, 0) * 5 + hot_num * 2 + view_num AS score
+        id,goods_name,category_id,sub_category_id,price,images,created,IFNULL(comment_count.count, 0) * 5 + hot_num * 2
+        + view_num AS score
         FROM
-            goods
-            LEFT JOIN (
-                          SELECT
-                              entity_id,
-                              count(1) AS count
-                          FROM
-                              COMMENT
-                          WHERE
-                              entity_type = 1
-                          GROUP BY
-                              entity_id
-                      ) AS comment_count ON goods.id = comment_count.entity_id
+        <include refid="table"></include>
+        LEFT JOIN (
+        SELECT
+        entity_id,
+        count(1) AS count
+        FROM
+        COMMENT
+        WHERE
+        entity_type = 1
+        GROUP BY
+        entity_id
+        ) AS comment_count ON goods.id = comment_count.entity_id
         <where>
             <if test="categoryId neq 0">
                 category_id = #{categoryId}
@@ -93,7 +100,49 @@
             and status=1
         </where>
         ORDER BY
-            score desc
-        limit #{maxSize}
+        score desc
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="selectCount" resultType="int">
+       select count(1)
+        from  <include refid="table"></include>
+        <where>
+            <if test="categoryId neq 0">
+                category_id = #{categoryId}
+            </if>
+            <if test="subCategoryId neq 0">
+                and sub_category_id = #{subCategoryId}
+            </if>
+            <if test="status neq null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectGoodsListByClause" resultType="goods">
+        select id,goods_name,category_id,sub_category_id,price,images,created
+        from
+        <include refid="table"></include>
+        <if test="whereClause !=null and whereClause != '' ">
+            <where>
+                ${whereClause}
+            </where>
+        </if>
+        <if test="orderClause !=null and orderClause != '' ">
+            ORDER BY ${orderClause}
+        </if>
+        limit ${limitClause}
+    </select>
+
+    <select id="selectGoodsCountByClause" resultType="int">
+        select count(1)
+        from
+        <include refid="table"></include>
+        <if test="whereClause !=null and whereClause != '' ">
+            <where>
+                ${whereClause}
+            </where>
+        </if>
     </select>
 </mapper>

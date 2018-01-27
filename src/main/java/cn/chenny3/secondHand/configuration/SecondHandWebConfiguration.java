@@ -18,9 +18,9 @@ public class SecondHandWebConfiguration extends WebMvcConfigurerAdapter{
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        registry.addInterceptor(viewInterceptor);
+        registry.addInterceptor(viewInterceptor).excludePathPatterns("/member/*","/login");
         registry.addInterceptor(passportInterceptor);
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/member/**","/goods/**");
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/member/**","/goods/**").excludePathPatterns("/goods/list/**");
         super.addInterceptors(registry);
     }
 }

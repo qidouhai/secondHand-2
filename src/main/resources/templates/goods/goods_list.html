@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>闲鱼-大学生二手交易平台</title>      <!-- Bootstrap -->
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/global.css" rel="stylesheet"/>
+    <link href="/styles/pageHelper.css" rel="stylesheet"/>
+    <link href="/styles/shop_list.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+</head>
+
+<body>
+<div th:replace="fragment/header :: #header"></div>
+<div id="content">
+    <div id="condition" th:with="selectedCategoryId=${vo.get('conditions').get('categoryId')},selectedSubCategoryId=${vo.get('conditions').get('subCategoryId')},selectedOrderName=${vo.get('conditions').get('orderName')},selectedOrderValue=${vo.get('conditions').get('orderValue')}">
+        <div class="category row">
+            <span>类&nbsp;&nbsp;&nbsp;&nbsp;别:</span>
+            <ul value="category">
+                <li>
+                    <a href="javascript:void(0)" class="highlight" onclick="switchSelected(this)"
+                       th:value="0"
+                       th:class="${selectedCategoryId eq 0?'highlight':''}">所有</a>
+                </li>
+                <li th:each="category:${vo.get('categories')}">
+                    <a href="javascript:void(0)"  onclick="switchSelected(this)"
+                       th:text="${category.categoryName}"
+                       th:value="${category.id}"
+                       th:class="${selectedCategoryId eq category.id?'highlight':''}">闲置数码</a>
+                </li>
+
+            </ul>
+        </div>
+        <div class="sub_category row" th:if="${selectedCategoryId &gt; 0}">
+            <span>子类别:</span>
+            <ul value="subCategory">
+                <li>
+                    <a href="javascript:void(0)" class="highlight" onclick="switchSelected(this)"
+                       th:value="0"
+                       th:class="${selectedSubCategoryId eq 0?'highlight':''}">所有</a>
+                </li>
+                <li th:each="tag:${vo.get('tags')}">
+                    <a href="javascript:void(0)" onclick="switchSelected(this)" th:text="${tag.categoryName}" th:value="${tag.id}"
+                       th:class="${tag.id eq selectedSubCategoryId?'highlight':''}">手机</a>
+                </li>
+
+            </ul>
+
+        </div>
+        <div class="order row">
+            <span>排&nbsp;&nbsp;&nbsp;&nbsp;序:</span>
+            <ul value="condition">
+                <li><a href="javascript:void(0)" onclick="switchSelected(this)" name="created" value="desc"
+                       class="highlight" th:class="${selectedOrderName eq 'created'?'highlight':''}">默认</a></li>
+                <li><a href="javascript:void(0)" th:class="${selectedOrderName eq 'hot'?'highlight':''}" onclick="switchSelected(this)" name="hot" value="desc">热度降序</a></li>
+                <li><a href="javascript:void(0)" th:class="${selectedOrderName eq 'price' and selectedOrderValue eq 'asc'?'highlight':''}" onclick="switchSelected(this)" name="price" value="asc">价格升序</a></li>
+                <li><a href="javascript:void(0)" th:class="${selectedOrderName eq 'price' and selectedOrderValue eq 'desc'?'highlight':''}" onclick="switchSelected(this)" name="price" value="desc">价格降序</a></li>
+
+            </ul>
+        </div>
+        <div class="hot_condition row" th:remove="all">
+            <span>热&nbsp;&nbsp;&nbsp;&nbsp;度:</span>
+            <ul>
+                <li><a href="javascript:void(0)" onclick="switchSelected(this)" class="highlight">默认</a></li>
+                <li><a href="javascript:void(0)" onclick="switchSelected(this)">升序</a></li>
+                <li><a href="javascript:void(0)" onclick="switchSelected(this)">降序</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="shops" style="margin-top: 30px;" th:with="goodsList=${vo.get('pageHelper').contents}">
+
+        <a href="#" class="shop_wrap" th:each="goods:${goodsList}" th:object="${goods}"
+           th:href="@{/goods/{id}(id=*{id})}">
+            <div class="shop_img">
+                <img th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${goods.imageArr[0]}+'?x-oss-process=style/medium_goods_size'"
+                     src="/images/shop_images/iphone.jpg" alt="shop_img"/>
+            </div>
+            <div class="description">
+                <p class="shop_price" th:text="*{#numbers.formatDecimal(price/100.0,0,2)}">285.0</p>
+                <p class="shop_name" th:text="*{goodsName}">iphone5</p>
+                <div class="" style="overflow: hidden">
+                    <div class="pull-left date" th:text="*{#dates.format(created, 'yyyy年MM月dd日')}">2017年9月2日</div>
+                    <div class="pull-right address">湖南理工学院</div>
+                </div>
+            </div>
+        </a>
+
+    </div>
+</div>
+<div id="pageHelper" th:object="${vo.get('pageHelper')}">
+    <a class="first" href="javascript:void(0)" th:onclick="'goPage('+*{first}+')'">首页</a>
+    <a class="pre" href="javascript:void(0)" th:onclick="'goPage('+*{pre}+')'">上一页</a>
+    <input type="number" class="curPage" value="1" th:value="*{curPage}"/>/<span th:text="*{last}"></span>
+    <a class="next" href="javascript:void(0)" th:onclick="'goPage('+*{next}+')'">下一页</a>
+    <a class="last" href="javascript:void(0)" th:onclick="'goPage('+*{last}+')'">尾页</a>
+</div>
+<div th:replace="fragment/footer :: #footer"></div>
+
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<script src="/scripts/goods_list.js">
+</script>
+</body>
+</html>
