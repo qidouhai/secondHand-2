@@ -62,8 +62,13 @@ public class GoodsServiceImpl implements GoodsService{
     }
 
     @Override
+    public List<Goods> selectHotGoodsList(int categoryId,int subCategoryId, int maxSize) {
+        return goodsDao.selectGoodsByScore(categoryId, subCategoryId, maxSize);
+    }
+
+    @Override
     public List<Goods> selectHotGoodsList(int categoryId, int maxSize) {
-        return null;
+        return goodsDao.selectGoodsByScore(categoryId, 0, maxSize);
     }
 
     @Override
@@ -79,5 +84,15 @@ public class GoodsServiceImpl implements GoodsService{
     @Override
     public int selectMyGoodsCount(String search, Integer status, int ownerId) {
         return goodsDao.selectMyGoodsCount(search,status,ownerId);
+    }
+
+    @Override
+    public List<Goods> selectRecentPublishGoods(int maxSize) {
+        return selectRecentPublishGoods(0,0,maxSize);
+    }
+
+    @Override
+    public List<Goods> selectRecentPublishGoods(int categoryId,int subCategoryId, int maxSize) {
+        return goodsDao.selectRecentPublishGoods(categoryId,subCategoryId,maxSize);
     }
 }

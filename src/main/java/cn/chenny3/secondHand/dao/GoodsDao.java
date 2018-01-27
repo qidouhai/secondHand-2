@@ -43,4 +43,8 @@ public interface GoodsDao {
     int selectMyGoodsCount(@Param("search")String search,
                            @Param("status")Integer status,
                            @Param("ownerId")Integer ownerId);
+
+    List<Goods> selectRecentPublishGoods(@Param("categoryId") int categoryId,@Param("subCategoryId") int subCategoryId, @Param("maxSize") int maxSize);
+
+    List<Goods> selectGoodsByScore(@Param("categoryId") int categoryId,@Param("subCategoryId") int subCategoryId, @Param("maxSize") int maxSize);
 }

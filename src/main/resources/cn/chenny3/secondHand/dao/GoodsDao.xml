@@ -50,4 +50,50 @@
             </choose>
         </where>
     </select>
+    
+    <select id="selectRecentPublishGoods" resultType="goods">
+        select id,goods_name,category_id,sub_category_id,price,images,created
+        from <include refid="table"></include>
+        <where>
+            <if test="categoryId != 0">
+                category_id = #{categoryId}
+            </if>
+            <if test="subCategoryId != 0">
+                and sub_category_id = #{subCategoryId}
+            </if>
+            and status=1
+        </where>
+        order by created DESC
+        limit #{maxSize}
+    </select>
+
+    <select id="selectGoodsByScore" resultType="goods">
+        SELECT
+        id,goods_name,category_id,sub_category_id,price,images,created,IFNULL(comment_count.count, 0) * 5 + hot_num * 2 + view_num AS score
+        FROM
+            goods
+            LEFT JOIN (
+                          SELECT
+                              entity_id,
+                              count(1) AS count
+                          FROM
+                              COMMENT
+                          WHERE
+                              entity_type = 1
+                          GROUP BY
+                              entity_id
+                      ) AS comment_count ON goods.id = comment_count.entity_id
+        <where>
+            <if test="categoryId neq 0">
+                category_id = #{categoryId}
+            </if>
+            <if test="subCategoryId neq 0">
+                and sub_category_id=#{subCategoryId}
+            </if>
+            and status=1
+        </where>
+        ORDER BY
+            score desc
+        limit #{maxSize}
+    </select>
 </mapper>

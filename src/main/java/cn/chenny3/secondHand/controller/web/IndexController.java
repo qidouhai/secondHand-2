@@ -5,6 +5,7 @@ import cn.chenny3.secondHand.commons.vo.ViewObject;
 import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.Category;
 import cn.chenny3.secondHand.model.Content;
+import cn.chenny3.secondHand.model.Goods;
 import cn.chenny3.secondHand.service.CategoryService;
 import cn.chenny3.secondHand.service.ContentService;
 import cn.chenny3.secondHand.service.GoodsService;
@@ -38,13 +39,17 @@ public class IndexController extends BaseController{
         for(Category category:categoryService.getNavCategories()){
             ViewObject floor = new ViewObject();
             floor.put("tags",categoryService.selectCategoriesByParentId(category.getId()));
-            floor.put("goods",goodsService.selectHotGoodsList(category.getId(),9));
+            floor.put("goodsList",goodsService.selectHotGoodsList(category.getId(),7));
             floors.add(floor);
         }
+        //查询最新发布的商品
+        List<Goods> rencentPublishGoods=goodsService.selectRecentPublishGoods(8);
+
         ViewObject vo = new ViewObject().
                 put("banners",banners).
                 put("announcements",announcements).
-                put("floors",floors);
+                put("floors",floors).
+                put("rencentPublishGoods",rencentPublishGoods);
         model.addAttribute("vo",vo);
         return "index";
     }

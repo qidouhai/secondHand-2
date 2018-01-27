@@ -14,8 +14,12 @@ public interface GoodsService {
     int updateHotNum(int id, int step);
     List<Goods> selectGoodsBySubCategoryId(int subCategoryId);
     List<Goods> selectGoodsByCategoryId(int categoryId);
-    List<Goods> selectHotGoodsList(int categoryId, int maxSize);
+    List<Goods> selectHotGoodsList(int categoryId,int subCategoryId, int maxSize);
+    public List<Goods> selectHotGoodsList(int categoryId, int maxSize);
     List<Goods> selectGoodsList(Integer goodsIds[]);
     List<Goods> selectMyGoods(Integer curPage, Integer pageSize, String search, String order, Integer status, int ownerId);
     int selectMyGoodsCount(String search, Integer status, int userId);
+
+    List<Goods> selectRecentPublishGoods(int maxSize);
+    List<Goods> selectRecentPublishGoods(int categoryId,int subCategoryId,int maxSize);
 }
