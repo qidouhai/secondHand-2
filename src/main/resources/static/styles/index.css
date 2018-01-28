@@ -170,11 +170,11 @@ blockquote a:hover{
 }
 .shop_wrap .shop_img{
     width: 100%;
-    height: 200px;
+    height: auto;
 }
 .shop_img img{
     width: 100%;
-    height: 200px;
+    height: auto;
     display: block;
 }
 .shop_wrap .description{

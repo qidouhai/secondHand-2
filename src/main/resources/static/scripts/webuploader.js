@@ -4691,6 +4691,9 @@
                 } catch( err ) {
                 }
     
+                me.dndOver = false;
+                me.elem.removeClass( prefix + 'over' );
+    
                 if ( data ) {
                     return;
                 }
@@ -4701,8 +4704,6 @@
                     }) );
                 });
     
-                me.dndOver = false;
-                me.elem.removeClass( prefix + 'over' );
                 return false;
             },
     
@@ -4778,7 +4779,7 @@
                 if (!elem) {
                     return;
                 }
-                
+    
                 elem.off( 'dragenter', this.dragEnterHandler );
                 elem.off( 'dragover', this.dragOverHandler );
                 elem.off( 'dragleave', this.dragLeaveHandler );
@@ -5064,7 +5065,7 @@
      * @fileOverview Image控件
      */
     define('runtime/html5/imagemeta',[
-        'runtime/html5/utils'
+        'runtime/html5/util'
     ], function( Util ) {
     
         var api;
@@ -6254,7 +6255,7 @@
      * @fileOverview Fix android canvas.toDataUrl bug.
      */
     define('runtime/html5/androidpatch',[
-        'runtime/html5/utils',
+        'runtime/html5/util',
         'runtime/html5/jpegencoder',
         'base'
     ], function( Util, encoder, Base ) {
@@ -6306,7 +6307,7 @@
     define('runtime/html5/image',[
         'base',
         'runtime/html5/runtime',
-        'runtime/html5/utils'
+        'runtime/html5/util'
     ], function( Base, Html5Runtime, Util ) {
     
         var BLANK = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
@@ -6327,6 +6328,8 @@
                         width: this.width,
                         height: this.height
                     };
+    
+                    debugger;
     
                     // 读取meta信息。
                     if ( !me._metas && 'image/jpeg' === me.type ) {
@@ -6473,12 +6476,12 @@
     
                 // setter
                 if ( val ) {
-                    this._meta = val;
+                    this._metas = val;
                     return this;
                 }
     
                 // getter
-                return this._meta;
+                return this._metas;
             },
     
             destroy: function() {

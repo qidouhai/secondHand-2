@@ -127,10 +127,8 @@
 <script src="/scripts/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/scripts/bootstrap.min.js"></script>
-<script src="/scripts/nav.js"></script>
 <script type="text/javascript" src="/scripts/webuploader.js"></script>
 <script type="text/javascript" src="/scripts/demo.js"></script>
-<script src="/scripts/ckeditor/ckeditor.js"></script>
 <script>
     $(document).ready(function(){
         bindKeyEvent($("#inputPrice"),/\d+\.?\d{0,2}/);
@@ -215,8 +213,7 @@
         $.post('/goods',$('form').serialize(),function (data) {
             var action= $('#status').val()==0?'商品信息发布':'商品信息保存';
             if(data.code==0){
-                alert("商品id:"+data.msg+",添加成功");
-                window.location.reload();
+                window.location.href='/goods/'+data.msg;
 
             }else{
                 alert(data.msg+"失败");
