@@ -2,19 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <body>
-<header id="header">
+<header id="header" th:with="uri=${#httpServletRequest.getRequestURI()}">
     <nav>
         <a id="logo" href="/"></a>
         <ul id="topnav" class="top_nav top_ul">
 
             <li th:each="category : ${vo.get('categories')}">
-                <a th:text="${category.categoryName}" th:href="'#'+${categoryStat.index}"></a>
+                <a th:text="${category.categoryName}" th:href="${#strings.equalsIgnoreCase(uri,'/')||#strings.equalsIgnoreCase(uri,'/index')||#strings.equalsIgnoreCase(uri,'/index.html')?'#'+categoryStat.index:'/goods/list/'+categoryStat.index}"></a>
 
             </li>
         </ul>
-        <ul class="top_url top_ul">
+        <ul class="top_url top_ul" th:if="${vo.get('user') ne null}">
             <li><a href="/goods/addView">发布闲置</a></li>
+            <li><a href="/member">购物车</a></li>
             <li><a href="/member">个人中心</a></li>
+        </ul>
+        <ul class="top_url top_ul" th:unless="${vo.get('user') ne null}">
+            <li><a href="/login">登录/注册</a></li>
         </ul>
     </nav>
 
