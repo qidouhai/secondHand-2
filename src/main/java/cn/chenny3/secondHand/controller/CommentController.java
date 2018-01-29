@@ -1,7 +1,7 @@
 package cn.chenny3.secondHand.controller;
 
-import cn.chenny3.secondHand.commons.enums.EntityType;
-import cn.chenny3.secondHand.commons.result.EasyResult;
+import cn.chenny3.secondHand.common.bean.enums.EntityType;
+import cn.chenny3.secondHand.common.bean.dto.EasyResult;
 import cn.chenny3.secondHand.model.Comment;
 import cn.chenny3.secondHand.service.CommentService;
 import com.fasterxml.jackson.annotation.JsonInclude;

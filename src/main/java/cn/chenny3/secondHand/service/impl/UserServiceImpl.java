@@ -3,7 +3,7 @@ package cn.chenny3.secondHand.service.impl;
 import cn.chenny3.secondHand.dao.UserDao;
 import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.service.UserService;
-import cn.chenny3.secondHand.commons.utils.SecondHandUtil;
+import cn.chenny3.secondHand.common.utils.SecondHandUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +59,31 @@ public class UserServiceImpl implements UserService{
         User temp = new User();
         temp.setId(user.getId());
         temp.setAuthenticateId(user.getAuthenticateId());
+        updateUser(temp);
+    }
+
+    @Override
+    public void updatePassword(int id, String password) {
+        User user = selectUser(id);
+        //新密码用盐进行md5加密
+        user.setPassword(SecondHandUtil.MD5(password+user.getSalt()));
+        user.setUpdated(new Date());
+        updateUser(user);
+    }
+
+    @Override
+    public void updatePhone(int id, String phone) {
+        User temp = new User();
+        temp.setId(id);
+        temp.setPhone(phone);
+        updateUser(temp);
+    }
+
+    @Override
+    public void updateEmail(int id, String email) {
+        User temp = new User();
+        temp.setId(id);
+        temp.setEmail(email);
         updateUser(temp);
     }
 }

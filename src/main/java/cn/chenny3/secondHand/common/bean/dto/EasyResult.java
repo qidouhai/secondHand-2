@@ -1,6 +1,8 @@
-package cn.chenny3.secondHand.commons.result;
+package cn.chenny3.secondHand.common.bean.dto;
 
-
+/**
+ * 前后端数据交互标准
+ */
 public class EasyResult {
     private int code;
     private Object msg;

@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.commons.bean;
+package cn.chenny3.secondHand.common.bean;
 
 import cn.chenny3.secondHand.model.User;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.commons.enums;
+package cn.chenny3.secondHand.common.bean.enums;
 
 public class GoodsStatus {
     public static int DELETE=0;

@@ -1,8 +1,8 @@
 package cn.chenny3.secondHand.controller.web;
 
-import cn.chenny3.secondHand.commons.bean.UserHolder;
-import cn.chenny3.secondHand.commons.result.EasyResult;
-import cn.chenny3.secondHand.commons.vo.ViewObject;
+import cn.chenny3.secondHand.common.bean.UserHolder;
+import cn.chenny3.secondHand.common.bean.dto.EasyResult;
+import cn.chenny3.secondHand.common.bean.vo.ViewObject;
 import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.Address;
 import cn.chenny3.secondHand.service.AddressService;

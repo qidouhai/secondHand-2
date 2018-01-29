@@ -1,6 +1,6 @@
 package cn.chenny3.secondHand.controller;
 
-import cn.chenny3.secondHand.commons.result.EasyResult;
+import cn.chenny3.secondHand.common.bean.dto.EasyResult;
 import cn.chenny3.secondHand.model.Content;
 import cn.chenny3.secondHand.service.ContentService;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.commons.interceptor;
+package cn.chenny3.secondHand.common.interceptor;
 
 import cn.chenny3.secondHand.model.User;
 import org.springframework.stereotype.Component;

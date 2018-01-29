@@ -1,8 +1,8 @@
 package cn.chenny3.secondHand.controller.web;
 
-import cn.chenny3.secondHand.commons.bean.UserHolder;
-import cn.chenny3.secondHand.commons.result.EasyResult;
-import cn.chenny3.secondHand.commons.utils.HnistPortalUtil;
+import cn.chenny3.secondHand.common.bean.UserHolder;
+import cn.chenny3.secondHand.common.bean.dto.EasyResult;
+import cn.chenny3.secondHand.common.utils.HnistPortalUtil;
 import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.model.UserAuthenticate;
@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserAuthenticateController extends BaseController{

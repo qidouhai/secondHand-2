@@ -58,7 +58,7 @@ public class CategoryServiceImpl implements CategoryService{
     public List<Category> selectCategoriesByParentId(int parentId) {
         return categoryDao.selectCategoriesByParentId(parentId);
     }
-
+    @Override
     public List<Category> getNavCategories(){
         return selectCategoriesByParentId(0);
     }

@@ -1,6 +1,6 @@
 package cn.chenny3.secondHand.configuration;
 
-import cn.chenny3.secondHand.commons.redisConfig.RedisProperties;
+import cn.chenny3.secondHand.common.config.RedisProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

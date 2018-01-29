@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.commons.utils;
+package cn.chenny3.secondHand.common.utils;
 
 import cn.chenny3.secondHand.model.UserAuthenticate;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +19,7 @@ import java.util.HashMap;
 @Component
 public class HnistPortalUtil {
     @Autowired
-    OkHttpEngine okHttpEngine;
+    OkHttpUtils okHttpUtils;
 
     private ObjectMapper objectMapper=new ObjectMapper();
 
@@ -33,7 +33,7 @@ public class HnistPortalUtil {
         String stuId = null;
         HashMap<String, String> headers = new HashMap<>();
         headers.put("cookie", "JSESSIONID=" + jsessionId);
-        Response response = okHttpEngine.syncGetOnlyNet("http://portal.hnist.cn/web/guest/242", headers, Collections.emptyMap());
+        Response response = okHttpUtils.syncGetOnlyNet("http://portal.hnist.cn/web/guest/242", headers, Collections.emptyMap());
         if (response.isSuccessful()) {
             String content = response.body().string();
             response.close();
@@ -67,7 +67,7 @@ public class HnistPortalUtil {
         params.put("needQuery","false");
         params.put("needCache","true");
         //发起请求
-        Response response = okHttpEngine.syncPost("http://portal.hnist.cn/portal_complex_bg/ViewRelationAction.do", headers, params);
+        Response response = okHttpUtils.syncPost("http://portal.hnist.cn/portal_complex_bg/ViewRelationAction.do", headers, params);
         if(response.isSuccessful()){
             String content = response.body().string();
             response.close();

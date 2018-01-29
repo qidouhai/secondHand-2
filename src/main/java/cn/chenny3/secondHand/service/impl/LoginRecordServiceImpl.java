@@ -3,7 +3,7 @@ package cn.chenny3.secondHand.service.impl;
 import cn.chenny3.secondHand.dao.LoginRecordDao;
 import cn.chenny3.secondHand.model.LoginRecord;
 import cn.chenny3.secondHand.service.LoginRecordService;
-import cn.chenny3.secondHand.commons.utils.LocationUtil;
+import cn.chenny3.secondHand.common.utils.LocationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class LoginRecordServiceImpl implements LoginRecordService{
     @Autowired
     private LoginRecordDao loginRecordDao;
     @Autowired
-    private LocationUtil locationUtil;
+    private LocationUtils locationUtil;
     @Override
     public int addLoginRecord(LoginRecord loginRecord) {
         //通过ip地址获取真实地理位置

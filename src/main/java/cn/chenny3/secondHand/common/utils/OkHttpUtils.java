@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.commons.utils;
+package cn.chenny3.secondHand.common.utils;
 
 
 import java.io.IOException;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
  * Created by chenny on 2017/11/14.
  */
 @Component
-public class OkHttpEngine {
-    private static volatile OkHttpEngine okHttpEngine;
+public class OkHttpUtils {
+    private static volatile OkHttpUtils okHttpUtils;
     private OkHttpClient okHttpClient;
 
 
-    private OkHttpEngine() {
+    private OkHttpUtils() {
         //init okHttpClient
         okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(15, TimeUnit.SECONDS)
@@ -34,15 +34,15 @@ public class OkHttpEngine {
     }
 
     //单例模式
-    public static OkHttpEngine getInstance() {
-        if (okHttpEngine == null) {
-            synchronized (OkHttpEngine.class) {
-                if (okHttpEngine == null) {
-                    okHttpEngine = new OkHttpEngine();
+    public static OkHttpUtils getInstance() {
+        if (okHttpUtils == null) {
+            synchronized (OkHttpUtils.class) {
+                if (okHttpUtils == null) {
+                    okHttpUtils = new OkHttpUtils();
                 }
             }
         }
-        return okHttpEngine;
+        return okHttpUtils;
     }
 
     public Response syncGetOnlyNet(String url, Map<String, String> headers, Map<String, String> params) throws IOException {

@@ -1,7 +1,7 @@
-package cn.chenny3.secondHand.commons.interceptor;
+package cn.chenny3.secondHand.common.interceptor;
 
-import cn.chenny3.secondHand.commons.bean.UserHolder;
-import cn.chenny3.secondHand.commons.vo.ViewObject;
+import cn.chenny3.secondHand.common.bean.UserHolder;
+import cn.chenny3.secondHand.common.bean.vo.ViewObject;
 import cn.chenny3.secondHand.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 /**
  * 作用:

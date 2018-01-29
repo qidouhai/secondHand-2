@@ -1,7 +1,7 @@
 package cn.chenny3.secondHand;
 
 import cn.chenny3.secondHand.model.UserAuthenticate;
-import cn.chenny3.secondHand.commons.utils.HnistPortalUtil;
+import cn.chenny3.secondHand.common.utils.HnistPortalUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

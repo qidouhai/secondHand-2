@@ -1,6 +1,6 @@
-package cn.chenny3.secondHand.commons.interceptor;
+package cn.chenny3.secondHand.common.interceptor;
 
-import cn.chenny3.secondHand.commons.vo.ViewObject;
+import cn.chenny3.secondHand.common.bean.vo.ViewObject;
 import cn.chenny3.secondHand.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

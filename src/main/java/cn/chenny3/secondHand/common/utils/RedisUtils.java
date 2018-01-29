@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.commons.utils;
+package cn.chenny3.secondHand.common.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.*;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 @Component
-public class RedisAdapter {
+public class RedisUtils {
     @Autowired
     private StringRedisTemplate redisTemplate;
 

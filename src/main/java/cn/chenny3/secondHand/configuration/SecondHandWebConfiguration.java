@@ -1,8 +1,8 @@
 package cn.chenny3.secondHand.configuration;
 
-import cn.chenny3.secondHand.commons.interceptor.LoginInterceptor;
-import cn.chenny3.secondHand.commons.interceptor.PassportInterceptor;
-import cn.chenny3.secondHand.commons.interceptor.ViewInterceptor;
+import cn.chenny3.secondHand.common.interceptor.LoginInterceptor;
+import cn.chenny3.secondHand.common.interceptor.PassportInterceptor;
+import cn.chenny3.secondHand.common.interceptor.ViewInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

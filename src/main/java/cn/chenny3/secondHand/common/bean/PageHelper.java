@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.commons.bean;
+package cn.chenny3.secondHand.common.bean;
 
 import java.util.List;
 

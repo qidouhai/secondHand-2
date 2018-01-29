@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class TestLocationUtil {
+public class TestLocationUtils {
     private final OkHttpClient client = new OkHttpClient();
     @Test
     public void test() throws IOException {

@@ -1,12 +1,12 @@
 package cn.chenny3.secondHand.controller;
 
-import cn.chenny3.secondHand.commons.bean.PageHelper;
-import cn.chenny3.secondHand.commons.bean.UserHolder;
-import cn.chenny3.secondHand.commons.enums.GoodsStatus;
-import cn.chenny3.secondHand.commons.result.EasyResult;
-import cn.chenny3.secondHand.commons.utils.RedisAdapter;
-import cn.chenny3.secondHand.commons.utils.RedisKeyUtil;
-import cn.chenny3.secondHand.commons.vo.ViewObject;
+import cn.chenny3.secondHand.common.bean.PageHelper;
+import cn.chenny3.secondHand.common.bean.UserHolder;
+import cn.chenny3.secondHand.common.bean.enums.GoodsStatus;
+import cn.chenny3.secondHand.common.bean.dto.EasyResult;
+import cn.chenny3.secondHand.common.utils.RedisUtils;
+import cn.chenny3.secondHand.common.utils.RedisKeyUtils;
+import cn.chenny3.secondHand.common.bean.vo.ViewObject;
 import cn.chenny3.secondHand.model.Address;
 import cn.chenny3.secondHand.model.Category;
 import cn.chenny3.secondHand.model.Goods;
@@ -39,7 +39,7 @@ public class GoodsController extends BaseController {
     @Autowired
     private AddressService addressService;
     @Autowired
-    private RedisAdapter redisAdapter;
+    private RedisUtils redisUtils;
 
     @RequestMapping(value = "addView", method = RequestMethod.GET)
     public String addView(Model model) {
@@ -73,7 +73,7 @@ public class GoodsController extends BaseController {
             Goods goods = goodsService.selectGoods(id);
             if (goods != null) {
                 //添加访问量
-                redisAdapter.incr(RedisKeyUtil.getGoodsViewKey(id));
+                redisUtils.incr(RedisKeyUtils.getGoodsViewKey(id));
                 goods.setViewNum(goods.getViewNum() + 1);
                 goodsService.updateViewNum(goods.getId(), 1);
                 //查询商品归属人
@@ -94,8 +94,8 @@ public class GoodsController extends BaseController {
                 //如果客户端处于登录状态，查询是否收藏、点赞此商品
                 if (userHolder.get() != null) {
                     int userId = userHolder.get().getId();
-                    viewObject.put("collectFlag", redisAdapter.zrank(RedisKeyUtil.getUserCollectKey(userId), String.valueOf(id)) != null);
-                    viewObject.put("hotFlag", redisAdapter.zrank(RedisKeyUtil.getUserHotKey(userId), String.valueOf(id)) != null);
+                    viewObject.put("collectFlag", redisUtils.zrank(RedisKeyUtils.getUserCollectKey(userId), String.valueOf(id)) != null);
+                    viewObject.put("hotFlag", redisUtils.zrank(RedisKeyUtils.getUserHotKey(userId), String.valueOf(id)) != null);
                 }
                 model.addAttribute("vo", viewObject);
                 return "/goods/goods_detail";
@@ -182,16 +182,16 @@ public class GoodsController extends BaseController {
     @ResponseBody
     public EasyResult collect(@PathVariable("goodsId") int goodsId) {
         try {
-            String userCollectKey = RedisKeyUtil.getUserCollectKey(userHolder.get().getId());
-            String goodsCollectKey = RedisKeyUtil.getGoodsCollectKey(goodsId);
-            if (redisAdapter.zrank(userCollectKey, String.valueOf(goodsId)) != null) {
+            String userCollectKey = RedisKeyUtils.getUserCollectKey(userHolder.get().getId());
+            String goodsCollectKey = RedisKeyUtils.getGoodsCollectKey(goodsId);
+            if (redisUtils.zrank(userCollectKey, String.valueOf(goodsId)) != null) {
                 return new EasyResult(1, "不能重复收藏同一件商品");
             }
             //增加收藏量
-            redisAdapter.incr(goodsCollectKey);
+            redisUtils.incr(goodsCollectKey);
             goodsService.updateCollectNum(goodsId, 1);
             //保存当前用户的收藏记录
-            redisAdapter.zadd(
+            redisUtils.zadd(
                     userCollectKey,
                     String.valueOf(goodsId),
                     System.currentTimeMillis()
@@ -207,16 +207,16 @@ public class GoodsController extends BaseController {
     @ResponseBody
     public EasyResult cancalCollect(@PathVariable("goodsId") int goodsId) {
         try {
-            String userCollectKey = RedisKeyUtil.getUserCollectKey(userHolder.get().getId());
-            String goodsCollectKey = RedisKeyUtil.getGoodsCollectKey(goodsId);
-            if (redisAdapter.zrank(userCollectKey, String.valueOf(goodsId)) == null) {
+            String userCollectKey = RedisKeyUtils.getUserCollectKey(userHolder.get().getId());
+            String goodsCollectKey = RedisKeyUtils.getGoodsCollectKey(goodsId);
+            if (redisUtils.zrank(userCollectKey, String.valueOf(goodsId)) == null) {
                 return new EasyResult(1, "不能取消收藏没有收藏过的商品");
             }
             //减少收藏量
-            redisAdapter.decr(goodsCollectKey);
+            redisUtils.decr(goodsCollectKey);
             goodsService.updateCollectNum(goodsId, -1);
             //删除当前用户的收藏记录
-            redisAdapter.zrem(
+            redisUtils.zrem(
                     userCollectKey,
                     String.valueOf(goodsId)
             );
@@ -231,16 +231,16 @@ public class GoodsController extends BaseController {
     @ResponseBody
     public EasyResult hot(@PathVariable("goodsId") int goodsId) {
         try {
-            String userHotKey = RedisKeyUtil.getUserHotKey(userHolder.get().getId());
-            String goodsHotKey = RedisKeyUtil.getGoodsHotKey(goodsId);
-            if (redisAdapter.zrank(userHotKey, String.valueOf(goodsId)) != null) {
+            String userHotKey = RedisKeyUtils.getUserHotKey(userHolder.get().getId());
+            String goodsHotKey = RedisKeyUtils.getGoodsHotKey(goodsId);
+            if (redisUtils.zrank(userHotKey, String.valueOf(goodsId)) != null) {
                 return new EasyResult(1, "不能重复点赞同一件商品");
             }
             //增加点赞量
-            redisAdapter.incr(goodsHotKey);
+            redisUtils.incr(goodsHotKey);
             goodsService.updateHotNum(goodsId, 1);
             //保存当前用户的点赞记录
-            redisAdapter.zadd(
+            redisUtils.zadd(
                     userHotKey,
                     String.valueOf(goodsId),
                     System.currentTimeMillis()
@@ -256,16 +256,16 @@ public class GoodsController extends BaseController {
     @ResponseBody
     public EasyResult cancalHot(@PathVariable("goodsId") int goodsId) {
         try {
-            String userHotKey = RedisKeyUtil.getUserHotKey(userHolder.get().getId());
-            String goodsHotKey = RedisKeyUtil.getGoodsHotKey(goodsId);
-            if (redisAdapter.zrank(userHotKey, String.valueOf(goodsId)) == null) {
+            String userHotKey = RedisKeyUtils.getUserHotKey(userHolder.get().getId());
+            String goodsHotKey = RedisKeyUtils.getGoodsHotKey(goodsId);
+            if (redisUtils.zrank(userHotKey, String.valueOf(goodsId)) == null) {
                 return new EasyResult(1, "不能取消点赞没有点赞过的商品");
             }
             //增加点赞量
-            redisAdapter.decr(goodsHotKey);
+            redisUtils.decr(goodsHotKey);
             goodsService.updateHotNum(goodsId, -1);
             //保存当前用户的点赞记录
-            redisAdapter.zrem(
+            redisUtils.zrem(
                     userHotKey,
                     String.valueOf(goodsId)
             );

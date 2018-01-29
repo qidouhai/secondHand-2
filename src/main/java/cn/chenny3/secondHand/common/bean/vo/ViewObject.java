@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.commons.vo;
+package cn.chenny3.secondHand.common.bean.vo;
 
 import java.util.HashMap;
 import java.util.Map;

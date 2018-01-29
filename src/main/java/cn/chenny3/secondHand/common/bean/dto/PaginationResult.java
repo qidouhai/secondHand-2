@@ -1,4 +1,4 @@
-package cn.chenny3.secondHand.commons.result;
+package cn.chenny3.secondHand.common.bean.dto;
 
 import java.util.List;
 

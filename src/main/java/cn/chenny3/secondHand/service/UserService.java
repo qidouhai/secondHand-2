@@ -12,4 +12,10 @@ public interface UserService {
     void deleteUser(int userId);
 
     void updateAuthenticateStatus(User user);
+
+    void updatePassword(int id, String password);
+
+    void updatePhone(int id, String phone);
+
+    void updateEmail(int id, String email);
 }
