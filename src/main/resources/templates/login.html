@@ -14,6 +14,8 @@
 
     <!-- Style -->
     <link rel="stylesheet" href="/styles/login.css" type="text/css" media="all"/>
+
+
 </head>
 <!-- //Head -->
 
@@ -23,9 +25,9 @@
 <div class="container w3layouts agileits">
     <div class="login w3layouts agileits">
         <h2>登 录</h2>
-        <form action="/login" method="post">
-            <input type="text" name="id" placeholder="用户名" required="required" />
-            <input type="password" name="password" placeholder="密码" required="required"/>
+        <form action="/login" method="post" >
+            <input type="text" name="id" placeholder="用户名"  autocomplete="off" />
+            <input type="password" name="password" placeholder="密码"/>
         </form>
         <ul class="tick w3layouts agileits">
             <li>
@@ -66,6 +68,8 @@
 <!-- //Body -->
 <script src="/scripts/jquery.min.js"></script>
 <script>
+
+
     $("#login").click(function () {
         $.post("/login",$("form:eq(0)").serialize(),function (result) {
             if(result.code==0){
@@ -86,4 +90,5 @@
         })
     })
 </script>
+
 </html>

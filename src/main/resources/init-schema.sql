@@ -119,3 +119,13 @@ CREATE TABLE `address` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
+Drop table if EXISTS `suggest`;
+create table `suggest`(
+  id int auto_increment PRIMARY key,
+  title VARCHAR(100) not null COMMENT '建议标题',
+  content text not NULL COMMENT '建议内容',
+  user_id int not null COMMENT '发起人',
+  `status` int(1) DEFAULT '1',
+  `created` datetime DEFAULT NULL COMMENT '创建时间',
+  `updated` datetime DEFAULT NULL COMMENT '修改时间'
+);

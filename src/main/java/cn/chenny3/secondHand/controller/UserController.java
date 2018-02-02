@@ -75,13 +75,34 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "password",method = RequestMethod.PUT)
     @ResponseBody
-    public EasyResult updatePasword(@RequestParam("password") String password) {
+    public EasyResult updatePasword(@RequestParam("originalPassword") String originalPassword,
+                                    @RequestParam("newPassword") String newPassword) {
         try{
-            if (StringUtils.isBlank(password)&&password.length()<6) {
-                return new EasyResult(1,"输入的密码不足6位");
+            if(StringUtils.isBlank(originalPassword)&&originalPassword.length()<6){
+                return new EasyResult(1,"输入的原始密码不足6位");
             }
-            userService.updatePassword(userHolder.get().getId(),password);
-            return new EasyResult(0,"密码修改成功。下次登录请使用新密码！");
+            if (StringUtils.isBlank(newPassword)&&newPassword.length()<6) {
+                return new EasyResult(1,"输入的新密码不足6位");
+            }
+            int userId=userHolder.get().getId();
+            //从数据库中查出用户的密码和盐
+            User user = userService.selectUser(userId);
+            String salt=user.getSalt();
+            String dbEncryptPassword=user.getPassword();
+            //对输入的密码参数进行加密处理
+            String handledOriginalPassword=SecondHandUtil.MD5(originalPassword+salt);
+            String handledNewPassword=SecondHandUtil.MD5(newPassword+salt);
+            //原始密码验证
+            if(dbEncryptPassword.equals(handledOriginalPassword)){
+                //新密码和原始密码一致
+                if(dbEncryptPassword.equals(handledNewPassword)){
+                    return new EasyResult(1,"新密码和原始密码不能相等");
+                }
+                userService.updatePassword(userId,newPassword);
+                return new EasyResult(0,"密码修改成功。下次登录请使用新密码！");
+            }
+            return new EasyResult(1,"输入的原始密码不正确");
+
         }catch (Exception e){
             logger.error(e.getMessage());
             return new EasyResult(1,"密码修改失败");

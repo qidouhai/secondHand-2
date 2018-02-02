@@ -63,27 +63,29 @@
 </div>
 
 <div class="m_des">
-    <form>
+    <form id="passwordForm">
         <table border="0" style="width:880px;" cellspacing="0" cellpadding="0">
             <tbody>
             <tr height="45">
                 <td width="80" align="right">原密码 &nbsp; &nbsp;</td>
-                <td><input type="password" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
-                        color="#ff4e00">*</font></td>
+                <td><input type="password" value="" name="originalPassword" class="add_ipt" style="width:180px;"/>&nbsp;
+                    <font
+                            color="#ff4e00">*</font></td>
             </tr>
             <tr height="45">
                 <td align="right">新密码 &nbsp; &nbsp;</td>
-                <td><input type="password" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
-                        color="#ff4e00">*</font></td>
+                <td><input type="password" value="" name="newPassword" class="add_ipt" style="width:180px;"/>&nbsp;
+                    <font
+                            color="#ff4e00">*</font></td>
             </tr>
             <tr height="45">
                 <td align="right">确认密码 &nbsp; &nbsp;</td>
-                <td><input type="password" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
+                <td><input type="password" name="confirmNewPassword" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
                         color="#ff4e00">*</font></td>
             </tr>
             <tr height="50">
                 <td>&nbsp;</td>
-                <td><input type="submit" value="确认修改" class="btn_tj"/></td>
+                <td><input type="button" onclick="updatePassword()" value="确认修改" class="btn_tj"/></td>
             </tr>
             </tbody>
         </table>
@@ -92,7 +94,48 @@
 </div>
 </body>
 <script src="/scripts/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/scripts/bootstrap.min.js"></script>
+<script>
+    /*<![CDATA[*/
+    function updatePassword() {
+        var originalPassword = $('#passwordForm input[name=originalPassword]').val();
+        var newPassword = $('#passwordForm input[name=newPassword]').val();
+        var confirmNewPassword = $('#passwordForm input[name=confirmNewPassword]').val();
 
+        if (originalPassword == null || $.trim(originalPassword) == ''||originalPassword.length<6) {
+            alert("输入的原始密码不足6位");
+            return ;
+        }
+
+        if (newPassword == null || $.trim(newPassword) == ''||newPassword.length<6) {
+            alert("输入的新密码不足6位");
+            return ;
+        }
+        if (confirmNewPassword == null || $.trim(confirmNewPassword) == ''||confirmNewPassword.length<6) {
+            alert("输入的确认密码不足6位");
+            return ;
+        }
+
+        if(newPassword != confirmNewPassword){
+            alert("输入的新密码和确认密码不一致");
+            return ;
+        }
+
+        $.ajax({
+            url:'/user/password',
+            type:'post',
+            data:{originalPassword:originalPassword,newPassword:newPassword,_method:'put'},
+            dataType:'json',
+            success:function (result) {
+                if(result.code==0){
+                    alert(result.msg);
+                    window.location.reload();
+                }else{
+                    alert(result.msg);
+                }
+            }
+            });
+    }
+    /*]]>*/
+</script>
 </html>

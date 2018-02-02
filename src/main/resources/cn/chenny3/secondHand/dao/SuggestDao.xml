@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.chenny3.secondHand.dao.SuggestDao">
+    <sql id="table">selectSuggests</sql>
+
+    <select id="selectCountByUserId" resultType="suggest">
+        select count(1)
+        FROM <include refid="table"></include>
+        <where>
+            user_id = #{userId},status = #{status}
+        </where>
+    </select>
+    <select id="selectSuggestList" resultType="suggest">
+        select
+        id,title,content,user_id,status,created,updated
+        from
+        <include refid="table"></include>
+        <where>
+            user_id = #{userId},status = #{status}
+        </where>
+        ORDER BY created
+    </select>
+
+    <select id="selectSuggestListByPage" resultType="suggest">
+        select
+        id,title,content,user_id,status,created,updated
+        from
+        <include refid="table"></include>
+        <where>
+            <if test="userId != 0">user_id = #{userId}</if>,status = #{status}
+        </where>
+        ORDER BY created
+        limit #{offset},#{limit}
+    </select>
+
+
+</mapper>
