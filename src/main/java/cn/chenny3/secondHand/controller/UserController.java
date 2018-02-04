@@ -113,22 +113,7 @@ public class UserController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "phone",method = RequestMethod.PUT)
-    @ResponseBody
-    public EasyResult updatePhone(@RequestParam("phone") String phone) {
-        try{
-            if (StringUtils.isBlank(phone)&&phone.length()!=11) {
-                return new EasyResult(1,"输入的手机号不足11位");
-            }
-            userService.updatePhone(userHolder.get().getId(),phone);
-            //更新会话中的用户信息
-            userHolder.get().setPhone(phone);
-            return new EasyResult(0,"手机号修改成功。");
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            return new EasyResult(1,"手机号密码修改失败");
-        }
-    }
+
 
     /**
      * 检查数据表中指定的属性值是否唯一
@@ -144,10 +129,11 @@ public class UserController extends BaseController {
             fieldName=fieldName.trim();
             if(!fieldName.equals("name")&&
                     !fieldName.equals("email")&&
+                    !fieldName.equals("phone")&&
                     !fieldName.equals("qq")&&
                     !fieldName.equals("wechat")&&
                     !fieldName.equals("alipay")){
-                return new EasyResult(0,"输入的检查域名称不符合规定");
+                return new EasyResult(1,"输入的检查域名称不符合规定");
             }
             boolean flag=userService.checkUniqueAtField(fieldName,fieldValue);
             if(flag){
@@ -173,10 +159,11 @@ public class UserController extends BaseController {
             //防止sql注入
             fieldName=fieldName.trim();
             if(!fieldName.equals("email")&&
+                    !fieldName.equals("phone")&&
                     !fieldName.equals("qq")&&
                     !fieldName.equals("wechat")&&
                     !fieldName.equals("alipay")){
-                return new EasyResult(0,"输入的检查域名称不符合规定");
+                return new EasyResult(1,"输入的检查域名称不符合规定");
             }
             boolean flag=userService.checkExistAtField(userHolder.get(),fieldName,fieldValue);
             if(flag){
@@ -223,8 +210,7 @@ public class UserController extends BaseController {
                 //更新会话中的用户信息
                 user.setEmail(email);
                 //删除redis中的缓存的验证信息
-                String key=RedisKeyUtils.getUpdateEmailAccountKey(user.getId());
-                redisUtils.del(key);
+                redisUtils.del(keyAtRedis);
                 //返回结果
                 return new EasyResult(0,"邮箱修改成功");
             }else{
@@ -233,6 +219,52 @@ public class UserController extends BaseController {
         }catch (Exception e){
             logger.error(e.getMessage());
             return new EasyResult(1,"邮箱修改失败");
+        }
+    }
+
+    @RequestMapping(value = "phone",method = RequestMethod.PUT)
+    @ResponseBody
+    public EasyResult updatePhone(@RequestParam("phone") String phone,@RequestParam("verifyCode")String verifyCode) {
+        try{
+            //参数验证
+            if (StringUtils.isBlank(phone)&&!phone.matches("1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}")) {
+                return new EasyResult(1,"请输入正确格式的11位手机号");
+            }
+            if(StringUtils.isBlank(verifyCode)){
+                return new EasyResult(1,"请输入验证码");
+            }
+            User user = userHolder.get();
+            int userId=user.getId();
+            //从redis中获取保存的有效验证码
+            String keyAtRedis= RedisKeyUtils.getUpdatePhoneAccountKey(userId);
+            String valueAtRedis = redisUtils.get(keyAtRedis);
+            //验证码过期
+            if(valueAtRedis==null){
+                return new EasyResult(1,"验证码过期，请重新获取");
+            }
+            //拆分value，获的保存的手机号和验证码
+            int splitIndex=valueAtRedis.lastIndexOf("#");
+            String phoneAtRedis=valueAtRedis.substring(0,splitIndex);
+            String verifyCodeByRedis=valueAtRedis.substring(splitIndex+1);
+            //与用户输入的验证匹配
+            if(!phone.equals(phoneAtRedis)){
+                return new EasyResult(1,"请重新输入需要绑定的新手机号");
+            }
+            if(verifyCodeByRedis.equals(verifyCode)){
+                //修改信息保存至数据库
+                userService.updatePhone(user.getId(),phone);
+                //更新会话中的用户信息
+                user.setPhone(phone);
+                //删除redis中的缓存的验证信息
+                redisUtils.del(keyAtRedis);
+                //返回结果
+                return new EasyResult(0,"手机号修改成功");
+            }else{
+                return new EasyResult(1,"手机号修改失败");
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return new EasyResult(1,"手机号修改失败");
         }
     }
 }

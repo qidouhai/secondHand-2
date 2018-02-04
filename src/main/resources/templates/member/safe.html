@@ -21,15 +21,14 @@
         <table border="0" style="width:880px;" cellspacing="0" cellpadding="0">
             <tbody>
             <tr height="45">
-                <td width="80" align="right">原手机 &nbsp; &nbsp;</td>
-                <td><input type="text" name="originPhoneInput" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
+                <td  align="right" style="width: 30px;">原手机 &nbsp; &nbsp;</td>
+                <td  width="200" style="width: 200px;"><input type="text" name="originPhoneInput" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
                         color="#ff4e00">*</font></td>
-                <td width="100"><input type="button" value="验证" onclick="verifyOriginPhone()" class="verifyPhoneBtn general_btn"/></td>
-            </tr>
+                <td  width="100"><input type="button" value="验证" onclick="verifyOriginPhone()" class="verifyPhoneBtn general_btn"/></td>
             </tr>
             <tr height="45" hidden="hidden">
                 <td align="right">新手机 &nbsp; &nbsp;</td>
-                <td><input type="text" name="newPhoneInput" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
+                <td><input type="text" name="newPhoneInput" class="newPhoneInput add_ipt" style="width:180px;"/>&nbsp; <font
                         color="#ff4e00">*</font></td>
                 <td width="90"><input type="button" value="获取验证码" onclick="getPhoneVerifyCode()" class="getVerifyCodeBtn general_btn"/></td>
             </tr>
@@ -40,7 +39,7 @@
             </tr>
             <tr height="50" hidden="hidden">
                 <td>&nbsp;</td>
-                <td><input type="submit" value="确认修改" class="btn_tj"/></td>
+                <td><input type="button" onclick="commitUpdatePhone()" value="确认修改" class="btn_tj"/></td>
             </tr>
             </tbody>
         </table>
@@ -215,7 +214,7 @@
         var phone=$.trim($('input[name=newPhoneInput]:eq(0)').val());
         var verifyCode=$.trim($('input[name=verifyCodeInput]:eq(0)').val());
         //验证邮箱格式
-        if(!checkEmail(phone)){alert('请输入正确格式的11位手机号');return ;}
+        if(!checkPhone(phone)){alert('请输入正确格式的11位手机号');return ;}
         //验证验证码，不能为空
         if(verifyCode==''){alert('验证码不能为空');return ; }
         //正式提交修改
@@ -324,7 +323,7 @@
                     alert('验证码获取失败，请重试');
                 }
             },
-            async:false
+            async:true
         });
 
     }
