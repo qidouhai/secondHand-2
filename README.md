@@ -15,3 +15,6 @@
 |7.Spring Data Redis 二：RedisTemplate实现事物问题剖析和解决|http://blog.csdn.net/congcong68/article/details/52734735|  
 |8.thymeleaf模板js中包含转义字符报错|https://zhidao.baidu.com/question/811851082853036012.html|  
 |9.springboot 整合邮件发送功能|http://blog.didispace.com/springbootmailsender/|
+|10.springboot中配置文件application.properties的理解|https://www.cnblogs.com/shamo89/p/8178109.html|
+|11.Springboot 之 解决IDEA读取properties配置文件的中文乱码问题|https://www.cnblogs.com/a8457013/p/7829223.html|
+|12.Class.getField和getDeclaredField的区别|https://www.jianshu.com/p/1361f1f43e99|

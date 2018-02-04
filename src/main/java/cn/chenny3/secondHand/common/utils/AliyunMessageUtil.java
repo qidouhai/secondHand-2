@@ -61,7 +61,7 @@ public class AliyunMessageUtil {
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
         if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
         //请求成功
-            System.out.println("发送成功");
+
         }
     }
 }
