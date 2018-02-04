@@ -24,4 +24,6 @@ public interface UserDao {
     int updateStatus(@Param("id") int id,@Param("status") int status);
 
     int updateUser(User user);
+    @Select({"select count(1) from ",TABLE_NAME," where ${fieldName}=#{fieldValue}"})
+    int checkCountByField(@Param("fieldName")String fieldName, @Param("fieldValue")String fieldValue);
 }

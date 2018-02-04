@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class RedisUtils {
@@ -19,11 +20,11 @@ public class RedisUtils {
         return redisTemplate.opsForValue();
     }
 
-    private ListOperations<String,String> getOpsForList(){
+    private ListOperations<String, String> getOpsForList() {
         return redisTemplate.opsForList();
     }
 
-    private ZSetOperations<String,String> getOpsForZSet(){
+    private ZSetOperations<String, String> getOpsForZSet() {
         return redisTemplate.opsForZSet();
     }
 
@@ -31,12 +32,14 @@ public class RedisUtils {
         return getOpsForSet().add(key, value);
     }
 
-    public Long srem(String key,String value){
-        return getOpsForSet().remove(key,value);
+    public Long srem(String key, String value) {
+        return getOpsForSet().remove(key, value);
     }
-    public Boolean sIsMember(String key,String value){
-        return getOpsForSet().isMember(key,value);
+
+    public Boolean sIsMember(String key, String value) {
+        return getOpsForSet().isMember(key, value);
     }
+
     public Long incr(String key) {
         return getOpsForValue().increment(key, 1);
     }
@@ -53,6 +56,14 @@ public class RedisUtils {
         return getOpsForValue().increment(key, delta);
     }
 
+    public void set(String key, String value, Long timeOut) {
+        getOpsForValue().set(key, value, timeOut, TimeUnit.SECONDS);
+    }
+
+    public void set(String key, String value) {
+        getOpsForValue().set(key, value);
+    }
+
     public String get(String key) {
         return getOpsForValue().get(key);
     }
@@ -61,35 +72,35 @@ public class RedisUtils {
         redisTemplate.delete(key);
     }
 
-    public Set<String> scard(String key){
+    public Set<String> scard(String key) {
         return getOpsForSet().members(key);
     }
 
-    public Long lpush(String key,String value){
-        return getOpsForList().leftPush(key,value);
+    public Long lpush(String key, String value) {
+        return getOpsForList().leftPush(key, value);
     }
 
-    public Long rpush(String key,String value){
-        return getOpsForList().rightPush(key,value);
+    public Long rpush(String key, String value) {
+        return getOpsForList().rightPush(key, value);
     }
 
-    public Boolean zadd(String key,String value,double score){
-        return getOpsForZSet().add(key,value,score);
+    public Boolean zadd(String key, String value, double score) {
+        return getOpsForZSet().add(key, value, score);
     }
 
-    public Set<String> zrange(String key,int start,int end){
-        return getOpsForZSet().range(key,start,end);
+    public Set<String> zrange(String key, int start, int end) {
+        return getOpsForZSet().range(key, start, end);
     }
 
-    public Set<String> zrevrange(String key,int start,int end){
-        return getOpsForZSet().reverseRange(key,start,end);
+    public Set<String> zrevrange(String key, int start, int end) {
+        return getOpsForZSet().reverseRange(key, start, end);
     }
 
-    public Long zrem(String key,String... member){
-        return getOpsForZSet().remove(key,member);
+    public Long zrem(String key, String... member) {
+        return getOpsForZSet().remove(key, member);
     }
 
-    public Long zrank(String key,String memeber){
-        return getOpsForZSet().rank(key,memeber);
+    public Long zrank(String key, String memeber) {
+        return getOpsForZSet().rank(key, memeber);
     }
 }

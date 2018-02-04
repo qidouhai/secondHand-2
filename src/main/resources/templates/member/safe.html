@@ -22,15 +22,23 @@
             <tbody>
             <tr height="45">
                 <td width="80" align="right">原手机 &nbsp; &nbsp;</td>
-                <td><input type="text" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
+                <td><input type="text" name="originPhoneInput" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
                         color="#ff4e00">*</font></td>
+                <td width="100"><input type="button" value="验证" onclick="verifyOriginPhone()" class="verifyPhoneBtn general_btn"/></td>
             </tr>
-            <tr height="45">
+            </tr>
+            <tr height="45" hidden="hidden">
                 <td align="right">新手机 &nbsp; &nbsp;</td>
-                <td><input type="text" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
+                <td><input type="text" name="newPhoneInput" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
+                        color="#ff4e00">*</font></td>
+                <td width="90"><input type="button" value="获取验证码" onclick="getPhoneVerifyCode()" class="getVerifyCodeBtn general_btn"/></td>
+            </tr>
+            <tr height="45" hidden="hidden">
+                <td align="right" style="width: 30px">验证码 &nbsp; &nbsp;</td>
+                <td style="width: 200px;"><input type="text" name="verifyCodeInput" value="" class="add_ipt" style="width:180px;" placeholder="验证码已发至新手机号"/>&nbsp; <font
                         color="#ff4e00">*</font></td>
             </tr>
-            <tr height="50">
+            <tr height="50" hidden="hidden">
                 <td>&nbsp;</td>
                 <td><input type="submit" value="确认修改" class="btn_tj"/></td>
             </tr>
@@ -44,18 +52,25 @@
         <table border="0" style="width:880px;" cellspacing="0" cellpadding="0">
             <tbody>
             <tr height="45">
-                <td width="80" align="right">原邮箱 &nbsp; &nbsp;</td>
-                <td><input type="text" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
+                <td  align="right" style="width: 30px;">原邮箱 &nbsp; &nbsp;</td>
+                <td width="200" style="width: 200px;"><input type="text" name="originEmailInput" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
+                        color="#ff4e00">*</font></td>
+                <td width="100"><input type="button" value="验证" onclick="verifyOriginEmail()" class="verifyEmailBtn general_btn"/></td>
+            </tr>
+            <tr height="45" hidden="hidden">
+                <td align="right" style="width: 30px">新邮箱 &nbsp; &nbsp;</td>
+                <td style="width: 200px;"><input type="text" name="newEmailInput" value="" class="add_ipt" style="width:180px;" placeholder="请输入新邮箱"/>&nbsp; <font
+                        color="#ff4e00">*</font></td>
+                <td width="90"><input type="button" value="获取验证码" onclick="getEmailVerifyCode()" class="getVerifyCodeBtn general_btn"/></td>
+            </tr>
+            <tr height="45" hidden="hidden">
+                <td align="right" style="width: 30px">验证码 &nbsp; &nbsp;</td>
+                <td style="width: 200px;"><input type="text" name="verifyCodeInput" value="" class="add_ipt" style="width:180px;" placeholder="验证码已发至新邮箱"/>&nbsp; <font
                         color="#ff4e00">*</font></td>
             </tr>
-            <tr height="45">
-                <td align="right">新邮箱 &nbsp; &nbsp;</td>
-                <td><input type="text" value="" class="add_ipt" style="width:180px;"/>&nbsp; <font
-                        color="#ff4e00">*</font></td>
-            </tr>
-            <tr height="50">
+            <tr height="50" hidden="hidden">
                 <td>&nbsp;</td>
-                <td><input type="submit" value="确认修改" class="btn_tj"/></td>
+                <td><input type="button" onclick="commitNewEmail()" value="确认修改" class="btn_tj"/></td>
             </tr>
             </tbody>
         </table>
@@ -97,6 +112,246 @@
 <script src="/scripts/bootstrap.min.js"></script>
 <script>
     /*<![CDATA[*/
+    /**
+     * 验证用户输入手机号是否符合格式
+     */
+    function checkPhone(phone){
+        if(/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(phone)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * 验证输入的手机号是否是用户当前的手机号
+     */
+    function verifyOriginPhone(){
+        var originPhone=$.trim($('input[name=originPhoneInput]:eq(0)').val());
+        //验证手机号格式
+        if(!checkPhone(originPhone)){alert("请输入正确格式的11位手机号");return;}
+        //提交后台验证
+        $.get('/user/check/curUser/phone',{value:originPhone},function (result) {
+            if(result.code==0){
+                $('.verifyPhoneBtn').val("验证成功");
+                $('.verifyPhoneBtn').attr('disabled','disabled');
+                //显示新邮箱输入框
+                $('.verifyPhoneBtn').parent().parent().next().removeAttr('hidden');
+            }else{
+                alert("验证失败");
+            }
+        },'json')
+    }
+
+    /**
+     * 验证输入的手机号是否在数据库中存在，唯一性校验
+     * 符合唯一性，即在数据库中不存在，返回true，否则返回false
+     */
+    function checkUniquePhoneInDB(phone){
+        var flag;
+        $.ajax({
+            url:'/user/check/phone',
+            data:{value:phone},
+            dataType:'json',
+            success:function (result) {
+                if(result.code==0){
+                    flag=true;
+                }else{
+                    flag=false;
+                }
+            },
+            async:false
+        });
+        return flag;
+    }
+
+    /**
+     * 获取手机验证码
+     */
+    function getPhoneVerifyCode(){
+        //验证手机号
+        var newPhone=$.trim($('input[name=newPhoneInput]:eq(0)').val());
+        //验证手机号格式
+        if(!checkPhone(newPhone)){alert("请输入正确格式的11位手机号");return;}
+        //手机号为唯一性校验
+        if(!checkUniquePhoneInDB(newPhone)){alert("该手机号已被其他用户绑定，请重新输入");return;}
+        //正式获取验证码
+        $.ajax({
+            url:'/verifyCode/updatePhone',
+            data:{phone:newPhone},
+            dataType:'json',
+            success:function (result) {
+                if(result.code==0){
+                    //显示验证码输入框
+                    $('input[name=newPhoneInput]:eq(0)').parent().parent().next().removeAttr('hidden');
+                    //显示提交修改按钮
+                    $('input[name=newPhoneInput]:eq(0)').parent().parent().next().next().removeAttr('hidden');
+                    //禁用获取验证码的按钮,并设置倒计时，倒计时结束才继续获取
+                    var timer;
+                    var time=120;
+                    $('.getVerifyCodeBtn:eq(0)').attr('disabled','disabled');
+                    timer=window.setInterval(function () {
+                        $('.getVerifyCodeBtn:eq(0)').val(time+"秒后再次获取");
+                        time--;
+                        if(time==0){
+                            window.clearTimeout(timer);
+                            $('.getVerifyCodeBtn:eq(0)').val("获取验证码");
+                            $('.getVerifyCodeBtn:eq(0)').removeAttr('disabled');
+                            time=120;
+                        }
+                    },1000);
+                }else{
+                    alert('验证码获取失败，请重试');
+                }
+            },
+            async:false
+        });
+
+    }
+    /**
+     * 提交手机号修改
+     */
+    function commitUpdatePhone(){
+        var phone=$.trim($('input[name=newPhoneInput]:eq(0)').val());
+        var verifyCode=$.trim($('input[name=verifyCodeInput]:eq(0)').val());
+        //验证邮箱格式
+        if(!checkEmail(phone)){alert('请输入正确格式的11位手机号');return ;}
+        //验证验证码，不能为空
+        if(verifyCode==''){alert('验证码不能为空');return ; }
+        //正式提交修改
+        $.post('/user/phone',{_method:'put',phone:phone,verifyCode:verifyCode},function (result) {
+            if(result.code==0){
+                alert("手机号修改成功");
+                window.location.reload();
+            }else{
+                alert("手机号修改失败");
+            }
+        },'json');
+    }
+
+
+    /**
+     * 验证用户输入的邮箱是否符合格式
+     */
+    function checkEmail(email){
+        if(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    /**
+     * 验证输入邮箱是否和当前用户真实邮箱匹配
+     */
+    function verifyOriginEmail(){
+        var originEmail=$.trim($('input[name=originEmailInput]:eq(0)').val());
+        //验证邮箱格式
+        if(!checkEmail(originEmail)){alert('请输入正确格式的邮箱');return ;}
+        //提交后台验证
+        $.get('/user/check/curUser/email',{value:originEmail},function (result) {
+            if(result.code==0){
+                $('.verifyEmailBtn').val("验证成功");
+                $('.verifyEmailBtn').attr('disabled','disabled');
+                //显示新邮箱输入框
+                $('.verifyEmailBtn').parent().parent().next().removeAttr('hidden');
+            }else{
+                alert("验证失败");
+            }
+        },'json')
+    }
+
+    /**
+     *验证用户输入的邮箱是否在数据库中存在，验证唯一性
+     * 返回 true 代表数据库中不存在，符合唯一性校验
+     * 返回 false 代表数据库中已存在，不符合唯一性校验
+     */
+    function checkUniqueEmailInDB(email){
+        var flag;
+        $.ajax({
+            url:'/user/check/email',
+            data:{value:email},
+            dataType:'json',
+            success:function (result) {
+                if(result.code==0){
+                    flag=true;
+                }else{
+                    flag=false;
+                }
+            },
+            async:false
+        });
+        return flag;
+    }
+
+
+
+    /**
+     * 获取验证码
+     *
+     */
+    function getEmailVerifyCode() {
+        var newEmail=$.trim($('input[name=newEmailInput]:eq(0)').val());
+        //验证邮箱格式
+        if(!checkEmail(newEmail)){alert('请输入正确格式的邮箱');return ;}
+        //唯一性校验
+        if(!checkUniqueEmailInDB(newEmail)){alert('输入的邮箱已被其他用户绑定,请重新输入');return;}
+        //正式获取验证码
+        $.ajax({
+            url:'/verifyCode/updateEmail',
+            data:{email:newEmail},
+            dataType:'json',
+            success:function (result) {
+                if(result.code==0){
+                    //显示验证码输入框
+                    $('input[name=newEmailInput]:eq(0)').parent().parent().next().removeAttr('hidden');
+                    //显示提交修改按钮
+                    $('input[name=newEmailInput]:eq(0)').parent().parent().next().next().removeAttr('hidden');
+                    //禁用获取验证码的按钮,并设置倒计时，倒计时结束才继续获取
+                    var timer;
+                    var time=120;
+                    $('.getVerifyCodeBtn:eq(1)').attr('disabled','disabled');
+                    timer=window.setInterval(function () {
+                        $('.getVerifyCodeBtn:eq(1)').val(time+"秒后再次获取");
+                        time--;
+                        if(time==0){
+                            window.clearTimeout(timer);
+                            $('.getVerifyCodeBtn:eq(1)').val("获取验证码");
+                            $('.getVerifyCodeBtn:eq(1)').removeAttr('disabled');
+                            time=120;
+                        }
+                    },1000);
+                }else{
+                    alert('验证码获取失败，请重试');
+                }
+            },
+            async:false
+        });
+
+    }
+    /**
+     *提交新邮箱
+     */
+    function commitNewEmail(){
+        var email=$.trim($('input[name=newEmailInput]:eq(0)').val());
+        var verifyCode=$.trim($('input[name=verifyCodeInput]:eq(1)').val());
+        //验证邮箱格式
+        if(!checkEmail(email)){alert('请输入正确格式的邮箱');return ;}
+        //验证验证码，不能为空
+        if(verifyCode==''){alert('验证码不能为空');return ; }
+        //正式提交修改
+        $.post('/user/email',{_method:'put',email:email,verifyCode:verifyCode},function (result) {
+            if(result.code==0){
+                alert("邮箱修改成功");
+                window.location.reload();
+            }else{
+                alert("邮箱修改失败");
+            }
+        },'json');
+    }
+
+    /**
+     * 修改密码
+     */
     function updatePassword() {
         var originalPassword = $('#passwordForm input[name=originalPassword]').val();
         var newPassword = $('#passwordForm input[name=newPassword]').val();

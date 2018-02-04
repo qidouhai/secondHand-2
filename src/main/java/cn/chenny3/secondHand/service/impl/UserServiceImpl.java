@@ -7,6 +7,7 @@ import cn.chenny3.secondHand.common.utils.SecondHandUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.UUID;
 
@@ -85,5 +86,23 @@ public class UserServiceImpl implements UserService{
         temp.setId(id);
         temp.setEmail(email);
         updateUser(temp);
+    }
+
+    @Override
+    public boolean checkUniqueAtField(String fieldName, String fieldValue) {
+        int count=userDao.checkCountByField(fieldName,fieldValue);
+        return count==0?true:false;
+    }
+
+    @Override
+    public boolean checkExistAtField(User user, String fieldName, String fieldValue) throws NoSuchFieldException, IllegalAccessException {
+        //通过反射获取User当前类本身拥有的的指定属性
+        Field field = user.getClass().getDeclaredField(fieldName);
+        //设置访问权限
+        field.setAccessible(true);
+        if(field.get(user).equals(fieldValue)){
+            return true;
+        }
+        return false;
     }
 }

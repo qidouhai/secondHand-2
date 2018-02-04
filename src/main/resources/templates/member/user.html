@@ -61,7 +61,9 @@
     <tr>
         <td>用户ID：<span style="color:#555555;" th:text="${user.id}" >12345678</span></td>
         <td>用户名：<span style="color:#555555;" th:text="${user.name}">TRACY</span></td>
-        <td>电子邮箱：<span style="color:#555555;" th:text="${user.email}">1017097573@qq.com</span></td>
+        <td>电子邮箱：<span style="color:#555555;"
+                       th:with="subString=${#strings.substring(user.email,0,#strings.indexOf(user.email,'@'))},startIndex=${#strings.length(subString)/4},endIndex=${#strings.length(subString)>startIndex+4?startIndex+4:#strings.length(subString)},replaceLength=${endIndex - startIndex}"
+                       th:text="${#strings.replace(user.email,#strings.substring(user.email,startIndex,endIndex),#strings.repeat('*',replaceLength))}">1017097573@qq.com</span></td>
 
     </tr>
     <tr>
@@ -74,7 +76,7 @@
         <td>级&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').registerYear:'未知'}" >2014</span></td>
     </tr>
     <tr>
-        <td>联系电话：<span style="color:#555555;" th:text="${user.phone}">15576064301</span></td>
+        <td>联系电话：<span style="color:#555555;" th:with="subString=${#strings.substring(user.phone,3,7)}" th:text="${#strings.replace(user.phone,subString,'****')}">15576064301</span></td>
         <td>宿舍住址：<span style="color:#555555;">湖南理工学院南院13栋</span></td>
         <td>注册时间：<span style="color:#555555;" th:text="${#dates.format(user.created,'yyyy-MM-dd')}">2015-10-10</span></td>
     </tr>

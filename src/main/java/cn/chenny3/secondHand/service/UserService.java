@@ -18,4 +18,8 @@ public interface UserService {
     void updatePhone(int id, String phone);
 
     void updateEmail(int id, String email);
+
+    boolean checkUniqueAtField(String fieldName, String fieldValue);
+
+    boolean checkExistAtField(User user, String fieldName, String fieldValue) throws NoSuchFieldException, IllegalAccessException;
 }

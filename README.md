@@ -13,3 +13,5 @@
 | 5.SpringBoot和Redis的；整合|https://www.cnblogs.com/xmzJava/p/8028312.html|
 | 6.使用Redis作为SpringBoot项目数据缓存|https://www.jianshu.com/p/5a70b13a4fa7|
 |7.Spring Data Redis 二：RedisTemplate实现事物问题剖析和解决|http://blog.csdn.net/congcong68/article/details/52734735|  
+|8.thymeleaf模板js中包含转义字符报错|https://zhidao.baidu.com/question/811851082853036012.html|  
+|9.springboot 整合邮件发送功能|http://blog.didispace.com/springbootmailsender/|

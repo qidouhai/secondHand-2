@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
+import java.util.UUID;
 
 public class SecondHandUtil {
     private static final Logger logger = LoggerFactory.getLogger(SecondHandUtil.class);
@@ -40,5 +41,10 @@ public class SecondHandUtil {
 
     public static String getJsonString(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
+    }
+    //随机生成指定位数的
+    public static String generateSpecifiedLengthCode(int length){
+        if(length<0||length>32) throw new IllegalArgumentException("length的有效范围为1至32位");
+        return UUID.randomUUID().toString().replace("-","").substring(0,length);
     }
 }

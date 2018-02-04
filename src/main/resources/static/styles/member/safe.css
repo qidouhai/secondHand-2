@@ -13,8 +13,8 @@ form{
 }
 .m_des {
     overflow: hidden;
-    margin-top: 30px;
-    padding-bottom: 30px;
+    margin-top: 20px;
+    padding-bottom: 20px;
 
     border-bottom: 1px dotted #b6b6b6;
 }
@@ -31,4 +31,24 @@ form{
     padding: 0 18px;
     border: 0;
     cursor: pointer;
+}
+
+.general_btn {
+    width: auto;
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+    background-color: #ff4e00;
+    color: #FFF;
+    font-size: 12px;
+    font-family: "宋体";
+    text-align: center;
+    padding: 0 8px;
+    border: 0;
+    cursor: pointer;
+}
+
+.tip{
+    font-size: 12px;
+    color: #ff2b18;
 }

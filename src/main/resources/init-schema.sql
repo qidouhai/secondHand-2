@@ -11,10 +11,13 @@ CREATE TABLE `user` (
   `alipay` varchar(20) DEFAULT NULL,
   `email` varchar(30) NOT NULL,
   `authenticate_id` int(11) DEFAULT NULL COMMENT '认证id',
+  `address_id` int(11) DEFAULT NULL,
   `status` int(1) DEFAULT '1',
   `created` datetime DEFAULT NULL COMMENT '创建时间',
   `updated` datetime DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_email` (`email`) USING BTREE,
+  UNIQUE KEY `unique_phone` (`phone`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 
