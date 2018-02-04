@@ -72,8 +72,8 @@ public class SSOController extends BaseController{
             //todo 获取ip地址功能需补全，现在不能实现客户端代理访问时获取其真实ip
             LoginRecord loginRecord = new LoginRecord().setUserId(dbUser.getId()).setIp(request.getRemoteAddr());
             //0:0:0:0:0:0:0:1
-            if(loginRecord.getAddress().equals("0:0:0:0:0:0:0:1")){
-                loginRecord.setAddress("127.0.0.1");
+            if(loginRecord.getIp().equals("0:0:0:0:0:0:0:1")){
+                loginRecord.setIp("127.0.0.1");
             }
             loginRecordService.addLoginRecord(loginRecord);
 
