@@ -1,6 +1,21 @@
 # secondHand
 针对湖南理工学院打造的大学生跳蚤市场交易平台
-
+# 使用技术
+- Springboot
+- Thymeleaf
+- Mybatis
+- Redis
+- Mysql
+- OKHTTP
+- Jsoup
+- JavaMailSender
+- hibernate-validate
+- ueditor
+- devTools
+- bootstrap / boostrap-table
+- 阿里云大于短信服务
+- 阿里云对象存储服务
+- ...
 
 # Q&A
 
