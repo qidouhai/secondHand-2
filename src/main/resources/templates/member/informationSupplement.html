@@ -11,20 +11,22 @@
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
 
     <style>
-        .title{
+        .title {
             text-align: center;
             margin-top: 200px;
         }
 
-        form{
+        form {
             margin-top: 30px;
             width: 282px;
         }
-        .horizontal_center{
-            margin-left:auto;
+
+        .horizontal_center {
+            margin-left: auto;
             margin-right: auto;
         }
-        .confirm_btn{
+
+        .confirm_btn {
             display: block;
             margin-top: 40px;
             width: 200px;
@@ -42,94 +44,193 @@
             border-radius: 8px;
         }
 
-        .confirm_btn:hover{
+        .confirm_btn:hover {
 
             background-color: #fff;
             color: #000;
             transition: all 0.5s ease-in 0s;
         }
 
-        .required{
+        .required {
             color: red;
             line-height: 20px;
             display: inline-block;
-            padding:0 2px;
+            padding: 0 2px;
         }
-        .inputs_wrap{
+
+        .inputs_wrap {
             overflow: hidden;
         }
-        .inputs_wrap select,.input_wrap {
+
+        .inputs_wrap select, .input_wrap {
             float: left;
         }
-        .inputs_wrap select{
+
+        .inputs_wrap select {
             width: 70px;
         }
-        .input_wrap input{
+
+        .input_wrap input {
             width: 70px;
             display: inline-block;
         }
-        .input_wrap{
+
+        .input_wrap {
             width: auto;
             line-height: 34px;
             margin-right: 15px;
         }
-        .input_wrap:last-child{
+
+        .input_wrap:last-child {
             margin-right: 0px;
         }
     </style>
 </head>
 <body class="container">
-    <div class="row title">
-        <h1>用户信息补充</h1>
-    </div>
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <form class="horizontal_center">
-                <div class="form-group">
-                    <label for="address">收货地址(<span class="required">*</span>)</label>
-                    <div class="inputs_wrap">
-                        <div class="input_wrap">
-                            <select id="address" class="form-control">
-                                <option>南</option>
-                                <option>东</option>
-                                <option>北</option>
-                            </select>院
-                        </div>
-                        <div class="input_wrap">
-                            <select id="dong" class="form-control">
-                                <option>1</option>
-                                <option>2</option>
-                            </select>栋
-                        </div>
+<div class="row title">
+    <h1>用户信息补充</h1>
+</div>
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <form class="horizontal_center">
+            <div class="form-group">
+                <label for="area">收货地址(<span class="required">*</span>)</label>
+                <div class="inputs_wrap">
+                    <div class="input_wrap">
+                        <select id="area" name="area" class="form-control">
+                            <option>南</option>
+                            <option>东</option>
+                            <option>北</option>
+                        </select>院
+                    </div>
+                    <div class="input_wrap">
+                        <select id="hostelId" name="hostelId" class="form-control">
+                            <option>1</option>
+                            <option>2</option>
+                        </select>栋
+                    </div>
 
-                        <div class="input_wrap">
-                            <input type="email" class="form-control" id="" placeholder="例:204"/>号
-                        </div>
-
+                    <div class="input_wrap">
+                        <input type="text" name="houseId" class="form-control" id="houseId" placeholder="例:204"/>号
                     </div>
 
                 </div>
-                <div class="form-group">
-                    <label for="qq">QQ</label>
-                    <input type="email" class="form-control" id="qq" placeholder="qq"/>
-                </div>
-                <div class="form-group">
-                    <label for="wechat">wechat</label>
-                    <input type="email" class="form-control" id="wechat" placeholder="wechat"/>
-                </div>
-                <div class="form-group">
-                    <label for="alipay">alipay</label>
-                    <input type="email" class="form-control" id="alipay" placeholder="alipay"/>
-                </div>
-                <button type="button" class="confirm_btn horizontal_center">Submit</button>
-            </form>
-        </div>
-    </div>
 
+            </div>
+            <div class="form-group">
+                <label for="qq">QQ</label>
+                <input type="email" class="form-control" name="qq" id="qq" placeholder="qq"/>
+            </div>
+            <div class="form-group">
+                <label for="wechat">wechat</label>
+                <input type="email" class="form-control" name="wechat" id="wechat" placeholder="wechat"/>
+            </div>
+            <div class="form-group">
+                <label for="alipay">alipay</label>
+                <input type="email" class="form-control" name="alipay" id="alipay" placeholder="alipay"/>
+            </div>
+            <button type="button" id="supplementBtn" onclick="commitSupplementInfo()"
+                    class="confirm_btn horizontal_center">Submit
+            </button>
+        </form>
+    </div>
+</div>
 
 
 <script src="/scripts/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/scripts/bootstrap.min.js"></script>
+<script>
+    /*<![CDATA[*/
+    //定义对象数组，建立校区和公寓栋数的关系
+    var arr = new Array({area: '南', hostelNum: '19'}, {area: '东', hostelNum: '10'}, {area: '北', hostelNum: '7'})
+
+    /**
+     * 根据校区查询对应的公寓栋数
+     */
+    function getHostelNum(area) {
+        var hostelNum;
+        $.each(arr, function (i, item) {
+            console.log(item)
+            if (item.area == area) {
+                hostelNum = item.hostelNum;
+            }
+        });
+        return hostelNum;
+    }
+
+    /**
+     * area下拉框内容改变时，重置hostel下拉框的option元素
+     */
+    $('#area').change(function () {
+        resterHostelSelect($('#area').val());
+    })
+
+    /**
+     *重置hostel下拉框的option元素
+     */
+    function resterHostelSelect(area) {
+        console.log(area);
+        var hostelNum = getHostelNum($('#area').val());
+        console.log(hostelNum);
+        $('#hostel_id').empty();
+        for (var i = 1; i <= hostelNum; i++) {
+            $('#hostel_id').append('<option value="' + i + '">' + i + '</option>');
+        }
+    }
+
+    $(function () {
+        //初始化下拉框内容
+        resterHostelSelect(arr[0].area);
+    })
+
+    /**
+     * 检测input内容是否为空
+     *
+     */
+    var inputArr = new Array(
+        {inputId: 'area', inputName: '校区'},
+        {inputId: 'hostelId', inputName: '公寓楼号'},
+        {inputId: 'houseId', inputName: '宿舍号'},
+        {inputId: 'qq', inputName: 'qq'},
+        {inputId: 'wechat', inputName: '微信'},
+        {inputId: 'alipay', inputName: '支付宝'});
+
+    function checkNotNull(arr) {
+        var flag = true;
+        for (var i = 0; i < arr.length; i++) {
+            var selector = '#' + arr[i].inputId;
+            console.log($(selector).val());
+            if ($(selector).val() == '' || $(selector).val() == null) {
+                flag = false;
+                $(selector).focus();
+                return flag;
+            }
+        }
+        return flag;
+    }
+
+    /**
+     *提交表单内容
+     */
+    function commitSupplementInfo() {
+        //检测表单内容是否为空
+        if (!checkNotNull(inputArr)) {
+            return;
+        }
+        $.post('/user/supplement', $(document.forms[0]).serialize(), function (result) {
+            if(result.code==0){
+                window.location.href="/member";
+            }else{
+                alert(result.msg);
+            }
+        }, 'json');
+
+    }
+
+
+
+    /*]]>*/
+</script>
 </body>
 </html>

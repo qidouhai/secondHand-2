@@ -17,8 +17,12 @@ CREATE TABLE `user` (
   `updated` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_email` (`email`) USING BTREE,
-  UNIQUE KEY `unique_phone` (`phone`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `unique_name` (`name`) USING BTREE,
+  UNIQUE KEY `unique_phone` (`phone`) USING BTREE,
+  UNIQUE KEY `unique_wechat` (`wechat`) USING BTREE,
+  UNIQUE KEY `unique_qq` (`qq`) USING BTREE,
+  UNIQUE KEY `unique_alipay` (`alipay`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 
 
@@ -107,8 +111,10 @@ CREATE TABLE `user_authenticate` (
   `class_name` varchar(20) NOT NULL COMMENT '班级名',
   `register_year` int(4) NOT NULL COMMENT '注册时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `stu_id` (`stu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `unique_stuId` (`stu_id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+
 
 Drop table if EXISTS `address`;
 CREATE TABLE `address` (

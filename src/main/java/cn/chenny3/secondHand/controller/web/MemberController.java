@@ -2,6 +2,7 @@ package cn.chenny3.secondHand.controller.web;
 
 import cn.chenny3.secondHand.common.bean.PageHelper;
 import cn.chenny3.secondHand.common.bean.UserHolder;
+import cn.chenny3.secondHand.common.bean.dto.EasyResult;
 import cn.chenny3.secondHand.common.bean.dto.PaginationResult;
 import cn.chenny3.secondHand.common.utils.RedisUtils;
 import cn.chenny3.secondHand.common.utils.RedisKeyUtils;
@@ -11,6 +12,7 @@ import cn.chenny3.secondHand.model.*;
 import cn.chenny3.secondHand.service.GoodsService;
 import cn.chenny3.secondHand.service.LoginRecordService;
 import cn.chenny3.secondHand.service.UserAuthenticateService;
+import cn.chenny3.secondHand.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -166,8 +168,15 @@ public class MemberController extends BaseController {
      * @param model
      * @return
      */
-    @RequestMapping("supplememnt")
+    @RequestMapping(value="supplement",method = RequestMethod.GET)
     public String supplementView(Model model) {
-        return "member/informationSupplement";
+        try{
+            return "/member/informationSupplement";
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
+
+
 }

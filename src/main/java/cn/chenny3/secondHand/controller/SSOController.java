@@ -31,7 +31,18 @@ public class SSOController extends BaseController{
     @ResponseBody
     public EasyResult register(User user){
         try {
-            user.setHeadUrl(defaultAvatar);
+            //姓名，邮箱和手机号唯一性校验，避免造成二次使用
+            if(!userService.checkUniqueAtField("name",user.getName())){
+                return new EasyResult(1,"name已被其他用户绑定，请重新填写");
+            }
+            if(!userService.checkUniqueAtField("email",user.getEmail())){
+                return new EasyResult(1,"email已被其他用户绑定，请重新填写");
+            }
+            if(!userService.checkUniqueAtField("phone",user.getEmail())){
+                return new EasyResult(1,"phone已被其他用户绑定，请重新填写");
+            }
+
+            //保存用户
             userService.addUser(user);
             return new EasyResult(0,"注册成功");
         }catch (Exception e){

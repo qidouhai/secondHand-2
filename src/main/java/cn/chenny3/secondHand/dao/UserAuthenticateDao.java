@@ -15,4 +15,7 @@ public interface UserAuthenticateDao {
 
     @Select({"select ",SELECT_FIEDS," from ",TABLE_NAME," where id=#{authenticateId}"})
     UserAuthenticate selectAuthenticate(@Param("authenticateId") int authenticateId);
+
+    @Select({"select ",SELECT_FIEDS," from ",TABLE_NAME," where stu_id=#{stuId}"})
+    UserAuthenticate selectAuthenticateByStuId(@Param("stuId")String stuId);
 }

@@ -61,6 +61,7 @@
 <script src="/scripts/jquery.min.js"></script>
 <script src="/scripts/login.js"></script>
 <script>
+    /*<![CDATA[*/
     $(function () {
         var mao=window.location.hash;
         if(mao==null||mao==''){
@@ -77,8 +78,57 @@
 
     });
 
-    $("#login").click(function () {
+    /**
+     * 验证用户输入手机号是否符合格式
+     */
+    function checkPhone(phone){
+        if(/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/.test(phone)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    /**
+     * 验证用户输入的邮箱是否符合格式
+     */
+    function checkEmail(email){
+        if(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
+    var loginInputArr = new Array(
+        {inputId: 'id', inputName: 'id',inputIndex:0},
+        {inputId: 'password', inputName: 'password',inputIndex:0});
+
+    var registerInputArr = new Array(
+        {inputId: 'name', inputName: 'name',inputIndex:0},
+        {inputId: 'email', inputName: 'email',inputIndex:0},
+        {inputId: 'phone', inputName: 'phone',inputIndex:0},
+        {inputId: 'password', inputName: 'password',inputIndex:1});
+
+    function checkNotNull(arr) {
+        var flag = true;
+        for (var i = 0; i < arr.length; i++) {
+            var selector = 'input[name=' + arr[i].inputName+']:eq('+arr[i].inputIndex+')';
+            console.log($(selector).val());
+            if ($(selector).val() == '' || $(selector).val() == null) {
+                flag = false;
+                $(selector).focus();
+                return flag;
+            }
+        }
+        return flag;
+    }
+
+
+    $("#login").click(function () {
+        //参数非空校验
+        if(!checkNotNull(loginInputArr)){
+            return ;
+        }
         $.ajax({
             url: '/login',
             type: 'post',
@@ -95,7 +145,24 @@
     })
 
     $("#register").click(function () {
-
+        //参数非空校验
+        if(!checkNotNull(registerInputArr)){
+            return ;
+        }
+        //邮箱格式验证
+        if(!checkEmail($('input[name=email]:eq(0)').val())){
+            alert("邮箱格式不对，请重新输入");
+            $('input[name=email]:eq(0)').val('');
+            $('input[name=email]:eq(0)').focus();
+            return ;
+        }
+        //手机号格式验证
+        if(!checkPhone($('input[name=phone]:eq(0)').val())){
+            alert("手机号格式不对，请重新输入");
+            $('input[name=phone]:eq(0)').val('');
+            $('input[name=phone]:eq(0)').focus();
+            return;
+        }
         $.ajax({
             url: '/register',
             type: 'post',
@@ -110,6 +177,8 @@
             }
         })
     })
+
+    /*]]>*/
 </script>
 
 

@@ -1,6 +1,7 @@
 package cn.chenny3.secondHand.service;
 
 
+import cn.chenny3.secondHand.common.bean.dto.SupplementDTO;
 import cn.chenny3.secondHand.model.User;
 
 public interface UserService {
@@ -22,4 +23,6 @@ public interface UserService {
     boolean checkUniqueAtField(String fieldName, String fieldValue);
 
     boolean checkExistAtField(User user, String fieldName, String fieldValue) throws NoSuchFieldException, IllegalAccessException;
+
+    void supplementInfo(User user, SupplementDTO supplementDTO);
 }

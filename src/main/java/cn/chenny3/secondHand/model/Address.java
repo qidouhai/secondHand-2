@@ -6,7 +6,7 @@ package cn.chenny3.secondHand.model;
 public class Address extends Base{
     private int id;
     private String area;
-    private String hostelId;
+    private int hostelId;
     private int houseId;
     private int status;
 
@@ -26,11 +26,11 @@ public class Address extends Base{
         this.area = area;
     }
 
-    public String getHostelId() {
+    public int getHostelId() {
         return hostelId;
     }
 
-    public void setHostelId(String hostelId) {
+    public void setHostelId(int hostelId) {
         this.hostelId = hostelId;
     }
 

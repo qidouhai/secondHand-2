@@ -48,6 +48,10 @@ public class UserAuthenticateController extends BaseController{
             }
             //通过OKHTTP 获取用户身份信息
             UserAuthenticate authenticateInfo = hnistPortalUtil.getAuthenticateInfo(hnistJsessionId);
+            //检测认证信息是否被其他用户所使用
+            if(userAuthenticateService.selectAuthenticateByStuId(authenticateInfo.getStuId())!=null){
+                return new EasyResult(1,"此认证信息已被其他用户认证，请重新认证");
+            }
             //获取保存至redis的业务key
             String key= RedisKeyUtils.getAuthenticateInfoAssociateKey(user.getId());
             //授权信息保存至redis，有效期90秒

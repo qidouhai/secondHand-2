@@ -2,6 +2,7 @@ package cn.chenny3.secondHand.controller;
 
 import cn.chenny3.secondHand.common.bean.UserHolder;
 import cn.chenny3.secondHand.common.bean.dto.EasyResult;
+import cn.chenny3.secondHand.common.bean.dto.SupplementDTO;
 import cn.chenny3.secondHand.common.utils.RedisKeyUtils;
 import cn.chenny3.secondHand.common.utils.RedisUtils;
 import cn.chenny3.secondHand.common.utils.SecondHandUtil;
@@ -25,8 +26,6 @@ public class UserController extends BaseController {
     private UserHolder userHolder;
     @Autowired
     private RedisUtils redisUtils;
-    @Value("${user.avatar.default}")
-    private String defaultAvatar;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
@@ -268,6 +267,38 @@ public class UserController extends BaseController {
         }catch (Exception e){
             logger.error(e.getMessage());
             return new EasyResult(1,"手机号修改失败");
+        }
+    }
+
+
+    /**
+     * 补充用户信息
+     * @param supplementDTO
+     * @return
+     */
+    @RequestMapping(value = "supplement",method = RequestMethod.POST)
+    @ResponseBody
+    public EasyResult supplementInfo(@Valid SupplementDTO supplementDTO,BindingResult bindingResult){
+        try{
+            //参数是否为空校验
+            if(bindingResult.hasErrors()){
+                return new EasyResult(1,objectErrorsToString(bindingResult));
+            }
+            //检查补充的联系方式是否被其他人绑定
+            if(!userService.checkUniqueAtField("qq",supplementDTO.getQq())){
+                return new EasyResult(1,"qq已被其他用户绑定，请重新填写");
+            }
+            if(!userService.checkUniqueAtField("wechat",supplementDTO.getWechat())){
+                return new EasyResult(1,"wechat已被其他用户绑定，请重新填写");
+            }if(!userService.checkUniqueAtField("alipay",supplementDTO.getAlipay())){
+                return new EasyResult(1,"alipay已被其他用户绑定，请重新填写");
+            }
+
+            userService.supplementInfo(userHolder.get(),supplementDTO);
+            return new EasyResult(0,"补全用户信息成功");
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return new EasyResult(0,"补全用户信息失败");
         }
     }
 }

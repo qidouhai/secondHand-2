@@ -1,10 +1,14 @@
 package cn.chenny3.secondHand.service.impl;
 
+import cn.chenny3.secondHand.common.bean.dto.SupplementDTO;
 import cn.chenny3.secondHand.dao.UserDao;
+import cn.chenny3.secondHand.model.Address;
 import cn.chenny3.secondHand.model.User;
+import cn.chenny3.secondHand.service.AddressService;
 import cn.chenny3.secondHand.service.UserService;
 import cn.chenny3.secondHand.common.utils.SecondHandUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -12,15 +16,21 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private AddressService addressService;
+    @Value("${user.avatar.default}")
+    private String defaultAvatar;
 
     @Override
     public int addUser(User user) {
-        String salt= UUID.randomUUID().toString().replaceAll("-","");
+        //设置默认头像
+        user.setHeadUrl(defaultAvatar);
+        String salt = UUID.randomUUID().toString().replaceAll("-", "");
         user.setSalt(salt);
-        user.setPassword(SecondHandUtil.MD5(user.getPassword()+user.getSalt()));
+        user.setPassword(SecondHandUtil.MD5(user.getPassword() + user.getSalt()));
         user.setStatus(1);
         user.setAuthenticateId(0);
         user.setAddressId(0);
@@ -41,7 +51,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public int updateStatus(int id, int status) {
-        return userDao.updateStatus(id,status);
+        return userDao.updateStatus(id, status);
     }
 
     @Override
@@ -52,7 +62,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void deleteUser(int userId) {
-        userDao.updateStatus(userId,0);
+        userDao.updateStatus(userId, 0);
     }
 
     @Override
@@ -67,7 +77,7 @@ public class UserServiceImpl implements UserService{
     public void updatePassword(int id, String password) {
         User user = selectUser(id);
         //新密码用盐进行md5加密
-        user.setPassword(SecondHandUtil.MD5(password+user.getSalt()));
+        user.setPassword(SecondHandUtil.MD5(password + user.getSalt()));
         user.setUpdated(new Date());
         updateUser(user);
     }
@@ -90,8 +100,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean checkUniqueAtField(String fieldName, String fieldValue) {
-        int count=userDao.checkCountByField(fieldName,fieldValue);
-        return count==0?true:false;
+        int count = userDao.checkCountByField(fieldName, fieldValue);
+        return count == 0 ? true : false;
     }
 
     @Override
@@ -100,9 +110,36 @@ public class UserServiceImpl implements UserService{
         Field field = user.getClass().getDeclaredField(fieldName);
         //设置访问权限
         field.setAccessible(true);
-        if(field.get(user).equals(fieldValue)){
+        if (field.get(user).equals(fieldValue)) {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 补全用户信息
+     * @param user userHolder.get() 当前登录用户
+     * @param supplementDTO
+     */
+    @Override
+    public void supplementInfo(User user, SupplementDTO supplementDTO) {
+        //填充地址信息
+        Address address = new Address();
+        address.setArea(supplementDTO.getArea());
+        address.setHostelId(supplementDTO.getHostelId());
+        address.setHouseId(supplementDTO.getHouseId());
+        //保存地址信息至数据库
+        addressService.add(address);
+
+        //填充user信息
+        user.setQq(supplementDTO.getQq());
+        user.setWechat(supplementDTO.getWechat());
+        user.setAlipay(supplementDTO.getAlipay());
+        //将address的自增id设置到user中
+        user.setAddressId(address.getId());
+        user.setUpdated(new Date());
+
+        //修改用户信息
+        userDao.updateUser(user);
     }
 }

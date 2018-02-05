@@ -21,5 +21,10 @@ public class UserAuthenticateServiceImpl implements UserAuthenticateService{
         return userAuthenticateDao.selectAuthenticate(authenticateId);
     }
 
+    @Override
+    public UserAuthenticate selectAuthenticateByStuId(String stuId) {
+        return userAuthenticateDao.selectAuthenticateByStuId(stuId);
+    }
+
 
 }
