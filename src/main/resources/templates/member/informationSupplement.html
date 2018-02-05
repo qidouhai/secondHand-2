@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>用户信息补充页面</title>
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/global.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+
+    <style>
+        .title{
+            text-align: center;
+            margin-top: 200px;
+        }
+
+        form{
+            margin-top: 30px;
+            width: 282px;
+        }
+        .horizontal_center{
+            margin-left:auto;
+            margin-right: auto;
+        }
+        .confirm_btn{
+            display: block;
+            margin-top: 40px;
+            width: 200px;
+            height: 50px;
+            line-height: 30px;
+            padding: 10px 40px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #000;
+            background-color: #000;
+            letter-spacing: 3px;
+            color: #fff;
+            border-radius: 8px;
+        }
+
+        .confirm_btn:hover{
+
+            background-color: #fff;
+            color: #000;
+            transition: all 0.5s ease-in 0s;
+        }
+
+        .required{
+            color: red;
+            line-height: 20px;
+            display: inline-block;
+            padding:0 2px;
+        }
+        .inputs_wrap{
+            overflow: hidden;
+        }
+        .inputs_wrap select,.input_wrap {
+            float: left;
+        }
+        .inputs_wrap select{
+            width: 70px;
+        }
+        .input_wrap input{
+            width: 70px;
+            display: inline-block;
+        }
+        .input_wrap{
+            width: auto;
+            line-height: 34px;
+            margin-right: 15px;
+        }
+        .input_wrap:last-child{
+            margin-right: 0px;
+        }
+    </style>
+</head>
+<body class="container">
+    <div class="row title">
+        <h1>用户信息补充</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form class="horizontal_center">
+                <div class="form-group">
+                    <label for="address">收货地址(<span class="required">*</span>)</label>
+                    <div class="inputs_wrap">
+                        <div class="input_wrap">
+                            <select id="address" class="form-control">
+                                <option>南</option>
+                                <option>东</option>
+                                <option>北</option>
+                            </select>院
+                        </div>
+                        <div class="input_wrap">
+                            <select id="dong" class="form-control">
+                                <option>1</option>
+                                <option>2</option>
+                            </select>栋
+                        </div>
+
+                        <div class="input_wrap">
+                            <input type="email" class="form-control" id="" placeholder="例:204"/>号
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <label for="qq">QQ</label>
+                    <input type="email" class="form-control" id="qq" placeholder="qq"/>
+                </div>
+                <div class="form-group">
+                    <label for="wechat">wechat</label>
+                    <input type="email" class="form-control" id="wechat" placeholder="wechat"/>
+                </div>
+                <div class="form-group">
+                    <label for="alipay">alipay</label>
+                    <input type="email" class="form-control" id="alipay" placeholder="alipay"/>
+                </div>
+                <button type="button" class="confirm_btn horizontal_center">Submit</button>
+            </form>
+        </div>
+    </div>
+
+
+
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+</body>
+</html>

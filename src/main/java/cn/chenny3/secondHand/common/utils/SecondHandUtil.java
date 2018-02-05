@@ -5,12 +5,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.UUID;
 
 public class SecondHandUtil {
     private static final Logger logger = LoggerFactory.getLogger(SecondHandUtil.class);
     private static ObjectMapper objectMapper=new ObjectMapper();
+
+    /**
+     * MD5
+     * @param key
+     * @return
+     */
     public static String MD5(String key) {
         char hexDigits[] = {
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
@@ -39,10 +46,33 @@ public class SecondHandUtil {
         }
     }
 
+    /**
+     * Object 转 JSON
+     * @param object
+     * @return
+     * @throws JsonProcessingException
+     */
     public static String getJsonString(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
     }
-    //随机生成指定位数的
+
+    /**
+     * JSON 转 Object
+     * @param json
+     * @param clazz
+     * @param <T>
+     * @return
+     * @throws IOException
+     */
+    public static<T> T getObjectFromJson(String json,Class<T> clazz) throws IOException {
+        return objectMapper.readValue(json,clazz);
+    }
+
+    /**
+     * 随机生成指定位数的随机码
+     * @param length
+     * @return
+     */
     public static String generateSpecifiedLengthCode(int length){
         if(length<0||length>32) throw new IllegalArgumentException("length的有效范围为1至32位");
         return UUID.randomUUID().toString().replace("-","").substring(0,length);

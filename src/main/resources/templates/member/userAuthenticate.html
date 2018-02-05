@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>用户身份认证</title>
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/global.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+
+    <style>
+        .title{
+            text-align: center;
+            margin-top: 200px;
+        }
+
+        form{
+            margin-top: 30px;
+            width: 282px;
+        }
+
+        .tip{
+            width: 220px;
+            margin-top: 20px;
+            display: block;
+            font-size: 12px;
+            color: #0f0f0f;
+        }
+        .result_show{
+            width: 700px;
+        }
+
+        .horizontal_center{
+            margin-left:auto;
+            margin-right: auto;
+        }
+        .authenticate_result_title{
+            text-align: center;
+            margin-top: 60px;
+        }
+        .authenticate_result_title:before{
+            content: '';
+            width: 120px;
+            height: 1px;
+            display: inline-block;
+            margin-bottom: 8px;
+            margin-right: 15px;
+            background-color: #dbdbdb;
+        }
+
+        .authenticate_result_title:after{
+            content: '';
+            width: 120px;
+            height: 1px;
+            display: inline-block;
+            margin-bottom: 8px;
+            margin-left: 15px;
+            background-color: #dbdbdb;
+        }
+
+        .confirm_btn{
+            display: block;
+            margin-top: 40px;
+            width: 300px;
+            height: 50px;
+            line-height: 30px;
+            padding: 10px 40px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            border: 2px solid #000;
+            background-color: #000;
+            letter-spacing: 3px;
+            color: #fff;
+            border-radius: 8px;
+        }
+
+        .confirm_btn:hover{
+
+            background-color: #fff;
+            color: #000;
+            transition: all 0.5s ease-in 0s;
+        }
+    </style>
+</head>
+<body class="container">
+    <div class="row title">
+        <h1>学生身份关联</h1>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form class="form-inline horizontal_center">
+                <div class="form-group">
+                    <input type="email" name="sessionInput" class="form-control" id="sessionInput" placeholder="输入信息门户JSESSIONID"/>
+                </div>
+
+                <button type="button" id="commitAuthenticateBtn" class="btn btn-default">提交认证</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <a href="javascript:void(0)" class="tip horizontal_center" data-toggle="modal" data-target="#helpModel">如何获取信息门户网站的JESSIONID值？</a>
+    </div>
+    <!-- 认证信息展示 -->
+        <div class="row hidden result_show horizontal_center">
+            <h4 class="authenticate_result_title">认证结果展示</h4>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>学号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>院部</th>
+                        <th>专业</th>
+                        <th>注册年份</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- 确认关联按钮-->
+            <button  class="confirm_btn horizontal_center" onclick="confirmAuthenticate()">确认关联(有效期90秒)</button>
+        </div>
+
+
+
+    <div id="helpModel" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-lg" role="document" style="width: 780px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="helpModelLabel">帮助信息</h4>
+                </div>
+                <div class="modal-body">
+                    <p>第一步：</p>
+                    <img src="/images/tutorial/pic1.png" width="740"/>
+                    <p>第二步：</p>
+                    <img src="/images/tutorial/pic2.png" width="740"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">已清楚</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<script>
+    /*<![CDATA[*/
+    $('#commitAuthenticateBtn').click(function () {
+        var jessionId=$('#sessionInput').val();
+        if(jessionId==null||jessionId==''){
+            $('#sessionInput').focus();
+            return;
+        }
+        $.post("/member/authenticate",{"jsessionId":jessionId},function (result) {
+            //认证成功
+            if(result.code==0){
+                var authenticateInfo=result.msg;
+                var value=' <tr>\n' +
+                    '                        <td>'+authenticateInfo.stuId+'</td>\n' +
+                    '                        <td>'+authenticateInfo.name+'</td>\n' +
+                    '                        <td>'+authenticateInfo.sex+'</td>\n' +
+                    '                        <td>'+authenticateInfo.deptName+'</td>\n' +
+                    '                        <td>'+authenticateInfo.subjectName+'</td>\n' +
+                    '                        <td>'+authenticateInfo.registerYear+'</td>\n' +
+                    '                    </tr>';
+                $('.result_show table tbody').empty();
+                $('.result_show table tbody').append(value);
+                $('.result_show:eq(0)').removeClass('hidden');
+
+                //关联按钮倒计时
+                var time =90;
+                timer=window.setInterval(function () {
+                    $('.confirm_btn:eq(0)').text("确认关联(有效期"+time+"秒)");
+                    time--;
+                    if(time==0){
+                        window.clearTimeout(timer);
+                        $('.result_show table tbody').empty();
+                        $('.result_show:eq(0)').addClass('hidden');
+                        time=90;
+                    }
+                },1000);
+
+            }else{//失败
+                alert(result.msg);
+                $('#sessionInput').val('');
+                $('#sessionInput').focus();
+            }
+        },'json');
+    })
+    
+    function confirmAuthenticate() {
+        $.post('/member/authenticate/confirm',null,function (result) {
+            if(result.code==0){
+                alert(result.msg);
+            }else{
+                alert(result.msg);
+                window.location.reload();
+            }
+        })
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

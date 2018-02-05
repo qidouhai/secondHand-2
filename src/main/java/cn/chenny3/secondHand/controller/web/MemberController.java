@@ -161,5 +161,13 @@ public class MemberController extends BaseController {
         return request.getRemoteAddr();
     }
 
-
+    /**
+     * 用户信息补充页面
+     * @param model
+     * @return
+     */
+    @RequestMapping("supplememnt")
+    public String supplementView(Model model) {
+        return "member/informationSupplement";
+    }
 }
