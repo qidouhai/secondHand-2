@@ -15,13 +15,30 @@
         <ul class="top_url top_ul" th:if="${vo.get('user') ne null}">
             <li><a href="/goods/addView">发布闲置</a></li>
             <li><a href="/member">购物车</a></li>
-            <li><a href="/member">个人中心</a></li>
+            <li class="info" style=""><a href="javascript:void(0)" th:text="${vo.get('user').name}">个人中心</a></li>
         </ul>
         <ul class="top_url top_ul" th:unless="${vo.get('user') ne null}">
             <li><a href="/login">登录/注册</a></li>
         </ul>
     </nav>
+    <script src="/scripts/jquery.min.js"></script>
+    <script>
+        /*<![CDATA[*/
+        $('.info:eq(0)').hover(
+            function () {
+                $('.info:eq(0)').append('<div style="width: 120px;height: 80px;border: 1px solid green;background-color: #dbdbdb;position: absolute;top: 71px;">\n' +
+                    '                <div style="height: 40px;line-height: 40px;text-align:center"><a href="/member">个人中心</a></div>\n' +
+                    '                <div style="height: 40px;line-height: 40px;text-align:center"><a href="/logout">注销</a></div>\n' +
+                    '            </div>');
+            },
+            function () {
+                $('.info:eq(0)>div').remove();
+            }
+        )
 
+        /*]]>*/
+    </script>
 </header>
+
 </body>
 </html>

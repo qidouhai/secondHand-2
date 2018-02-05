@@ -81,7 +81,8 @@
                     <a href="/goods/list">最新发布</a>
                 </blockquote>
             </div>
-            <a href="#" class="shop_wrap" th:each="goods:${goodsList}" th:object="${goods}" th:href="@{/goods/{id}(id=*{id})}">
+            <a href="#" class="shop_wrap" th:each="goods:${goodsList}" th:object="${goods}"
+               th:href="@{/goods/{id}(id=*{id})}">
                 <div class="shop_img">
                     <img th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${goods.imageArr[0]}+'?x-oss-process=style/medium_goods_size'"
                          src="/images/shop_images/iphone.jpg" alt="shop_img"/>
@@ -110,11 +111,14 @@
             <div class="tags">
                 <ul>
                     <li th:each="tag:${floor.get('tags')}">
-                        <a href="#" th:href="@{/goods/list/{categoryId}/{subcategoryId}(categoryId=${vo.get('categories')[floorStat.index].id},subcategoryId=${tag.id})}" th:text="${tag.categoryName}">标签名</a>
+                        <a href="#"
+                           th:href="@{/goods/list/{categoryId}/{subcategoryId}(categoryId=${vo.get('categories')[floorStat.index].id},subcategoryId=${tag.id})}"
+                           th:text="${tag.categoryName}">标签名</a>
                     </li>
                 </ul>
             </div>
-            <a href="#" class="shop_wrap" th:each="goods:${floor.get('goodsList')}" th:object="${goods}" th:href="@{/goods/{id}(id=*{id})}">
+            <a href="#" class="shop_wrap" th:each="goods:${floor.get('goodsList')}" th:object="${goods}"
+               th:href="@{/goods/{id}(id=*{id})}">
                 <div class="shop_img">
                     <img th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${goods.imageArr[0]}+'?x-oss-process=style/medium_goods_size'"
                          src="/images/shop_images/iphone.jpg" alt="shop_img"/>
@@ -128,7 +132,6 @@
                     </div>
                 </div>
             </a>
-
         </div>
 
     </div>
