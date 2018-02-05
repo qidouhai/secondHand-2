@@ -1,94 +1,117 @@
-
 <!DOCTYPE html>
 <html>
-
-<!-- Head -->
 <head>
-    <title>登录/注册</title>
-
-    <!-- Meta-Tags -->
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-    <!-- //Meta-Tags -->
-
-    <!-- Style -->
-    <link rel="stylesheet" href="/styles/login.css" type="text/css" media="all"/>
-
+    <meta charset="UTF-8"/>
+    <title>Sign Up Login</title>
+    <link rel="stylesheet" href="/styles/login.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"/>
+    <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/icon?family=Material+Icons'/>
 
 </head>
-<!-- //Head -->
 
-<!-- Body -->
 <body>
-<h1>登录/注册</h1>
-<div class="container w3layouts agileits">
-    <div class="login w3layouts agileits">
-        <h2>登 录</h2>
-        <form action="/login" method="post" >
-            <input type="text" name="id" placeholder="用户名"  autocomplete="off" />
-            <input type="password" name="password" placeholder="密码"/>
-        </form>
-        <ul class="tick w3layouts agileits">
-            <li>
-                <input type="checkbox" id="brand1" value=""/>
-                <label for="brand1"><span></span>记住我</label>
-            </li>
-        </ul>
-        <div class="send-button w3layouts agileits">
-            <form>
-                <input id="login" type="button" value="登 录"/>
-            </form>
-        </div>
-        <a href="#">记住密码?</a>
 
-        <div class="clear"></div>
-    </div>
-    <div class="register w3layouts agileits">
-        <h2>注 册</h2>
-        <form action="/register" method="post">
-            <input type="text" Name="name" placeholder="用户名" required="required" />
-            <input type="text" Name="email" placeholder="邮箱" required="required" />
-            <input type="password" Name="password" placeholder="密码" required="required"/>
-            <input type="text" Name="phone" placeholder="手机号码" required="required"/>
-        </form>
-        <div class="send-button w3layouts agileits">
-            <form>
-                <input id="register" type="button" value="免费注册"/>
-            </form>
+
+<div class="cotn_principal">
+    <div class="cont_centrar">
+        <div class="cont_login">
+            <div class="cont_info_log_sign_up">
+                <div class="col_md_login">
+                    <div class="cont_ba_opcitiy">
+                        <h2>LOGIN</h2>
+                        <p>登录面板</p>
+                        <button class="btn_login" onclick="cambiar_login()">LOGIN</button>
+                    </div>
+                </div>
+                <div class="col_md_sign_up">
+                    <div class="cont_ba_opcitiy">
+                        <h2>SIGN UP</h2>
+                        <p>注册面板</p>
+                        <button class="btn_sign_up" onclick="cambiar_sign_up()">SIGN UP</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cont_back_info">
+                <div class="cont_img_back_grey"><img src="/images/login_background.jpg" alt=""/></div>
+            </div>
+            <div class="cont_forms">
+                <div class="cont_img_back_"><img src="/images/login_background.jpg" alt=""/></div>
+                <div class="cont_form_login"><a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
+                    <h2>LOGIN</h2>
+                    <form id="loginForm" action="#" method="post">
+                        <input type="text" name="id" placeholder="id/学号/邮箱/手机号"/>
+                        <input type="password" name="password" placeholder="password"/>
+                        <button type="button" class="btn_login" id="login">LOGIN</button>
+                    </form>
+                </div>
+                <div class="cont_form_sign_up"><a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
+                    <h2>SIGN UP</h2>
+                    <form id="registerForm" action="" method="post" >
+                        <input type="text" name="name" placeholder="name"/>
+                        <input type="text" name="email" placeholder="email"/>
+                        <input type="text" name="phone" placeholder="phone"/>
+                        <input type="password" name="password" placeholder="password"/>
+                        <button type="button"  class="btn_sign_up" id="register">SIGN UP</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="clear"></div>
     </div>
-    <div class="clear"></div>
 </div>
-<div class="footer w3layouts agileits">
-    <p>Copyright &copy; More Templates</p>
-</div>
-</body>
-<!-- //Body -->
 <script src="/scripts/jquery.min.js"></script>
+<script src="/scripts/login.js"></script>
 <script>
+    $(function () {
+        var mao=window.location.hash;
+        if(mao==null||mao==''){
+            mao='#login';
+        }
+        if(mao=='#login'){
+            $('.btn_login:eq(0)').click();
+            return ;
+        }
+        if(mao=='#register'){
+            $('.btn_sign_up:eq(0)').click();
+            return ;
+        }
 
+    });
 
     $("#login").click(function () {
-        $.post("/login",$("form:eq(0)").serialize(),function (result) {
-            if(result.code==0){
-                window.location.href='/index';
-            }else{
-                alert(result.msg);
+
+        $.ajax({
+            url: '/login',
+            type: 'post',
+            data: $("#loginForm").serialize(),
+            dataType: 'json',
+            success:function (result) {
+                if (result.code == 0) {
+                    window.location.href = '/member';
+                } else {
+                    alert(result.msg);
+                }
             }
         })
     })
 
     $("#register").click(function () {
-        $.post("/register",$("form:eq(2)").serialize(),function (result) {
-            if(result.code==0){
-                window.location.href='/index';
-            }else{
-                alert(result.msg);
+
+        $.ajax({
+            url: '/register',
+            type: 'post',
+            data: $("#registerForm").serialize(),
+            dataType:'json',
+            success: function (result) {
+                if (result.code == 0) {
+                    $('.btn_login:eq(0)').click();
+                } else {
+                    alert(result.msg);
+                }
             }
         })
     })
 </script>
 
+
+</body>
 </html>

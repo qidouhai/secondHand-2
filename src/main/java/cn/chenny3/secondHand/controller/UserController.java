@@ -9,6 +9,7 @@ import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,8 @@ public class UserController extends BaseController {
     private UserHolder userHolder;
     @Autowired
     private RedisUtils redisUtils;
+    @Value("${user.avatar.default}")
+    private String defaultAvatar;
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody

@@ -7,6 +7,7 @@ import cn.chenny3.secondHand.model.User;
 import cn.chenny3.secondHand.service.LoginRecordService;
 import cn.chenny3.secondHand.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,22 +24,15 @@ public class SSOController extends BaseController{
     UserService userService;
     @Autowired
     LoginRecordService loginRecordService;
+    @Value("${user.avatar.default}")
+    private String defaultAvatar;
 
     @RequestMapping(value = "register",method = RequestMethod.POST)
     @ResponseBody
     public EasyResult register(User user){
         try {
-
-            //todo:跳转到信息完善页面
-            user.setHeadUrl("img/avatar/c8eb62d426f146ed91e737c14bd1fb90.png");
-            String randomStr= UUID.randomUUID().toString().replace("-","");
-
-            user.setQq(randomStr.substring(0,10));
-            user.setWechat(user.getQq());
-            user.setAlipay(user.getQq());
-
+            user.setHeadUrl(defaultAvatar);
             userService.addUser(user);
-
             return new EasyResult(0,"注册成功");
         }catch (Exception e){
             logger.error(e.getMessage());
