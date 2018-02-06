@@ -18,7 +18,7 @@
     <table border="0" style="width:850px; line-height:22px;margin: 0 auto" cellspacing="0" cellpadding="0">
         <tbody>
         <tr valign="top">
-            <td width="115"><img src="http://secondhand-oss.oss-cn-beijing.aliyuncs.com/img/avatar/c8eb62d426f146ed91e737c14bd1fb90.png?x-oss-process=style/90_size" width="90" height="90"/></td>
+            <td width="115"><img src="http://secondhand-oss.oss-cn-beijing.aliyuncs.com/img/avatar/c8eb62d426f146ed91e737c14bd1fb90.png?x-oss-process=style/90_size" width="90" height="90" th:src="'http://cdn.chenny3.cn/'+${user.headUrl}+'?x-oss-process=style/90_size'"/></td>
             <td style="padding-left: 25px;">
                 <div class="m_user" th:text="${user.name}">TRACY</div>
                 <p style="font-size: 12px;">

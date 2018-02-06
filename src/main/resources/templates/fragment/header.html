@@ -14,8 +14,7 @@
         </ul>
         <ul class="top_url top_ul" th:if="${vo.get('user') ne null}">
             <li><a href="/goods/addView">发布闲置</a></li>
-            <li><a href="/member">购物车</a></li>
-            <li class="info" style=""><a href="javascript:void(0)" th:text="${vo.get('user').name}">个人中心</a></li>
+            <li class="info" style="position: absolute"><img src="http://secondhand-oss.oss-cn-beijing.aliyuncs.com/img/avatar/893205a3a15e4780a60e5d7c4f583b34.jpg?x-oss-process=style/40_size" th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${vo.get('user').headUrl+'?x-oss-process=style/40_size'}" style="width: 30px;height: 30px;border-radius: 20px;margin-right: 5px;"/><a href="javascript:void(0)" th:text="${vo.get('user').name}">个人中心</a></li>
         </ul>
         <ul class="top_url top_ul" th:unless="${vo.get('user') ne null}">
             <li><a href="/login">登录/注册</a></li>
@@ -26,9 +25,11 @@
         /*<![CDATA[*/
         $('.info:eq(0)').hover(
             function () {
-                $('.info:eq(0)').append('<div style="width: 120px;height: 80px;border: 1px solid green;background-color: #dbdbdb;position: absolute;top: 71px;">\n' +
+                $('.info:eq(0)').append('<div style="width: 120px;height: 160px;background-color: #ffda44;position: absolute;top: 71px;left: -25px;">\n' +
                     '                <div style="height: 40px;line-height: 40px;text-align:center"><a href="/member">个人中心</a></div>\n' +
-                    '                <div style="height: 40px;line-height: 40px;text-align:center"><a href="/logout">注销</a></div>\n' +
+                    '                <div style="height: 40px;line-height: 40px;text-align:center"><a href="/member#collect">购物车</a></div>\n' +
+                    '                <div style="height: 40px;line-height: 40px;text-align:center"><a href="/member#collect">我的收藏</a></div>\n' +
+                    '                <div style="height: 40px;line-height: 40px;text-align:center"><a href="javascript:void(0)" onclick="logout()">注销</a></div>\n' +
                     '            </div>');
             },
             function () {
@@ -36,6 +37,15 @@
             }
         )
 
+        function logout(){
+            $.get('/logout',null,function (result) {
+                if(result.code==0){
+                    window.location.reload();
+                }else{
+                    alert(result.msg);
+                }
+            },'json');
+        }
         /*]]>*/
     </script>
 </header>
