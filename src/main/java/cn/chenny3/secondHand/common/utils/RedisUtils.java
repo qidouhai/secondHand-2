@@ -1,9 +1,12 @@
 package cn.chenny3.secondHand.common.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -84,6 +87,22 @@ public class RedisUtils {
         return getOpsForList().rightPush(key, value);
     }
 
+    public String rpop(String key){return getOpsForList().rightPop(key);}
+
+    public String rpop(String key,long timeOut,TimeUnit unit){return getOpsForList().rightPop(key,timeOut,unit);}
+
+    public String brpop(final String key){return redisTemplate.execute(new RedisCallback<String>() {
+        @Override
+        public String doInRedis(RedisConnection connection) throws DataAccessException {
+            List<byte[]> list = connection.bRPop(0, key.getBytes());
+            if(list!=null&&!list.isEmpty()){
+                return new String(list.get(1));
+            }
+            return null;
+
+        }
+    });}
+
     public Boolean zadd(String key, String value, double score) {
         return getOpsForZSet().add(key, value, score);
     }
@@ -103,4 +122,6 @@ public class RedisUtils {
     public Long zrank(String key, String memeber) {
         return getOpsForZSet().rank(key, memeber);
     }
+
+
 }

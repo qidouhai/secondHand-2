@@ -1,5 +1,8 @@
 package cn.chenny3.secondHand.controller;
 
+import cn.chenny3.secondHand.asyncframework.EventModel;
+import cn.chenny3.secondHand.asyncframework.EventProducer;
+import cn.chenny3.secondHand.asyncframework.EventType;
 import cn.chenny3.secondHand.common.bean.PageHelper;
 import cn.chenny3.secondHand.common.bean.UserHolder;
 import cn.chenny3.secondHand.common.bean.enums.GoodsStatus;
@@ -40,6 +43,8 @@ public class GoodsController extends BaseController {
     private AddressService addressService;
     @Autowired
     private RedisUtils redisUtils;
+    @Autowired
+    private EventProducer eventProducer;
 
     @RequestMapping(value = "addView", method = RequestMethod.GET)
     public String addView(Model model) {
@@ -72,10 +77,15 @@ public class GoodsController extends BaseController {
             }
             Goods goods = goodsService.selectGoods(id);
             if (goods != null) {
-                //添加访问量
-                redisUtils.incr(RedisKeyUtils.getGoodsViewKey(id));
+                //临时修改前台展示商品的访问量，将真正的更新操作交由异步线程默默处理
                 goods.setViewNum(goods.getViewNum() + 1);
-                goodsService.updateViewNum(goods.getId(), 1);
+                //异步的更新商品访问量
+                eventProducer.fireEvent(new EventModel()
+                        .setEventType(EventType.VIEW)
+                        .setActionId(userHolder.get().getId())
+                        .setEntityid(goods.getId())
+                        );
+
                 //查询商品归属人
                 User owner = userService.selectUser(goods.getOwnerId());
                 //抹掉安全相关信息
