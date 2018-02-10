@@ -1,5 +1,7 @@
 package cn.chenny3.secondHand.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -146,7 +148,7 @@ public class Goods extends Base{
     public void setHotNum(int hotNum) {
         this.hotNum = hotNum;
     }
-
+    @JsonIgnore
     public String[] getImageArr(){
         return images==null?null:images.split(";");
     }

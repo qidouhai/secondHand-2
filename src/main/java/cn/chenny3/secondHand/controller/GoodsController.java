@@ -10,6 +10,7 @@ import cn.chenny3.secondHand.common.bean.dto.EasyResult;
 import cn.chenny3.secondHand.common.utils.RedisUtils;
 import cn.chenny3.secondHand.common.utils.RedisKeyUtils;
 import cn.chenny3.secondHand.common.bean.vo.ViewObject;
+import cn.chenny3.secondHand.common.utils.SecondHandUtil;
 import cn.chenny3.secondHand.model.Address;
 import cn.chenny3.secondHand.model.Category;
 import cn.chenny3.secondHand.model.Goods;
@@ -18,6 +19,7 @@ import cn.chenny3.secondHand.service.AddressService;
 import cn.chenny3.secondHand.service.CategoryService;
 import cn.chenny3.secondHand.service.GoodsService;
 import cn.chenny3.secondHand.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,16 +77,27 @@ public class GoodsController extends BaseController {
             if (id <= 0) {
                 return "redirect:/404.html";
             }
-            Goods goods = goodsService.selectGoods(id);
+            Goods goods = null;
+            //从redis中查询缓存的商品信息
+            String cache = redisUtils.get(RedisKeyUtils.getCacheGoodsKey(id));
+            if (StringUtils.isNoneBlank(cache)) {
+                goods= SecondHandUtil.getObjectFromJson(cache,Goods.class);
+            }else{
+                //如果缓存未命中，再查询数据库
+                goods = goodsService.selectGoods(id);
+                //并将结果缓存至reids
+                redisUtils.set(RedisKeyUtils.getCacheGoodsKey(id),SecondHandUtil.getJsonString(goods));
+            }
+
             if (goods != null) {
                 //临时修改前台展示商品的访问量，将真正的更新操作交由异步线程默默处理
                 goods.setViewNum(goods.getViewNum() + 1);
                 //异步的更新商品访问量
                 eventProducer.fireEvent(new EventModel()
                         .setEventType(EventType.VIEW)
-                        .setActionId(userHolder.get().getId())
                         .setEntityid(goods.getId())
-                        );
+                        .setDatas().setData("goods",goods)
+                );
 
                 //查询商品归属人
                 User owner = userService.selectUser(goods.getOwnerId());
@@ -175,16 +188,16 @@ public class GoodsController extends BaseController {
         pageHelper.setPageSize(pageSize);
         pageHelper.setContents(goodsList);
 
-        ViewObject conditions=new ViewObject().put("categoryId", categoryId).
+        ViewObject conditions = new ViewObject().put("categoryId", categoryId).
                 put("subCategoryId", subCategoryId).
                 put("orderName", orderName).
                 put("orderValue", orderValue);
 
-        List<Category> tags=categoryId!=0?categoryService.selectCategoriesByParentId(categoryId):null;
+        List<Category> tags = categoryId != 0 ? categoryService.selectCategoriesByParentId(categoryId) : null;
 
         model.addAttribute("vo", new ViewObject().put("pageHelper", pageHelper).
-                                                    put("conditions",conditions).
-                                                    put("tags",tags));
+                put("conditions", conditions).
+                put("tags", tags));
         return "/goods/goods_list";
     }
 

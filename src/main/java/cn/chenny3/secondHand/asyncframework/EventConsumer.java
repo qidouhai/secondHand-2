@@ -29,7 +29,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
     private ThreadPoolExecutor threadPoolExecutor;
 
     {
-        threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+        threadPoolExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
     }
 
     @Override

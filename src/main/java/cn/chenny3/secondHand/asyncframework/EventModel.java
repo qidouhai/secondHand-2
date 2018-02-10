@@ -1,5 +1,6 @@
 package cn.chenny3.secondHand.asyncframework;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class EventModel {
@@ -71,4 +72,15 @@ public class EventModel {
         this.datas = datas;
         return this;
     }
+
+    public EventModel setDatas(){
+        this.datas=new HashMap<String, Object>();
+        return this;
+    }
+
+    public EventModel setData(String key,Object value){
+        datas.put(key, value);
+        return this;
+    }
+
 }
