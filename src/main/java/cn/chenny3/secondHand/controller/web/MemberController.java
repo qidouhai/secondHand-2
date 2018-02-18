@@ -126,8 +126,7 @@ public class MemberController extends BaseController {
                                     @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                     @RequestParam(value = "searchText", required = false) String search,
                                     @RequestParam(value = "sortOrder", required = false) String order,
-                                    @RequestParam(required = false) Integer status,
-                                    Model model) {
+                                    @RequestParam(required = false) Integer status) {
         if (curPage == null || curPage <= 0) {
             curPage = 1;
         }
@@ -176,6 +175,15 @@ public class MemberController extends BaseController {
             e.printStackTrace();
             return null;
         }
+    }
+
+
+    /**
+     * 购物车页面
+     */
+    @RequestMapping(value = "cart")
+    public String cart(){
+        return "/member/cart";
     }
 
 

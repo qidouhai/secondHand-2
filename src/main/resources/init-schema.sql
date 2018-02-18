@@ -12,6 +12,7 @@ CREATE TABLE `user` (
   `email` varchar(30) NOT NULL,
   `authenticate_id` int(11) DEFAULT NULL COMMENT '认证id',
   `address_id` int(11) DEFAULT NULL,
+  `role` int(1) NOT NULL,
   `status` int(1) DEFAULT '1',
   `created` datetime DEFAULT NULL COMMENT '创建时间',
   `updated` datetime DEFAULT NULL COMMENT '修改时间',
@@ -22,7 +23,9 @@ CREATE TABLE `user` (
   UNIQUE KEY `unique_wechat` (`wechat`) USING BTREE,
   UNIQUE KEY `unique_qq` (`qq`) USING BTREE,
   UNIQUE KEY `unique_alipay` (`alipay`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+
 
 
 
@@ -138,3 +141,21 @@ create table `suggest`(
   `created` datetime DEFAULT NULL COMMENT '创建时间',
   `updated` datetime DEFAULT NULL COMMENT '修改时间'
 );
+
+Drop table if EXISTS `Cart`;
+CREATE TABLE `cart` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goods_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `goods_name` varchar(100) NOT NULL,
+  `goods_image` varchar(40) NOT NULL,
+  `goods_price` int(11) NOT NULL,
+  `num` int(11) NOT NULL,
+  `status` int(1) DEFAULT '1',
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+

@@ -87,6 +87,9 @@ public class RedisUtils {
         return getOpsForList().rightPush(key, value);
     }
 
+    public List range(String key,int start,int end){
+        return getOpsForList().range(key,0,-1);
+    }
     public String rpop(String key){return getOpsForList().rightPop(key);}
 
     public String rpop(String key,long timeOut,TimeUnit unit){return getOpsForList().rightPop(key,timeOut,unit);}

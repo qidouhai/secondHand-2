@@ -19,8 +19,12 @@
         <setting name="autoMappingBehavior" value="FULL"/>
     </settings>
 
-    <!-- Continue going here -->
+    <!-- 类型别面设置 -->
     <typeAliases>
         <package name="cn.chenny3.secondHand.model"></package>
     </typeAliases>
+    <!-- 类型转换器配置-->
+    <typeHandlers>
+        <typeHandler handler="cn.chenny3.secondHand.common.typeHandler.EnumTypeHandler" javaType="cn.chenny3.secondHand.common.bean.enums.RoleType" jdbcType="INTEGER"></typeHandler>
+    </typeHandlers>
 </configuration>

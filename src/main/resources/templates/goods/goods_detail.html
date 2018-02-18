@@ -98,7 +98,7 @@
             <input type="hidden" id="userId" th:value="${vo.get('owner').id}"/>
             <input type="hidden" id="isLogin" th:value="${vo.get('user') ne null}"/>
             <div class="name"><span th:text="${vo.get('goods').goodsName}">联想笔记本电脑</span>
-                <div class="sell_out">已出售</div>
+                <div class="sell_out" th:text="'库存量:'+${vo.get('goods').inventory}+'件'">已出售</div>
             </div>
             <div class="price_wrap">
                 <span class="price" th:text="${#numbers.formatDecimal(vo.get('goods').price/100.0,0,2)}+'￥'">3299.28</span>

@@ -3,10 +3,12 @@ package cn.chenny3.secondHand.controller;
 import cn.chenny3.secondHand.asyncframework.EventModel;
 import cn.chenny3.secondHand.asyncframework.EventProducer;
 import cn.chenny3.secondHand.asyncframework.EventType;
+import cn.chenny3.secondHand.common.annotation.PermissionAnnotation;
 import cn.chenny3.secondHand.common.bean.PageHelper;
 import cn.chenny3.secondHand.common.bean.UserHolder;
 import cn.chenny3.secondHand.common.bean.enums.GoodsStatus;
 import cn.chenny3.secondHand.common.bean.dto.EasyResult;
+import cn.chenny3.secondHand.common.bean.enums.RoleType;
 import cn.chenny3.secondHand.common.utils.RedisUtils;
 import cn.chenny3.secondHand.common.utils.RedisKeyUtils;
 import cn.chenny3.secondHand.common.bean.vo.ViewObject;
@@ -48,11 +50,13 @@ public class GoodsController extends BaseController {
     @Autowired
     private EventProducer eventProducer;
 
+
     @RequestMapping(value = "addView", method = RequestMethod.GET)
     public String addView(Model model) {
         return "/goods/goods_add";
     }
 
+    @PermissionAnnotation(name="发布商品",description = "",roles = {RoleType.Admin})
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public EasyResult addGoods(@Valid Goods goods, BindingResult bindingResult) {

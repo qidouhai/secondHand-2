@@ -36,6 +36,9 @@
             <if test="addressId > 0">
                 address_id=#{addressId},
             </if>
+            <if test="addressId > 0">
+                role=#{role},
+            </if>
              updated=#{updated}
         </set>
         WHERE id=#{id}

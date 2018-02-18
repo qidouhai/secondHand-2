@@ -1,5 +1,7 @@
 package cn.chenny3.secondHand.model;
 
+import cn.chenny3.secondHand.common.bean.enums.RoleType;
+
 import javax.validation.constraints.NotNull;
 
 public class User extends Base{
@@ -18,6 +20,7 @@ public class User extends Base{
     private String email;
     private int addressId;
     private int authenticateId;
+    private RoleType role;
     private Integer status;
 
     public int getId() {
@@ -122,5 +125,13 @@ public class User extends Base{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public RoleType getRole() {
+        return role;
+    }
+
+    public void setRole(RoleType role) {
+        this.role = role;
     }
 }

@@ -1,24 +1,26 @@
 $('#shopTable').bootstrapTable({
-    toolbar:'#toolbar',
-    url: '/member/mygoods',
-    method: 'post',
+    url: '/cart/list',
+    method: 'get',
     columns: [{
         field: 'goodsName',
         title: '商品名称',
         formatter: function (value, row, index) {
             var url=row.status==2?'/goods/preview/'+row.id:'/goods/'+row.id;
-            img=row.images.split(";")[0];
-            return '  <div class="sm_img"><a href="'+url+'" style="margin-top: 0px" target="_blank"><img src="http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+img+'?x-oss-process=style/48_size" width="48" height="48" style="margin-top: 0px"></a></div>\n' +
+            return '  <div class="sm_img"><a href="'+url+'" style="margin-top: 0px" target="_blank"><img src="http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+row.goodsImage+'?x-oss-process=style/48_size" width="48" height="48" style="margin-top: 0px"></a></div>\n' +
                 ' <a href="'+url+'" style="font-size: 12px;" target="_blank">'+row.goodsName+'</a>';
         }
     }, {
-        field: 'price',
-        title: '商品价格(￥)',
+        field: 'goodsPrice',
+        title: '商品单价(￥)',
         width:200,
         formatter: function (value, row, index) {
-            return (row.price * 1.0) / 100;
+            return (row.goodsPrice * 1.0) / 100;
         }
     }, {
+        field: 'num',
+        title: '数量(件)',
+        width:200
+    },{
         field: '',
         title: '操作',
         width:170,
@@ -45,12 +47,13 @@ $('#shopTable').bootstrapTable({
         return {
             'pageSize': params.limit,
             'pageNumber': (params.offset / params.limit) + 1,
-            'searchText': params.search,
+            'searchText':'',
             'sortName': '',
-            'sortOrder': $('#toolbar .order a[class=active]').attr('value'),
-            'status':$('#toolbar .filter a[class=active]').attr('value')
+            'sortOrder':''
         };
     },
     pageSize: 7
 
 });
+
+

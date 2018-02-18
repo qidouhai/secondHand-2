@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>购物车</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+    <link rel="stylesheet" href="/styles/jquery.spinner.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css"/>
+    <style>
+        .mem_tit {
+            width: 880px;
+            margin: 0px auto;
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            color: #333333;
+            font-size: 16px;
+        }
+        .sm_img {
+            width: 48px;
+            height: 48px;
+            overflow: hidden;
+            float: left;
+            display: inline;
+            margin-right: 10px;
+            border: 1px solid #eaeaea;
+        }
+        table{
+            width: 880px!important;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div class="mem_tit">我的闲置</div>
+    <table id="myCart" class="table">
+        <tr>
+            <th>全选<input type="checkbox" id="selectAll" /></th>
+            <th>商品信息</th>
+            <th>单价</th>
+            <th>数量</th>
+            <th>金额</th>
+            <th>操作</th>
+        </tr>
+
+    </table>
+</body>
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<!-- Latest compiled and minified Locales -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/scripts/member/cart.js"></script>
+<script src="/scripts/jquery.spinner.js"></script>
+<script>
+    /*<![CDATA[*/
+    $(function () {
+        initDatas();
+    })
+    $('.spinnerExample').spinner({});
+
+    function initDatas(){
+        $.get('/cart/list',null,function(result){
+            var total=result.total;
+            $.each(result.rows,function (index,item) {
+                var html="<tr><td><input type=\"checkbox\" name=\"goods_id\" value=\""+item.goodsId+"\"/></td>\n" +
+                    "            <td><div class=\"sm_img\"><a href=\"\" style=\"margin-top: 0px\" target=\"_blank\"><img src=\"http://secondhand-oss.oss-cn-beijing.aliyuncs.com/"+item.goodsImage+"?x-oss-process=style/48_size\" width=\"48\" height=\"48\" style=\"margin-top: 0px\"></a></div><a href=\"\" style=\"font-size: 12px;\" target=\"_blank\">"+item.goodsName+"</a></td>\n" +
+                    "            <td><span style='color: #000;font-weight: bold'>￥"+item.goodsPrice*1.0/100+"</span></td>\n" +
+                    "            <td><input type=\"text\" class=\"spinnerExample\" value='1'/>\n</td>\n" +
+                    "            <td><span style='color: red;font-weight: bold'>￥"+(item.goodsPrice*1.0/100)*item.num+"</span></td></tr>"
+                $('#myCart').append(html);
+            })
+        })
+    }
+    /*]]>*/
+</script>
+</html>

@@ -1,6 +1,7 @@
 package cn.chenny3.secondHand.service.impl;
 
 import cn.chenny3.secondHand.common.bean.dto.SupplementDTO;
+import cn.chenny3.secondHand.common.bean.enums.RoleType;
 import cn.chenny3.secondHand.dao.UserDao;
 import cn.chenny3.secondHand.model.Address;
 import cn.chenny3.secondHand.model.User;
@@ -28,6 +29,9 @@ public class UserServiceImpl implements UserService {
     public int addUser(User user) {
         //设置默认头像
         user.setHeadUrl(defaultAvatar);
+        //设置默认角色
+        user.setRole(RoleType.USER);
+
         String salt = UUID.randomUUID().toString().replaceAll("-", "");
         user.setSalt(salt);
         user.setPassword(SecondHandUtil.MD5(user.getPassword() + user.getSalt()));
