@@ -70,5 +70,6 @@ public interface GoodsDao {
 
     int selectGoodsCountByClause(@Param("whereClause") String whereClause);
 
-
+    @Select({"select inventory from "+TABLE_NAME+" where id=#{goodsId}"})
+    int selectInventory(@Param("goodsId") int goodsId);
 }

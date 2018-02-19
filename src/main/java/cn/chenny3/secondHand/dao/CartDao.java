@@ -17,17 +17,19 @@ public interface CartDao {
     @Update({"update " + TABLE_NAME + " set num=#{num},updated=#{updated} where user_id=#{userId} and goods_id =#{goodsId}"})
     void updateCart(Cart cart);
 
-    @Update({"update " + TABLE_NAME + " set status = 0 where id=#{cartId}"})
-    void deleteCart(@Param("cartId") int cartId);
+    @Update({"update " + TABLE_NAME + " set status = #{status} where goods_id=#{goodsId} and user_id=#{userId}"})
+    void updateStatus(@Param("goodsId") int goodsId,@Param("userId")int userId,@Param("status") int status);
 
-    @Select({"select "+SELECT_FIEDS+" from " + TABLE_NAME + " where user_id=#{userId}"})
+    @Select({"select "+SELECT_FIEDS+" from " + TABLE_NAME + " where user_id=#{userId} and status=1"})
     List<Cart> selectAllCart(@Param("userId") int userId);
 
     List<Cart> selectCartList(@Param("userId") int userId, @Param("offset") int offset, @Param("limit") int limit);
 
-    @Select({"select count(1) from " + TABLE_NAME + " where user_id=#{userId}"})
+    @Select({"select count(1) from " + TABLE_NAME + " where user_id=#{userId} and status=1"})
     int selectCartCount(@Param("userId") int userId);
 
     @Select({"select " + SELECT_FIEDS + " from " + TABLE_NAME + " where user_id=#{userId} and goods_id=#{goodsId}"})
     Cart selectSpecialGoodsAtCart(@Param("goodsId") int goodsId, @Param("userId") int userId);
+
+
 }

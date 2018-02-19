@@ -159,7 +159,7 @@
             </div>
             <div class="pay_method">
                 <a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/online_payment.png"/>立即购买</a>
-                <a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/shopping_cart.png"/>加入购物车</a>
+                <a href="javascript:void(0)" id="addCart" ><img src="/images/util/shopping_cart.png"/>加入购物车</a>
             </div>
             <div class="other_shop">
                 <div class="title">
@@ -253,6 +253,7 @@
     function collect(obj) {
         if($('#isLogin').val()=='false'){
             requiredLogin();
+            return ;
         }
         var url = "/goods/collect/" + $('#entityId').val();
         if ($('#collectFlag').val() == 'true') {//取消收藏
@@ -293,6 +294,7 @@
     function hot(obj) {
         if($('#isLogin').val()=='false'){
             requiredLogin();
+            return ;
         }
         var url = "/goods/hot/" + $('#entityId').val();
         if ($('#hotFlag').val() == 'true') {//取消代码
@@ -332,6 +334,24 @@
     function requiredLogin() {
         alert('请先登录');
     }
+
+    //加入购物车
+    $('#addCart').click(function (e) {
+        if($('#isLogin').val()=='false'){
+            requiredLogin();
+            return;
+        }
+        $.post('/cart',{
+            goodsId:$('#entityId').val(),
+            num:1
+        },function (result) {
+            if(result.code==1){
+                alert(result.msg);
+            }else{
+                alert("成功加入购物车");
+            }
+        })
+    })
 </script>
 </body>
 </html>

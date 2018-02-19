@@ -9,11 +9,15 @@ public interface CartService {
 
     void updateCart(Cart cart);
 
-    void deleteCart(int cartId);
+    void deleteCart(int goodsId,int userId);
 
     List<Cart> selectCartList(int userId, int curPage, int pageSize);
 
     List<Cart> selectCartList(int userId);
 
     int selectCartCount(int userId);
+
+    Cart selectCart(int userId, int goodsId);
+
+
 }

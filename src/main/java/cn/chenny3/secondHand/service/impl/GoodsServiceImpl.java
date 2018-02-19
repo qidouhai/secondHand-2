@@ -88,6 +88,11 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
+    public int selectInventory(int goodsId) {
+        return goodsDao.selectInventory(goodsId);
+    }
+
+    @Override
     public List<Goods> selectGoodsList(Integer goodsIds[]) {
         return goodsDao.selectGoodsList(goodsIds);
     }

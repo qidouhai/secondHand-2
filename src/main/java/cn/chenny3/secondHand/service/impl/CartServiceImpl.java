@@ -28,10 +28,18 @@ public class CartServiceImpl implements CartService {
             cart.setUpdated(cart.getCreated());
             cartDao.addCart(cart);
         }else{//存在，修改购物车中商品的数量
-           cartAtDB.setUpdated(new Date());
-           int newNum=cartAtDB.getNum()+cart.getNum();
-           cartAtDB.setNum(newNum);
-           cartDao.updateCart(cartAtDB);
+           if(cartAtDB.getStatus()==0){//该商品记录之前在购物车中被删除
+               //修改状态
+               cartDao.updateStatus(cartAtDB.getGoodsId(),cartAtDB.getUserId(),1);
+               cartAtDB.setNum(cart.getNum());
+               cartAtDB.setUpdated(new Date());
+               cartDao.updateCart(cartAtDB);
+           }else{
+               cartAtDB.setUpdated(new Date());
+               int newNum=cartAtDB.getNum()+cart.getNum();
+               cartAtDB.setNum(newNum);
+               cartDao.updateCart(cartAtDB);
+           }
         }
     }
 
@@ -42,8 +50,8 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCart(int cartId) {
-        cartDao.deleteCart(cartId);
+    public void deleteCart(int goodsId,int userId) {
+        cartDao.updateStatus(goodsId,userId,0);
     }
 
     @Override
@@ -59,6 +67,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public int selectCartCount(int userId) {
         return cartDao.selectCartCount(userId);
+    }
+
+    @Override
+    public Cart selectCart(int userId, int goodsId) {
+        return cartDao.selectSpecialGoodsAtCart(goodsId,userId);
     }
 
 

@@ -23,6 +23,7 @@
             color: #333333;
             font-size: 16px;
         }
+
         .sm_img {
             width: 48px;
             height: 48px;
@@ -32,25 +33,100 @@
             margin-right: 10px;
             border: 1px solid #eaeaea;
         }
-        table{
-            width: 880px!important;
+
+        #myCart {
+            width: 880px !important;
             margin: 0 auto;
+
+        }
+
+        #myCart tr td:nth-child(2) {
+            width: 360px;
+        }
+
+        #myCart tr td:nth-child(4) input {
+            width: 40px;
+            text-align: center;
+        }
+
+        .curSingleCartprice{
+            color: red;
+            font-weight: bold;
+        }
+        .gwc_tb3 {
+            width: 100%;
+            border: 1px solid #d2d2d2;
+            background: #e7e7e7;
+            height: 46px;
+            margin-top: 20px;
+        }
+
+        .tb1_td1 {
+            width: 35px;
+            text-align: center;
+        }
+
+        .gwc_tb3 tr td {
+            font-size: 14px;
+        }
+
+        .tb3_td1 {
+            width: 448px;
+            text-align: center;
+        }
+
+        .tb3_td2 {
+            width: 100px;
+            text-align: center;
+        }
+
+        #jz1 {
+            font-size: 18px;
+        }
+
+        .jz2 {
+            width: 100px;
+            height: 46px;
+            line-height: 46px;
+            text-align: center;
+            font-size: 18px;
+            color: #fff;
+            background: #ee0000;
+            display: block;
+            float: right;
         }
     </style>
 </head>
-<body>
+<body id="cartBody" style="position: relative; padding-bottom: 47px;">
 <div class="mem_tit">我的闲置</div>
-    <table id="myCart" class="table">
-        <tr>
-            <th>全选<input type="checkbox" id="selectAll" /></th>
-            <th>商品信息</th>
-            <th>单价</th>
-            <th>数量</th>
-            <th>金额</th>
-            <th>操作</th>
-        </tr>
+<table id="myCart" class="table">
+    <tr>
+        <th>全选<input type="checkbox" id="selectAll"/></th>
+        <th>商品信息</th>
+        <th>单价</th>
+        <th>数量</th>
+        <th>金额</th>
+        <th>操作</th>
+    </tr>
 
-    </table>
+</table>
+<table cellpadding="0" cellspacing="0" class="gwc_tb3" style="position: fixed;bottom: 0px">
+    <tbody>
+    <tr>
+        <td class="tb1_td1">&nbsp;</td>
+        <td class="tb1_td1">&nbsp;</td>
+        <td class="tb3_td1">&nbsp;</td>
+        <td class="tb3_td2">已选商品 <label id="num" style="color:#ff5500;font-size:14px; font-weight:bold;">0</label>
+            件
+        </td>
+        <td class="tb3_td3">合计(不含运费):<span>￥</span><span style=" color:#ff5500;"><label id="price"
+                                                                                        style="color:#ff5500;font-size:14px; font-weight:bold;">0.00</label></span>
+        </td>
+        <td class="tb3_td4"><span id="jz1" style="display: none;">结算</span><a href="#" style="display: block;"
+                                                                              class="jz2" id="jz2">结算</a></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 <script src="/scripts/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -64,23 +140,185 @@
 <script>
     /*<![CDATA[*/
     $(function () {
+        //初始化购物车数据
         initDatas();
-    })
-    $('.spinnerExample').spinner({});
 
-    function initDatas(){
-        $.get('/cart/list',null,function(result){
-            var total=result.total;
-            $.each(result.rows,function (index,item) {
-                var html="<tr><td><input type=\"checkbox\" name=\"goods_id\" value=\""+item.goodsId+"\"/></td>\n" +
-                    "            <td><div class=\"sm_img\"><a href=\"\" style=\"margin-top: 0px\" target=\"_blank\"><img src=\"http://secondhand-oss.oss-cn-beijing.aliyuncs.com/"+item.goodsImage+"?x-oss-process=style/48_size\" width=\"48\" height=\"48\" style=\"margin-top: 0px\"></a></div><a href=\"\" style=\"font-size: 12px;\" target=\"_blank\">"+item.goodsName+"</a></td>\n" +
-                    "            <td><span style='color: #000;font-weight: bold'>￥"+item.goodsPrice*1.0/100+"</span></td>\n" +
-                    "            <td><input type=\"text\" class=\"spinnerExample\" value='1'/>\n</td>\n" +
-                    "            <td><span style='color: red;font-weight: bold'>￥"+(item.goodsPrice*1.0/100)*item.num+"</span></td></tr>"
-                $('#myCart').append(html);
+        //重置父页面iframe高度
+        resetIframeHeight();
+
+        //初始化数值微调器
+        $(".spinner")
+            .spinner('delay', 200) //delay in ms
+            .spinner('changed', function (e, newVal, oldVal) {
+                // trigger lazed, depend on delay option.
+                var tr=$(e.target).parent().parent().parent();
+                //异步请求此商品的库存
+                var goodsId=tr.find("td:eq(0) input").val();
+                $.get('/goods/inventory/'+goodsId,null,function (result) {
+                    if(result.code==1){
+                        alert("商品库存获取失败，请稍后重试");
+                    }else{
+                        var inventory=result.msg;
+                        if(newVal>inventory){
+                            $(e.target).val(oldVal);
+                            alert("商品库存量只有"+result.msg+"件");
+                        }else{
+                            //重新计算此商品的总额
+                            tr.find("td:eq(4)").text("￥"+(parseInt(parseFloat(tr.find("td:eq(2)").text().split("￥")[1])*100)*newVal/100).toFixed(2));                         //向后台提交更改后购物车中的该商品数量
+                            if(newVal>oldVal){// add
+                                $.post('/cart',{
+                                    goodsId:goodsId,
+                                    num:newVal-oldVal
+                                },function (result) {
+                                    if(result.code==1){
+                                        alert(result.msg);
+                                    }
+                                });
+                            }else{//decr
+                                $.ajax({
+                                    url:'/cart',
+                                    type:'post',
+                                    data:{
+                                        goodsId:goodsId,
+                                        num:oldVal-newVal,
+                                        _method:'put'
+                                    },
+                                    dataType:'json',
+                                    success:function (result) {
+
+                                        if(result.code==1){
+                                            alert(result.msg);
+                                        }
+                                    }
+                                    })
+                            }
+                        }
+                    }
+                })
+
+
+            });
+
+
+        //增加全选/反选功能
+        $('#selectAll').click(function () {
+            //获取选中状态
+            var isChecked = $(this).is(":checked");
+            //如果选中
+            if (isChecked) {
+                $('input[name=goods_id]').prop("checked",true);
+                //修改选中总价格和总件数
+                resetPriceAndNum();
+
+            }else{//未选中
+                $('input[name=goods_id]').prop("checked",false);
+                //修改选中总价格和总件数
+                resetPriceAndNum();
+            }
+
+        });
+
+
+        //从购物车中移除商品
+        $('.removeGoods').click(function (e) {
+            var othis=$(e.target);
+            var goodsId=othis.parent().parent().find("td:eq(0) input").val();
+            $.ajax({
+                url:"/cart",
+                type:'post',
+                data:{
+                    _method:'delete',
+                    goodsId:goodsId
+                },
+                dataType:'json',
+                success:function (result) {
+                    if(result.code==1){
+                        alert(result.msg);
+                    }else {
+                        //dom操作移除当前行
+                        othis.parent().parent().remove();
+                        //重置iframe高度
+                        resetIframeHeight();
+                        //重置购物车底栏数据
+                        resetPriceAndNum();
+                    }
+                },
+                async:false
             })
+
         })
+
+        //如果某一件商品的选框状态发生改变时
+        $.each($('input[name=goods_id]'),function (i,item) {
+            $(item).change(function () {
+                //统计此时全部选框选中的数量
+                var selectedNum=$('input[name=goods_id]:checked').length;
+                //统计全部选课的数量
+                var allNum=$('input[name=goods_id]').length;
+                if(selectedNum==allNum){
+                    //选中全选框
+                    $('#selectAll').prop("checked",true);
+                }else{
+                    $('#selectAll').prop("checked",false);
+                }
+                //修改选中总价格和总件数
+                resetPriceAndNum();
+
+            });
+        });
+
+
+    })
+
+
+    function initDatas() {
+        $.ajax({
+            url:'/cart/list',
+            data:null,
+            type:'get',
+            dataType:'json',
+            success:function (result) {
+                var total = result.total;
+                $.each(result.rows, function (index, item) {
+                    var html = "<tr><td><input type=\"checkbox\" name=\"goods_id\" value=\"" + item.goodsId + "\"/></td>\n" +
+                        "            <td><div class=\"sm_img\"><a href=\"/goods/" + item.goodsId + "\" style=\"margin-top: 0px\" target=\"_blank\"><img src=\"http://secondhand-oss.oss-cn-beijing.aliyuncs.com/" + item.goodsImage + "?x-oss-process=style/48_size\" width=\"48\" height=\"48\" style=\"margin-top: 0px\"></a></div><a href=\"/goods/" + item.goodsId + "\" style=\"font-size: 12px;\" target=\"_blank\">" + item.goodsName + "</a></td>\n" +
+                        "            <td><span style='color: #000;font-weight: bold'>￥" + (item.goodsPrice * 1.0 / 100).toFixed(2) + "</span></td>\n" +
+                        "            <td><div data-trigger=\"spinner\" class='spinner'>\n" +
+                        "  <a href=\"javascript:;\" data-spin=\"down\">-</a>\n" +
+                        "  <input type=\"text\" value=\"" + item.num + "\" data-rule=\"quantity\">\n" +
+                        "  <a href=\"javascript:;\" data-spin=\"up\">+</a>\n" +
+                        "</div></td>\n" +
+                        "            <td class='curSingleCartprice'>￥" +( (item.goodsPrice * 1.0 / 100) * item.num).toFixed(2) + "</td>" +
+                        "            <td><a href='javascript:void(0)' class='removeGoods'>删除</a></td></tr>";
+                    $('#myCart').append(html);
+                });
+            },
+            async:false
+        })
+
+
+
     }
+
+
+    function resetIframeHeight() {
+        window.parent.document.getElementById('external-frame').setAttribute("height", document.getElementById("cartBody").clientHeight);
+    }
+
+    function resetPriceAndNum(){
+        $('#num').text($('input[name=goods_id]:checked').length);
+        var price=0;
+        $.each($('input[name=goods_id]:checked'),function (i,item) {
+            var cur=parseInt(parseFloat($(item).parent().parent().find("td:eq(4)").text().split("￥")[1])*100);
+            console.log(cur);
+            price=price+cur;
+
+
+        })
+        $('#price').text((price/100).toFixed(2));
+    }
+
+
     /*]]>*/
 </script>
 </html>

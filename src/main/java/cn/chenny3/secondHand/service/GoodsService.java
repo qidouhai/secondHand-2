@@ -48,4 +48,6 @@ public interface GoodsService {
     int selectCount(Integer categoryId, Integer subCategoryId);
 
     int selectCount(Integer categoryId);
+
+    int selectInventory(int goodsId);
 }

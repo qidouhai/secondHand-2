@@ -22,6 +22,7 @@ import cn.chenny3.secondHand.service.CategoryService;
 import cn.chenny3.secondHand.service.GoodsService;
 import cn.chenny3.secondHand.service.UserService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -300,6 +301,19 @@ public class GoodsController extends BaseController {
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new EasyResult(1, "取消点赞失败");
+        }
+    }
+
+    @RequestMapping(value = "/inventory/{goodsId}",method = RequestMethod.GET)
+    @ResponseBody
+    public EasyResult getInventory(@PathVariable int goodsId){
+        try{
+            int inventory=goodsService.selectInventory(goodsId);
+            return new EasyResult(0,inventory);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return new EasyResult(1,"查询商品库存出错");
         }
     }
 }

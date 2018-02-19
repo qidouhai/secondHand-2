@@ -7,7 +7,7 @@
     <select id="selectCartList" resultType="cart">
         select id,goods_id,user_id,goods_name,goods_image,goods_price,num,status,created,updated
         from <include refid="table"></include>
-        where user_id=#{userId}
+        where user_id=#{userId},and status=1
         order by created desc
         limit #{offset},#{limit}
     </select>
