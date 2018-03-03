@@ -83,7 +83,7 @@ CREATE TABLE `comment`(
   from_id  int NOT NULL COMMENT '发送人id',
   to_id  int NOT NULL COMMENT '接收人id',
   parent_id int not null COMMENT '被回复的留言id, 0代表是一级留言，1代表是二级留言，回复别人的留言',
-  is_parent int not null COMMENT '此留言是否有其他人回复，1代表有，2代表没有',
+  is_parent int not null COMMENT '此留言是否有其他人回复，1代表没有，2代表有',
   sub_num int not null COMMENT '子回复的个数',
   entity_id int not null ,
   entity_type int not null,

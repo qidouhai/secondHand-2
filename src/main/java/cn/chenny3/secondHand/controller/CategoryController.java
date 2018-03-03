@@ -38,7 +38,7 @@ public class CategoryController extends BaseController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public EasyResult add(@RequestParam int categoryId){
+    public EasyResult get(@RequestParam int categoryId){
         try{
             if(categoryId<0){
                 return new EasyResult(1, "参数取值错误");
