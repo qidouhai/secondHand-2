@@ -1,6 +1,8 @@
 package cn.chenny3.secondHand.controller.web;
 
+import cn.chenny3.secondHand.common.annotation.PermissionAnnotation;
 import cn.chenny3.secondHand.common.bean.enums.ContentType;
+import cn.chenny3.secondHand.common.bean.enums.RoleType;
 import cn.chenny3.secondHand.common.bean.vo.ViewObject;
 import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.Category;
@@ -12,8 +14,11 @@ import cn.chenny3.secondHand.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +33,7 @@ public class IndexController extends BaseController{
     @Autowired
     private CategoryService categoryService;
 
+    @PermissionAnnotation(roles = RoleType.All)
     @RequestMapping(method = RequestMethod.GET)
     public String view(Model model){
         //查询banner
@@ -53,4 +59,5 @@ public class IndexController extends BaseController{
         model.addAttribute("vo",vo);
         return "index";
     }
+
 }

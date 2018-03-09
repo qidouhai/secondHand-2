@@ -51,7 +51,7 @@ public class GoodsController extends BaseController {
     @Autowired
     private EventProducer eventProducer;
 
-
+    @PermissionAnnotation(roles = RoleType.Admin)
     @RequestMapping(value = "addView", method = RequestMethod.GET)
     public String addView(Model model) {
         return "/goods/goods_add";

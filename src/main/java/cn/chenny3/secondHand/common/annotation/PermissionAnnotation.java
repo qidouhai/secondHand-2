@@ -9,8 +9,8 @@ import java.lang.annotation.*;
 @Inherited
 @Documented
 public @interface PermissionAnnotation {
-    String name();
-    String description();
+    String name() default "";
+    String description() default "";
     RoleType[] roles();
 }
 

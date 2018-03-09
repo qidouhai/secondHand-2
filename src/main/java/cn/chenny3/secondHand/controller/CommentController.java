@@ -10,11 +10,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @Controller
@@ -31,7 +33,7 @@ public class CommentController extends BaseController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public String addComment(Comment comment, BindingResult bindingResult) throws JsonProcessingException {
+    public String addComment(@Validated Comment comment, BindingResult bindingResult) throws JsonProcessingException {
         EasyResult easyResult=null;
         try {
             if (bindingResult.hasErrors()) {

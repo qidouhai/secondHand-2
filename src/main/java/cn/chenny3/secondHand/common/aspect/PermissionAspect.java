@@ -28,45 +28,57 @@ public class PermissionAspect {
     @Autowired
     private RequestResponseHolder requestResponseHolder;
 
-    @Pointcut(value = "@annotation(cn.chenny3.secondHand.common.annotation.PermissionAnnotation)")
+//    @Pointcut(value ="execution(* cn.chenny3.secondHand.controller..*.*(..))")
+    @Pointcut(value ="@annotation(cn.chenny3.secondHand.common.annotation.PermissionAnnotation)")
     public void PermissionAspect() {
     }
 
     @Around(value = "PermissionAspect()")
-    public void around(ProceedingJoinPoint joinPoint) throws Throwable {
-        //获得目标方法
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        //获取目标对象
         Signature signature = joinPoint.getSignature();
         Object target = joinPoint.getTarget();
+        //获取目标方法
         MethodSignature methodSignature = (MethodSignature) signature;
         Method targetMethod = methodSignature.getMethod();
 
         //获得标注在目标方法上的注解
         PermissionAnnotation permissionAnnotation = targetMethod.getAnnotation(PermissionAnnotation.class);
-        //获得访问目标方法所需要的角色
+        if(permissionAnnotation==null){
+            return "";
+        }
+        //获得注解上的角色信息
         RoleType[] roles = permissionAnnotation.roles();
         if (roles == null || roles.length == 0) {
             throw new IllegalAnnotationArgumentException("PermissionAnnotation注解参数未补全");
         }
 
         List<RoleType> roleTypeList = Arrays.asList(roles);
-        //不需要权限即可访问，直接放行
+        //所有用户都可访问
         if (roleTypeList.contains(RoleType.All)) {
-            joinPoint.proceed();
+            Object returnValue = joinPoint.proceed();
+            return returnValue;
         }
 
         //验证用户是否具有指定角色
         boolean isProceed = false;
-        for (RoleType role : roleTypeList) {
-            if (role.equals(userHolder.get().getRole())) {
-                isProceed = true;
+        try{
+            for (RoleType role : roleTypeList) {
+                if (role.equals(userHolder.get().getRole())) {
+                    isProceed = true;
+                }
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         //验证后，具有访问目标方法的权限
         if (isProceed == true) {
-            joinPoint.proceed();//放行
+            Object returnValue = joinPoint.proceed();
+            return returnValue;
         } else {
             //重定向到提示页面
-            getResponse().sendRedirect("/no_permission.html");
+            //getResponse().sendRedirect("/no_permission.html");
+            return "redirect:/no_permission.html";
         }
 
     }

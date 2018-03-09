@@ -123,6 +123,7 @@ public class RedisUtils {
     }
 
     public Long zrank(String key, String memeber) {
+
         return getOpsForZSet().rank(key, memeber);
     }
 
