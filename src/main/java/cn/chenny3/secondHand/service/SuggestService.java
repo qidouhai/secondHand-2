@@ -14,4 +14,9 @@ public interface SuggestService {
     List<Suggest> selectSuggestListByPage(int userId,int status,int curPage,int pageSize);
     List<Suggest> selectSuggestList(int userId,int status);
     int selectCountByUserId(int userId,int status);
+
+    List<Suggest> selectSuggestListByMgt(int start,int offset);
+    int selectSuggestCountByMgt();
+
+    void batchUpdateStatus(int ids[],int status);
 }

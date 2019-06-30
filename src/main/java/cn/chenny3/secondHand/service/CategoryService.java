@@ -10,4 +10,7 @@ public interface CategoryService {
     int updateStatus(int id,int status);
     List<Category> selectCategoriesByParentId(int parentId);
     List<Category> getNavCategories();
+    void updateCategoryName(Category category);
+
+    void removeCategory(int categoryId);
 }

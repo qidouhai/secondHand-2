@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/manager/common/header::commonHeader('用户查看')"></head>
+<body th:with="userAuthenticateInfo=${vo.get('userAuthenticateInfo')},user=${vo.get('user')},loginRecords=${vo.get('loginRecords')},address=${vo.get('address')}">
+<div class="cl pd-20" style=" background-color:#5bacb6">
+  <img class="avatar-XL l" src="images/user.png" width="55" height="55" th:src="'http://cdn.chenny3.cn/'+${user.headUrl}+'?x-oss-process=style/90_size'"/>
+  <dl style="margin-left:80px; color:#fff">
+    <dt><span class="f-18" th:text="${user.name}">张三</span> <span class="pl-10 f-12" th:text="${userAuthenticateInfo!=null?'(已认证)':'(未认证)'}">余额：40</span></dt>
+    <dd class="pt-10 f-12" style="margin-left:0">类型：<span th:text="${user.role.value==1?'普通用户':'管理员'}"></span></dd>
+  </dl>
+</div>
+<div class="pd-20">
+  <table class="table">
+    <tbody>
+      <tr>
+        <th class="text-r" width="80">性别：</th>
+        <td th:text="${userAuthenticateInfo!=null?userAuthenticateInfo.sex:'-'}">男</td>
+      </tr>
+      <tr>
+        <th class="text-r">手机：</th>
+        <td th:text="${user.phone}">13000000000</td>
+      </tr>
+      <tr>
+        <th class="text-r">邮箱：</th>
+        <td th:text="${user.email}">admin@mail.com</td>
+      </tr>
+      <tr>
+        <th class="text-r">院系：</th>
+        <td th:text="${userAuthenticateInfo!=null?userAuthenticateInfo.deptName:'-'}">admin@mail.com</td>
+      </tr>
+      <tr>
+        <th class="text-r">专业：</th>
+        <td th:text="${userAuthenticateInfo!=null?userAuthenticateInfo.subjectName:'-'}">admin@mail.com</td>
+      </tr>
+      <tr>
+        <th class="text-r">班级：</th>
+        <td th:text="${userAuthenticateInfo!=null?userAuthenticateInfo.className:'-'}">admin@mail.com</td>
+      </tr>
+      <tr>
+        <th class="text-r">地址：</th>
+        <td th:text="${userAuthenticateInfo!=null?userAuthenticateInfo.schoolName+' '+(address!=null?address.area+'院 '+address.hostelId+'栋 '+address.houseId+'宿舍':''):'-'}">北京市 海淀区</td>
+      </tr>
+      <tr>
+        <th class="text-r">注册时间：</th>
+        <td th:text="${#dates.format(user.created, 'yyyy年MM月dd日 HH:mm:ss')}">2014.12.20</td>
+      </tr>
+      <tr>
+        <th class="text-r">上次登录：</th>
+        <td th:text="${!#lists.isEmpty(loginRecords)?#dates.format(loginRecords[0].loginTime, 'yyyy年MM月dd日 HH:mm:ss'):'从未登录'}">2014.12.20</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+<div th:include="/manager/common/footer::commonFooter"></div>
+
+</body>
+</html>

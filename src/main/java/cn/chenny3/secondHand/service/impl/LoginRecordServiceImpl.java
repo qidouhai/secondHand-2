@@ -12,17 +12,22 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class LoginRecordServiceImpl implements LoginRecordService{
+public class LoginRecordServiceImpl implements LoginRecordService {
     @Autowired
     private LoginRecordDao loginRecordDao;
     @Autowired
     private LocationUtils locationUtil;
+
     @Override
     public int addLoginRecord(LoginRecord loginRecord) {
         //通过ip地址获取真实地理位置
-        String location="";
+        String location = "";
         try {
-             location = locationUtil.getRealLocation(loginRecord.getIp());
+            //0:0:0:0:0:0:0:1
+            if (loginRecord.getIp().equals("0:0:0:0:0:0:0:1")) {
+                loginRecord.setIp("127.0.0.1");
+            }
+            location = locationUtil.getRealLocation(loginRecord.getIp());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,5 +41,10 @@ public class LoginRecordServiceImpl implements LoginRecordService{
     @Override
     public List<LoginRecord> selectLastLoginRecord(int userId) {
         return loginRecordDao.selectLastLoginRecord(userId);
+    }
+
+    @Override
+    public int selectLoginCount(int userId) {
+        return loginRecordDao.selectLoginCount(userId);
     }
 }

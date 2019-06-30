@@ -42,7 +42,7 @@ public class CartController extends BaseController{
                 return new EasyResult(1,"商品数量必须是一个正数");
             }
             if(goods.getInventory()<cart.getNum()){
-                return new EasyResult(1,"添加商品至购物车失败。添加数量已经超出该商品的库存量。");
+                return new EasyResult(1,"库存量不足");
             }
             cart.setGoodsId(goods.getId());
             cart.setGoodsName(goods.getGoodsName());

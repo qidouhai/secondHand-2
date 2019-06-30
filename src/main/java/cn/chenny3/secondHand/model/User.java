@@ -18,8 +18,11 @@ public class User extends Base{
     private String wechat;
     private String alipay;
     private String email;
+    private Address address;
+    private UserAuthenticate userAuthenticate;
     private int addressId;
     private int authenticateId;
+    private int money;
     private RoleType role;
     private Integer status;
 
@@ -133,5 +136,29 @@ public class User extends Base{
 
     public void setRole(RoleType role) {
         this.role = role;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public UserAuthenticate getUserAuthenticate() {
+        return userAuthenticate;
+    }
+
+    public void setUserAuthenticate(UserAuthenticate userAuthenticate) {
+        this.userAuthenticate = userAuthenticate;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
     }
 }

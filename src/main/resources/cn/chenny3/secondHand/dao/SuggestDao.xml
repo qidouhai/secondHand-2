@@ -2,8 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.chenny3.secondHand.dao.SuggestDao">
-    <sql id="table">selectSuggests</sql>
-
+    <sql id="table">suggest</sql>
+    <resultMap id="suggestWithUserMap" type="suggest">
+        <association property="user" javaType="user">
+            <id property="id" column="user_id"></id>
+            <id property="name" column="username"></id>
+            <id property="headUrl" column="head_url"></id>
+            <id property="phone" column="phone"></id>
+            <id property="email" column="email"></id>
+        </association>
+    </resultMap>
     <select id="selectCountByUserId" resultType="suggest">
         select count(1)
         FROM <include refid="table"></include>
@@ -34,5 +42,31 @@
         limit #{offset},#{limit}
     </select>
 
+    <select id="selectSuggestListByMgt" resultMap="suggestWithUserMap">
+        select suggest.id,suggest.title,suggest.content,suggest.user_id,user.name 'username',user.head_url,user.phone,user.email,suggest.status,suggest.created
+        from suggest
+            INNER JOIN user on suggest.user_id=user.id
+        where suggest.status=1
+        ORDER BY suggest.created desc
+        limit #{start},#{offset}
+    </select>
 
+    <select id="selectSuggestCountByMgt" resultType="int">
+        select count(1)
+        from suggest
+        where suggest.status=1
+    </select>
+
+    <update id="batchUpdateStatus">
+        update <include refid="table"/>
+        <set>
+            status = #{status}
+        </set>
+        <where>
+            id in 
+            <foreach collection="ids" item="suggestId" open="(" separator="," close=")">
+                #{suggestId}
+            </foreach>
+        </where>
+    </update>
 </mapper>

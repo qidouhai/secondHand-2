@@ -1,0 +1,253 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/manager/common/header::commonHeader('二手物品分类')">
+</head>
+<body>
+<nav class="breadcrumb">
+    <i class="Hui-iconfont">&#xe67f;</i> 首页
+    <span class="c-gray en">&gt;</span> 二手物品管理 <span class="c-gray en">&gt;</span> 二手物品分类
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="Hui-iconfont">&#xe68f;</i>
+    </a>
+</nav>
+<table class="table">
+    <tr>
+        <td width="200" class="va-t">
+            <ul id="treeDemo" class="ztree"></ul>
+        </td>
+        <td class="va-t" style="margin-left: 100px;">
+            <button class="btn btn-success radius" style="margin-top: 8px" onclick="addCategory()">添加类目</button>
+        </td>
+    </tr>
+</table>
+<div th:include="/manager/common/footer::commonFooter"></div>
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/scripts/hui/zTree/v3/js/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript" src="/scripts/hui/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/scripts/hui/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="/scripts/hui/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var zTreeObj;
+    var setting = {
+        async: {
+            enable: true,
+            autoParam: ["id"],
+            dataFilter: ajaxDataFilter,
+            dataType: "json",
+            url: "/manager/goods/category",
+            type: 'get'
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "id",
+                pIdKey: "pId",
+                rootPId: ""
+            }
+        },
+        view: {
+            dblClickExpand: false,
+            showLine: false,
+            selectedMulti: false
+        },
+        edit: {
+            enable: true,
+            drag: {
+                prev: false,
+                next: false,
+                inner: false,
+                isMove: false,
+                isCopy: false
+
+            }
+        },
+        callback: {
+            beforeEditName: zTreeBeforeEditName,
+            onRename: zTreeOnRename,
+            beforeRemove: zTreeBeforeRemove,
+            onRemove: zTreeOnRemove,
+            onAsyncSuccess: zTreeOnAsyncSuccess
+        }
+    };
+
+    var zNodes = [];
+
+    var code;
+
+    function showCode(str) {
+        if (!code) code = $("#code");
+        code.empty();
+        code.append("<li>" + str + "</li>");
+    }
+
+    $(document).ready(function () {
+        zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    });
+
+    //异步加载节点成功的回调
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg) {
+        if(treeNode==undefined){
+            treeNode=zTreeObj.getNodes()[0];
+        }
+        if(treeNode.parentTId==null){//根节点
+            zTreeObj.expandNode(treeNode, true, false, true);
+
+        }
+    };
+
+    function ajaxDataFilter(treeId, parentNode, responseData) {
+        if (responseData) {
+            for (var i = 0; i < responseData.length; i++) {
+                responseData[i].isParent = responseData[i].isParent == 1 ? true : false;
+            }
+        }
+        return responseData;
+    };
+
+
+    function zTreeBeforeEditName(treeId, treeNode) {
+        //根节点不允许修改名称
+        if (treeNode.getParentNode() == null) {
+            layer.alert("根节点不允许修改");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function zTreeOnRename(event, treeId, treeNode, isCancel) {
+        $.ajax({
+            url: '/manager/goods/category/updateName',
+            data: {'id': treeNode.id, 'categoryName': treeNode.name},
+            dataType: 'json',
+            type: 'POST',
+            success: function (result) {
+                if (result.code != 0) {
+                    layer.alert(result.msg);
+
+                }
+            }
+        });
+    }
+
+    function zTreeBeforeRemove(treeId, treeNode) {
+        //根节点不允许修改名称
+        if (treeNode.getParentNode() == null) {
+            layer.alert("根节点不允许删除");
+            return false;
+        } else {
+            var flag;
+            $.ajax({
+                url: '/manager/goods/category/canRemove',
+                data: {'categoryId': treeNode.id},
+                dataType: 'json',
+                success: function (result) {
+                    if (result.code == 0) {
+                        flag = true;
+                    } else {
+                        layer.alert("【" + treeNode.name + "】" + result.msg);
+                        flag = false;
+                    }
+                },
+                async: false
+            });
+            return flag;
+        }
+    }
+
+    function zTreeOnRemove(event, treeId, treeNode) {
+        $.ajax({
+            url: '/manager/goods/category/remove',
+            data: {'categoryId': treeNode.id},
+            dataType: 'json',
+            success: function (result) {
+                if (result.code != 0) {
+                    layer.alert("【" + treeNode.name + "】" + result.msg);
+                }
+            }
+        });
+
+    }
+
+
+    function addCategory(){
+        var nodes = zTreeObj.getSelectedNodes();
+        if(nodes==null||nodes.length<=0){
+            layer.alert('请选中一个类目');
+            return ;
+        }
+
+        if(nodes[0].level ==2){
+            layer.alert('只支持添加到二级类目');
+            return ;
+        }
+        layer.open({
+            title:'添加类目',
+            type: 1,
+            area: ['400px', '160px'],
+            shadeClose: true, //点击遮罩关闭
+            content: '<form action="/manager/goods/category" method="post" class="form form-horizontal" id="addCategoryNameForm" style="width: 340px;margin: 0 auto" >\n' +
+            '    <div class="row cl">\n' +
+            '        <label class="form-label col-xs-5 col-sm-4">类目名称：</label>\n' +
+            '        <div class="formControls col-xs-7 col-sm-8">\n' +
+            '            <input id="categoryName" name="categoryName" type="text" class="input-text" autocomplete="off" placeholder="请输入">\n' +
+            '        </div>\n' +
+            '    </div>\n' +
+            '    <div class="row cl">\n' +
+            '        <div class="col-xs-7 col-sm-8 col-xs-offset-5 col-sm-offset-4">\n' +
+            '            <input class="btn btn-primary radius" type="submit" value="提交">\n' +
+            '        </div>\n' +
+            '    </div>\n' +
+            '</form>'
+        });
+
+        $("#addCategoryNameForm").validate({
+            rules:{
+                categoryName:{
+                    required: true,
+                    maxlength:10
+                }
+            },
+            messages: {
+                categoryName:{
+                    required: "请输入类目名称",
+                    maxlength: "类目名称不能多于10个字符"
+                }
+            },
+            submitHandler: function(form)
+            {
+                $(form).ajaxSubmit({
+                    data:{
+                        "parentId":zTreeObj.getSelectedNodes()[0].id,
+                    },success:function(result){
+                        if(result.code==0){
+                            //关闭所有弹窗
+                            layer.closeAll();
+                            //动态添加树节点
+                            var category=result.msg;
+                            //zTreeObj.reAsyncChildNodes(zTreeObj.getSelectedNodes()[0], {name:category.name,isParent:false,id:category.id},true);
+                            var node=zTreeObj.getSelectedNodes()[0];
+                            if(node.isParent==false){
+                                zTreeObj.reAsyncChildNodes(node.getParentNode() ,"refresh",false);
+                            }
+                            zTreeObj.reAsyncChildNodes(node ,"refresh",false);
+
+
+                        }else{
+                            layer.msg(result.msg);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+
+    /*]]>*/
+</script>
+
+</body>
+</html>

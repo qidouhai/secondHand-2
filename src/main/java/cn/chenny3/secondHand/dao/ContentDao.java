@@ -25,10 +25,17 @@ public interface ContentDao {
     void addContent(Content content);
     @Select({"select ",SELECT_FIEDS," from ",TABLE_NAME," where id = #{id}"})
     Content selectContent(int id);
-    @Select({"select ",SELECT_FIEDS," from ",TABLE_NAME," where entity_type = #{entityType}  order by updated desc limit #{startIndex},#{size}"})
-    List<Content> selectContents(@Param("entityType") int entityType,@Param("startIndex") int startIndex,@Param("size") int size);
-    @Select({"select count(1) from ",TABLE_NAME," where entity_type = #{entityType}"})
-    int selectCount(@Param("entityType") int entityType);
+
+
+    List<Content> selectContents(@Param("entityType") int entityType,@Param("statusArr")int statusArr[],@Param("start") int start,@Param("offset") int offset);
+
+    int selectCount(@Param("entityType") int entityType,@Param("statusArr")int statusArr[]);
+
+
     @Update({"update ", TABLE_NAME, " set status=#{status} where id=#{id}"})
-    int updateStatus(int id,int status);
+    int updateStatus(@Param("id") int id,@Param("status") int status);
+
+    void updateContent(Content content);
+
+    void batchUpdateStatus(@Param("ids") int ids[],@Param("status") int status);
 }

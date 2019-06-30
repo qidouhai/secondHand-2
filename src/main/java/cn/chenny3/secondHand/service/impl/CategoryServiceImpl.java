@@ -62,4 +62,28 @@ public class CategoryServiceImpl implements CategoryService{
     public List<Category> getNavCategories(){
         return selectCategoriesByParentId(0);
     }
+
+    @Override
+    public void updateCategoryName(Category category) {
+        category.setUpdated(new Date());
+        categoryDao.updateCategoryName(category);
+    }
+
+    @Override
+    public void removeCategory(int categoryId) {
+        categoryDao.updateStatus(categoryId,0);
+        //查找此节点的父节点
+        Category category = categoryDao.selectCategory(categoryId);
+        int parentId = category.getParentId();
+        //父节点是否拥有其他子节点
+        List<Category> categories = categoryDao.selectCategoriesByParentId(parentId);
+        if(categories==null||categories.size()==0){
+            //修改父节点的状态
+            Category parent = new Category();
+            parent.setId(parentId);
+            parent.setIsParent(0);
+            parent.setUpdated(new Date());
+            categoryDao.updateCategoryIsParent(parent);
+        }
+    }
 }

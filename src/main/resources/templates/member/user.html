@@ -22,7 +22,7 @@
             <td style="padding-left: 25px;">
                 <div class="m_user" th:text="${user.name}">TRACY</div>
                 <p style="font-size: 12px;">
-                <div>等级：<span th:text="${isAuthenticate &gt; 0?'认证用户':'未认证用户'}">实名用户</span></div>
+                <!--<div>等级：<span th:text="${isAuthenticate &gt; 0?'认证用户':'未认证用户'}">实名用户</span></div>-->
                 <div th:if="${#arrays.length(vo.get('loginRecords')) &gt; 1}" style="overflow: hidden">
                     <div class="pull-left">上次登录时间:<span th:text="${#dates.format(vo.get('loginRecords')[1].loginTime, 'yyyy年MM月dd日 HH:mm:ss')}">2015-09-28 18:19:47</span></div>
                     <div class="pull-left" style="margin-left: 20px;">上次登录ip地址:<span th:text="${vo.get('loginRecords')[1].ip}+'('+${vo.get('loginRecords')[1].address}+')'">192.168.158.250</span></div>
@@ -31,7 +31,7 @@
                     <div class="pull-left">本次登录时间:<span th:text="${#dates.format(vo.get('loginRecords')[0].loginTime, 'yyyy年MM月dd日 HH:mm:ss')}">2015-09-28 18:19:47</span></div>
                     <div class="pull-left" style="margin-left: 20px;">本次登录ip地址:<span th:text="${vo.get('loginRecords')[0].ip}+'('+${vo.get('loginRecords')[0].address}+')'">192.168.158.250</span></div>
                 </div>
-                <div>您还没有通过邮件认证 <a href="#" style="color:#ff4e00;">点此发送认证邮件</a></div>
+                <div style="display: none">您还没有通过邮件认证 <a href="#" style="color:#ff4e00;">点此发送认证邮件</a></div>
                 <div th:if="${isAuthenticate eq 0}">您还没有通过实名认证 <a href="#" style="color:#ff4e00;"  data-toggle="modal" data-target="#authenticateModel">点此关联身份信息</a></div>
                 </p>
                 <div class="m_notice hidden">
@@ -42,9 +42,8 @@
         </tbody>
     </table>
 </div>
-
-<div class="mem_t">资产信息</div>
-<table border="0" class="mon_tab" style="width:850px; line-height:22px;margin: 0 auto" cellspacing="0" cellpadding="0">
+<div class="mem_t" style="display: none">资产信息</div>
+<table  border="0" class="mon_tab" style="width:850px; line-height:22px;margin: 0 auto;display: none" cellspacing="0" cellpadding="0">
     <tbody>
     <tr>
         <td colspan="3">我的闲置：
@@ -69,6 +68,7 @@
     <tr>
         <td>学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').stuId:'未知'}">1861111111</span></td>
         <td>真实姓名：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').name:'未知'}">马化腾</span></td>
+        <td>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').sex:'未知'}">男</span></td>
     </tr>
     <tr>
         <td>院&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;系：<span style="color:#555555;" th:text="${isAuthenticate >0?vo.get('userAuthenticateInfo').deptName:'未知'}">计算机学院</span></td>
@@ -79,6 +79,16 @@
         <td>联系电话：<span style="color:#555555;" th:with="subString=${#strings.substring(user.phone,3,7)}" th:text="${#strings.replace(user.phone,subString,'****')}">15576064301</span></td>
         <td>宿舍住址：<span style="color:#555555;">湖南理工学院南院13栋</span></td>
         <td>注册时间：<span style="color:#555555;" th:text="${#dates.format(user.created,'yyyy-MM-dd')}">2015-10-10</span></td>
+    </tr>
+    </tbody>
+</table>
+<div class="mem_t">用户钱包<!--<a style="margin-left: 20px">充值余额</a>--></div>
+<table border="0" class="mon_tab" style="width:850px; line-height:22px;margin: 0 auto" cellspacing="0" cellpadding="0">
+    <tbody>
+    <tr>
+        <td>余额：<span style="color:#555555;" th:text="${user.money==0?'0.00元':#numbers.formatDecimal(user.money/100.0,0,2)+'元'}" >12345678</span></td>
+
+
     </tr>
     </tbody>
 </table>

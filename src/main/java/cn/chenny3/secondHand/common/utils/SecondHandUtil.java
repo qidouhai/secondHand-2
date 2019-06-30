@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class SecondHandUtil {
@@ -77,4 +79,37 @@ public class SecondHandUtil {
         if(length<0||length>32) throw new IllegalArgumentException("length的有效范围为1至32位");
         return UUID.randomUUID().toString().replace("-","").substring(0,length);
     }
+
+    /**
+     * 将日期类型转化为指定格式的字符串
+     * @param format
+     * @param date
+     * @return
+     */
+    public static String date2String(String format,Date...date){
+        Date curDate=null;
+        if(date==null||date.length<1){
+            curDate=new Date();
+        }else{
+            curDate=date[0];
+        }
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        String str = dateFormat.format(curDate);
+        return str;
+    }
+
+
+    /**
+     * 输入的Num不足len位时，自动在开头补0，并转化为str返回
+     * @param num
+     * @param len
+     * @return
+     */
+    public static String fillZero(int num,int len){
+        return String.format("%"+len+"d", num).replace(" ", "0");
+    }
+
+
+
 }

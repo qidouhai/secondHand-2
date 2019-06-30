@@ -19,4 +19,7 @@ public interface LoginRecordDao {
 
     @Select({"select ",SELECT_FIEDS," from ",TABLE_NAME," where user_id=#{userId} ORDER BY login_time desc limit 2"})
     List<LoginRecord> selectLastLoginRecord(@Param("userId") int userId);
+
+    @Select({"select count(1) from ",TABLE_NAME," where user_id=#{userId}"})
+    int selectLoginCount(@Param("userId") int userId);
 }

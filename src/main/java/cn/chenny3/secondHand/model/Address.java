@@ -10,6 +10,10 @@ public class Address extends Base{
     private int houseId;
     private int status;
 
+    //收货人姓名
+    private String userName;
+
+
     public int getId() {
         return id;
     }
@@ -49,5 +53,13 @@ public class Address extends Base{
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

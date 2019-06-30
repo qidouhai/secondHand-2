@@ -136,7 +136,12 @@
             <artifactId>aliyun-java-sdk-core</artifactId>
             <version>3.5.1</version>
         </dependency>
-
+        <!-- 服务器监控信息-->
+        <dependency>
+            <groupId>org.fusesource</groupId>
+            <artifactId>sigar</artifactId>
+            <version>1.6.4</version>
+        </dependency>
     </dependencies>
 
     <build>

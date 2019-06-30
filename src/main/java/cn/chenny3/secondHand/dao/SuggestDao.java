@@ -23,4 +23,10 @@ public interface SuggestDao {
     int selectCountByUserId(@Param("userId")int userId,@Param("status")int status);
     List<Suggest> selectSuggestListByPage(@Param("userId")int userId,@Param("status")int status,@Param("offset")int offset,@Param("limit")int limit);
     List<Suggest> selectSuggestList(@Param("userId")int userId,@Param("status")int status);
+
+    List<Suggest> selectSuggestListByMgt(@Param("start")int start,@Param("offset")int offset);
+    int selectSuggestCountByMgt();
+
+    void batchUpdateStatus(@Param("ids") int ids[],@Param("status") int status);
+
 }

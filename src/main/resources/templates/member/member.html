@@ -23,45 +23,50 @@
     <!--用户中心 开始 -->
     <div class="m_left">
         <div class="left_menu">
-            <div class="left_n">管理中心</div>
-            <div class="left_m">
-                <div class="left_m_t t_bg1">交易中心</div>
-                <ul>
-                    <li><a href="#cart" onclick="setIframeSrc(this)">购物车</a></li>
-                    <li><a href="javascript:void(0);">我的订单</a></li>
-                    <li><a href="#mygoods" onclick="setIframeSrc(this)">我的闲置</a></li>
-                </ul>
-            </div>
+           <!-- <div class="left_n">个人中心</div>-->
             <div class="left_m">
                 <div class="left_m_t t_bg2">会员中心</div>
                 <ul>
                     <li><a href="#user" onclick="setIframeSrc(this)" class="now">用户信息</a></li>
+                    <li><a href="#safe" onclick="setIframeSrc(this)">账户安全</a></li>
                     <li><a href="#address" onclick="setIframeSrc(this)">收货地址</a></li>
                     <li><a href="#collect" onclick="setIframeSrc(this)">我的收藏</a></li>
-
                 </ul>
             </div>
             <div class="left_m">
+                <div class="left_m_t t_bg1">物品中心</div>
+                <ul>
+                    <li><a href="#mygoods" onclick="setIframeSrc(this)">我的物品</a></li>
+                    <li><a href="#cart" onclick="setIframeSrc(this)">购物车</a></li>
+                   <!-- <li><a href="#order/list" onclick="setIframeSrc(this)">已购订单</a></li>
+                    <li><a href="#sellorder" onclick="setIframeSrc(this)">出售订单</a></li>-->
+                </ul>
+            </div>
+             <div class="left_m">
+                <div class="left_m_t t_bg3">订单中心</div>
+                <ul>
+                    <li><a href="#order/list" onclick="setIframeSrc(this)">已购订单</a></li>
+                    <li><a href="#sellOrderList" onclick="setIframeSrc(this)">出售订单</a></li>
+                </ul>
+            </div>
+            <div class="left_m">
+                <div class="left_m_t t_bg4">收藏中心</div>
+                <ul>
+                    <li><a href="#collect" onclick="setIframeSrc(this)">我的收藏</a></li>
+                </ul>
+            </div>
+           <!-- <div class="left_m">
                 <div class="left_m_t t_bg3">账户中心</div>
                 <ul>
                     <li><a href="#safe" onclick="setIframeSrc(this)">账户安全</a></li>
-                    <li><a href="#safe" onclick="setIframeSrc(this)">社交账号</a></li>
                 </ul>
-            </div>
-            <div class="left_m">
+            </div>-->
+           <!-- <div class="left_m">
                 <div class="left_m_t t_bg4">其他功能</div>
                 <ul>
-                    <li><a href="javascript:void(0);">我的消息</a></li>
-                    <li><a href="#suggest" onclick="setIframeSrc(this)">我的建议</a></li>
+                    <li><a href="#suggest" onclick="setIframeSrc(this)">提出建议</a></li>
                 </ul>
-            </div>
-            <div class="left_m">
-                <div class="left_m_t">管理操作</div>
-                <ul>
-                    <li><a href="javascript:void(0);">后台面板</a></li>
-                </ul>
-            </div>
-
+            </div>-->
         </div>
     </div>
     <iframe id="external-frame" class="m_right"   scrolling="no" frameborder="0"></iframe>
@@ -83,7 +88,14 @@
         $(obj).addClass('now');
         //刷新iframe的src地址
         var hrefVal=$(obj).attr('href');
-        $("#external-frame").attr("src", '/member/'+hrefVal.substring(1,hrefVal.length));
+        if(hrefVal=='#announcementmgt'){
+            $("#external-frame").attr("src",'/announcement/mgt');
+        }else if(hrefVal=='#bannermgt'){
+            $("#external-frame").attr("src",'/banner/mgt');
+        }else{
+            $("#external-frame").attr("src", '/member/'+hrefVal.substring(1,hrefVal.length));
+        }
+
         //重置高度
         setIframeHeight(document.getElementById('external-frame'));
     }

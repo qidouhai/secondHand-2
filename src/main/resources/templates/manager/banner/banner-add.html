@@ -1,0 +1,151 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/manager/common/header::commonHeader('新增图片')"></head>
+<body>
+<div class="page-container">
+    <form class="form form-horizontal" id="bannerForm" th:with="banner=${vo.get('content')}">
+        <div class="row cl">
+            <input type="hidden" name="id" value="0" th:value="${banner ne null? banner.id:'0'}"/>
+            <input type="hidden" name="entityType" value="1" />
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>版图标题：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="title" name="title" th:value="${banner ne null? banner.title:''}"/>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">上传版图：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <input type="hidden" name="image" id="image" th:value="${banner ne null? banner.image:''}"/>
+                    <input type="file"  class="input-text" id="img" name="img" style="display: inline-block"/>
+                    <button id="btn-star" type="button" class="btn btn-default btn-uploadstar radius ml-10" onclick="ajaxFileUpload('banner')">开始上传</button>
+                    <div>
+                        <img id="imgPreview" th:src="${banner ne null? 'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+banner.image:''}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <button onClick="banner_add_pushlish()" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存并发布</button>
+                <button onClick="banner_add_save()" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
+                <button onClick="layer_close()" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div th:include="/manager/common/footer::commonFooter"></div>
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/scripts/hui/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/scripts/hui/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="/scripts/hui/jquery.validation/1.14.0/messages_zh.js"></script>
+<script src="/scripts/ajaxfileupload.js"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+
+    $(document).ready(function () {
+        $('#bannerForm').validate({
+            rules:{
+                title:{
+                    required: true,
+                    maxlength:100
+                },
+                img:{
+                    required: function () {
+                        console.log($('input[name=image]').val()==null||$('input[name=image]').val()=='');
+                        return ($('input[name=image]').val()==null||$('input[name=image]').val()=='');
+                    }
+                }
+            },
+            messages: {
+                title:{
+                    required: "名称不能为空",
+                    maxlength: "名称最多不能超过100个字符"
+                },
+                img:{
+                    required: "请选择需要上传的图片并点击上传按钮"
+                }
+            }
+        })
+    });
+
+    //保存并发布
+    function banner_add_pushlish(){
+        addBanner(1);
+    }
+    //仅仅保存
+    function banner_add_save() {
+        addBanner(2);
+    }
+
+    //保存版图核心方法
+    function addBanner(status) {
+
+        if (!$("#bannerForm").valid()){
+            return;
+        }
+
+        if($('#image').val()==''){
+            layer.alert("选择图片后，需先点击上传按钮，才能提交");
+            return;
+        }
+
+        $.ajax({
+            'url':'/manager/content',
+            'type':'post',
+            'dataType':'json',
+            'data':{
+                'id':$('input[name=id]').val(),
+                'entityType':$('input[name=entityType]').val(),
+                'image':$('input[name=image]').val(),
+                'title':$('input[name=title]').val(),
+                'status':status
+            },
+            'success':function (result) {
+                if(result.code==0){
+                    //刷新父级的时候会自动关闭弹层
+                    window.parent.location.reload();
+                }else{
+                    layer.alert(result.msg);
+                }
+            }
+        });
+    }
+
+    //异步提交图片
+    function ajaxFileUpload(imgtype){
+        var url='/upload/img/'+imgtype;
+        $.ajaxFileUpload({
+            url:url,
+            secureuri:false,
+            fileElementId : 'img',                       //文件选择框的id属性
+            dataType: 'JSON',                                     //服务器返回的格式，可以是json
+            success: function (data){
+                data = $.parseJSON(data.replace(/<.*?>/ig,""));
+                console.log(data);
+                if(data.code==0 ) {
+                    $('#imgPreview').empty();
+                    $('#imgPreview').attr("border","0").attr("src","http://secondhand-oss.oss-cn-beijing.aliyuncs.com/"+data.msg);
+                    $($('input[name=image]')[0]).val(data.msg);
+                }else if(data.code==-1){
+                    alert("上传图片失败，请重试或联系管理员");
+                }
+            },
+            error: function (data, status, e){
+                console.log(data);
+                console.log(status);
+                console.log(e);
+                alert("上传失败");
+            }
+        });
+
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

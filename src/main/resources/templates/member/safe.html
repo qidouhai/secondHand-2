@@ -233,7 +233,7 @@
      * 验证用户输入的邮箱是否符合格式
      */
     function checkEmail(email){
-        if(/^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)){
+        if(/^[a-zA-Z0-9_\.]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(email)){
             return true;
         }else{
             return false;

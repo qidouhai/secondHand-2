@@ -50,4 +50,27 @@ public interface GoodsService {
     int selectCount(Integer categoryId);
 
     int selectInventory(int goodsId);
+
+    int selectGoodsCountByCategory(int categoryId);
+
+    List<Goods> selectGoodsListByMgt(Integer categoryId,
+                                     Integer subCategoryId,
+                                     int status,
+                                     String goodsName,
+                                     String startTime,
+                                     String endTime,
+                                     int start,
+                                     int offset);
+
+    int selectGoodsCountByMgt(Integer categoryId,
+                              Integer subCategoryId,
+                              int status,
+                              String goodsName,
+                              String startTime,
+                              String endTime);
+
+    void batchUpdateStatus(int ids[],int status);
+
+
+    void saveOrUpdateGoods(Goods goods);
 }

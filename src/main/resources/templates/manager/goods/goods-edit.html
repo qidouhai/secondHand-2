@@ -1,0 +1,502 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/manager/common/header::commonHeader('修改物品信息')"></head>
+<style>
+    #imagePreviewWrapper{
+        overflow: hidden;
+
+    }
+    #imagePreviewWrapper ul{
+        display: inline-block;
+        height: 130px;
+        min-width: 1px;
+    }
+
+    #imagePreviewWrapper .imagePreviewTool{
+        display: inline-block;
+        position: relative;
+        top: -30px;
+    }
+    #imagePreviewWrapper .btngroup{
+        text-align: center;
+    }
+    #imagePreviewWrapper .btngroup a{
+        text-decoration: none;
+        padding-left: 10px;
+    }
+    #imagePreviewWrapper ul li{
+        float: left;
+        list-style-type: none;
+        margin-right: 10px;
+    }
+    #imagePreviewWrapper ul li img{
+        width: 110px;
+        height: 110px;
+    }
+    #preview-wraper{
+        z-index: 99999;
+    }
+
+
+</style>
+<body th:with="goods=${vo.get('goods')}">
+
+<div class="page-container">
+    <form class="form form-horizontal" id="goodsForm" >
+        <div class="row cl">
+            <input type="hidden" name="id" value="0" th:value="${goods.id}"/>
+            <input type="hidden" name="entityType" value="1" />
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>物品名称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="goodsName" name="goodsName" th:value="${goods.goodsName}"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">所属分类：</label>
+            <div class="formControls col-xs-2 col-sm-2">
+                <span class="select-box">
+							<select class="select" size="1" name="categoryId" id="inputGoodsCategory">
+								<option th:each="category:${vo.get('categories')}" th:value="${category.id}" th:text="${category.categoryName}" th:selected="${goods.categoryId==category.id}">默认select</option>
+							</select>
+                </span> </div>
+            <div class="formControls col-xs-2 col-sm-2">
+                <span class="select-box">
+							<select class="select" size="1" name="subCategoryId" id="inputGoodsTag">
+								<option th:each="subCategory:${vo.get('subCategories')}" th:value="${subCategory.id}" th:text="${subCategory.categoryName}" th:selected="${goods.subCategoryId==subCategory.id}">默认select</option>
+							</select>
+                </span> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>物品价格：</label>
+            <div class="formControls col-xs-2 col-sm-2">
+                <input type="text" class="input-text" value="" id="inputPrice" placeholder="只能包含两位小数" th:value="${#numbers.formatDecimal(vo.get('goods').price/100.0,0,2)}"/>
+                <input type="hidden" name="price" id="hiddenPrice"/>
+            </div>
+        </div>
+        <div class="row cl">
+
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>图片展示：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="hidden" name="images" id="imageInput" th:value="${goods.images}"/>
+                <div id="imagePreviewWrapper">
+                    <ul>
+                        <li  th:each="img:${goods.imageArr}">
+                            <div class="preview"><img th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${img}"/></div>
+                            <div class="btngroup"><a href="javascript:void(0);" th:onclick="${'replaceImg('+imgStat.index+')'}">替换</a><a href="javascript:void(0);" th:onclick="${'deleteImg('+imgStat.index+')'}" >删除</a> </div>
+                        </li>
+                    </ul>
+
+                    <button type="button" class="imagePreviewTool btn btn-info" onclick="addImg(-1)" th:style="${goods.imageArr!=null and goods.imageArr.length>=5?'display:none':''}">上传图片</button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>物品库存：</label>
+            <div class="formControls col-xs-2 col-sm-2">
+                <input type="text" class="input-text"  name="inventory"  id="inputInventory" th:value="${goods.inventory}" placeholder="以整件数量填写"/>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>可否议价：</label>
+            <div class="formControls skin-minimal col-xs-2 col-sm-2" th:if="${goods.bargain==1}">
+                <div class="radio-box">
+                    <input type="radio" id="bargainRadio1" name="bargain" value="1" checked="checked"/>
+                    <label for="bargainRadio1">支持</label>
+                </div>
+                <div class="radio-box">
+                    <input type="radio" id="bargainRadio2" name="bargain" value="0"/>
+                    <label for="bargainRadio2">不支持</label>
+                </div>
+            </div>
+            <div class="formControls skin-minimal col-xs-8 col-sm-9" th:if="${goods.bargain==0}">
+                <div class="radio-box">
+                    <input type="radio" id="bargainRadio1" name="bargain" value="1" />
+                    <label for="bargainRadio1">支持</label>
+                </div>
+                <div class="radio-box">
+                    <input type="radio" id="bargainRadio2" name="bargain" value="0" checked="checked"/>
+                    <label for="bargainRadio2">不支持</label>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>详细信息：</label>
+            <div class="formControls col-xs-8 col-sm-8">
+                <div id="editor" type="text/plain" style="width:100%;height:300px;" ></div>
+                <input type="hidden" name="detail" id="detail"/>
+            </div>
+        </div>
+        <input type="hidden" id="status" name="status"/>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <button onClick="banner_add_pushlish()" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存并发布</button>
+                <button onClick="banner_add_save()" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 保存草稿</button>
+                <button onClick="layer_close()" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div th:id="imgUploadModel" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">图片上传</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <input name="imgIndex" type="hidden" />
+                    <div class="form-group">
+                        <label for="img" class="col-sm-2 control-label">选择图片</label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" id="img" name="img"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer" >
+                <button type="button" class="btn btn-default" data-dismiss="modal" >取消</button>
+                <button type="button" class="btn btn-primary" id="uploadBtn">上传</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:include="/manager/common/footer::commonFooter"></div>
+
+<!--请在下方写此页面业务相关的脚本-->
+<!-- ueditor 引入 js-->
+<script type="text/javascript" charset="utf-8" src="/scripts/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="/scripts/ueditor/ueditor.all.min.js"> </script>
+<!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
+<!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
+<script type="text/javascript" charset="utf-8" src="/scripts/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript" src="/scripts/hui/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/scripts/hui/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="/scripts/hui/jquery.validation/1.14.0/messages_zh.js"></script>
+<script src="/scripts/ajaxfileupload.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    $(document).ready(function(){
+        bindKeyEvent($("#inputPrice"),/\d+\.?\d{0,2}/);
+        bindKeyEvent($("#inputInventory"),/\d+/);
+
+        $(".preview").Huipreview({'className':'imgPreviewClass'});
+
+        initImageUploader();
+
+
+    });
+
+
+    function initImageUploader(){
+        var liArr=$("#imagePreviewWrapper ul li");
+        if(liArr!=null&&liArr.length>=5){
+            $('.imagePreviewTool').css('display','none');
+        }
+    }
+
+    function deleteImg(index){
+        //修改隐藏域
+        var imgsStr=$('#imageInput').val()
+        var imgArr=imgsStr.split(';');
+        var newArr=new Array();
+        for(var i=0;i<imgArr.length;i++){
+            if(i!=index){
+                newArr.push(imgArr[i]);
+            }
+        }
+        //删除图片
+        $('#imageInput').val(newArr.join(';'));
+        $('#imagePreviewWrapper li:eq('+index+')').remove();
+        //判断上传按钮是否显示
+        if(newArr.length<5){
+            $('.imagePreviewTool').css('display','inline-block');
+        }
+
+
+        //给li重新排序
+        $.each($('#imagePreviewWrapper ul li .btngroup'),function (i, item) {
+            var aArr=$(item).find('a');
+            $(aArr[0]).attr('onclick','replaceImg('+i+')');
+            $(aArr[1]).attr('onclick','deleteImg('+i+')');
+        })
+
+    }
+
+
+    function replaceImg(index) {
+        initImgUploadModel('图片替换','替换',index,ajaxFileUpload);
+    }
+
+    function addImg(index) {
+        initImgUploadModel('图片添加','添加',index,ajaxFileUpload);
+    }
+
+    function replaceImgAfterHandler(imgUrl,index){
+        var imgsStr=$('#imageInput').val()
+        var imgArr=imgsStr.split(';');
+        imgArr[index]=imgUrl;
+        $('#imageInput').val(imgArr.join(';'));
+        //图片回显
+        $('#imagePreviewWrapper li:eq('+index+')').find('img').attr('src','http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+imgUrl);
+    }
+
+    function addImgAfterHandler(imgUrl,index){
+        var imgsStr=$('#imageInput').val()
+        var imgArr;
+        if($.trim(imgsStr)==''){
+            imgArr=new Array();
+        }else{
+            imgArr=imgsStr.split(';');
+        }
+        imgArr.push(imgUrl);
+        $('#imageInput').val(imgArr.join(';'));
+        //图片回显
+        $('#imagePreviewWrapper ul').append('<li><div class="preview"><img src="http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+imgUrl+'"></div><div class="btngroup"><a href="javascript:void(0);" onclick="replaceImg('+(imgArr.length-1)+')">替换</a><a href="javascript:void(0);" onclick="deleteImg('+(imgArr.length-1)+')">删除</a> </div></li>')
+        //图片超过5张 隐藏图片上传按钮
+        if(imgArr.length>=5){
+            $('.imagePreviewTool').css('display','none');
+        }
+    }
+
+
+
+    function initImgUploadModel(title,btnName,index,btnClick){
+        $('#imgUploadModel .modal-title').text(title);
+        $('#imgUploadModel #img').val('');
+        $('#imgUploadModel #uploadBtn').text(btnName);
+        $('#imgUploadModel #uploadBtn').off('click').on('click',btnClick);
+        $('#imgUploadModel input[name=imgIndex]').val(index);
+        $('#imgUploadModel').modal('show');
+    }
+
+
+
+
+    //异步提交图片
+    function ajaxFileUpload(){
+        var url='/upload/img/goods';
+        $.ajaxFileUpload({
+            url:url,
+            secureuri:false,
+            fileElementId : 'img',                       //文件选择框的id属性
+            dataType: 'JSON',                                     //服务器返回的格式，可以是json
+            success: function (data){
+                data = $.parseJSON(data.replace(/<.*?>/ig,""));
+                console.log(data);
+                console.log(data);
+                if(data.code==0 ) {
+                    //关闭模态框
+                    $('#imgUploadModel').modal('hide');
+                    var index=$('#imgUploadModel input[name=imgIndex]').val();
+                    if(index==-1){//新增
+                        addImgAfterHandler(data.msg,index);
+                    }else{//替换
+                        replaceImgAfterHandler(data.msg,index);
+                    }
+                }else if(data.code==-1){
+                    alert("上传图片失败，请重试或联系管理员");
+                }
+            },
+            error: function (data, status, e){
+                console.log(data);
+                console.log(status);
+                console.log(e);
+                alert("上传失败");
+            }
+        });
+
+    }
+
+
+
+    function bindKeyEvent(obj,regExp){
+        obj.keyup(function () {
+            var reg = $(this).val().match(regExp);
+            var txt = '';
+            if (reg != null) {
+                txt = reg[0];
+            }
+            $(this).val(txt);
+        }).change(function () {
+            $(this).keypress();
+            var v = $(this).val();
+            if (/\.$/.test(v))
+            {
+                $(this).val(v.substr(0, v.length - 1));
+            }
+        });
+    };
+
+    UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+    UE.Editor.prototype.getActionUrl = function(action) {
+        if (action == 'uploadimage' || action == 'uploadscrawl' || action == 'uploadimage') {
+            return '/upload/img/ueditor';
+            //'http://localhost:8080/imgUpload';为方法imgUpload的访问地址
+        } else {
+            return this._bkGetActionUrl.call(this, action);
+        }
+    }
+
+    //实例化编辑器
+    //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+    var ue = UE.getEditor('editor');
+
+    //异步回调
+    ue.ready(function() {
+        ue.execCommand('inserthtml', [[${goods.detail}]])
+    });
+
+    //初始化级联下拉框子框
+    //initDataForTagInput(1);
+    //实现下拉框级联效果
+    var preId=1;
+    $('#inputGoodsCategory').change(function () {
+        initDataForTagInput($('#inputGoodsCategory').val());
+    });
+    function initDataForTagInput(categoryId) {
+        $.get("/category/",{categoryId:categoryId},function (result) {
+            if(result.code==0){
+                var arr=result.msg;
+                $('#inputGoodsTag').empty();
+                $.each(arr,function (i,item) {
+                    var option=$("<option></option>");
+                    option.val(item.id);
+                    option.text(item.name);
+                    $('#inputGoodsTag').append(option);
+                    //重设preId;
+                    preId=categoryId;
+                });
+            }else{
+                alert(result.msg);
+                var i=preId-1;
+                $("#inputGoodsCategory>option:eq("+i+")").attr("selected","selected");
+            }
+        },'json');
+    }
+
+    $('#publishNow').click(function () {
+        $('#status').val(1);
+        generateAndCommitFormData();
+    });
+    $('#onlySave').click(function () {
+        $('#status').val(2);
+        generateAndCommitFormData();
+    });
+    //提交商品信息
+    function generateAndCommitFormData() {
+        if(!validForm()){
+            return ;
+        }
+
+        //金额单位由元 转化为 分
+        $('#hiddenPrice').val(parseInt($("#inputPrice").val()*100));
+        //获取富文本编辑器的内容
+        $('#detail').val(ue.getContent());
+
+        $.post('/goods',$('form').serialize(),function (result) {
+            var action= $('#status').val()==0?'商品信息发布':'商品信息保存';
+            if(result.code==0){
+                //刷新父级的时候会自动关闭弹层
+                window.parent.location.reload();
+            }else{
+                layer.alert(result.msg);
+            }
+        },'json');
+
+    }
+
+
+    function validForm(){
+        if($('#inputGoodsName').val()==''){
+            alert('请输入物品名称');
+            return false;
+        }
+        if($('#inputPrice').val()==''){
+            alert('请输入物品价格');
+            return false;
+        }if($('#imageInput').val()==''){
+            alert('请上传物品图片');
+            return false;
+        }
+        if($('#inputInventory').val()==''){
+            alert('请输入物品库存');
+            return false;
+        }
+        var radioGroup=$('input[name=bargain]');
+        var checkedFlag=false;
+        for(var i=0;i<radioGroup.length;i++){
+            if(radioGroup[i].checked==true){
+                checkedFlag=true;
+            }
+        }
+        if(checkedFlag==false){
+            alert('请选择物品是否支持讲价单选按钮');
+            return false;
+        }
+
+        if(ue.getContent()==''){
+            alert("请输入物品详细介绍");
+            return false;
+        }
+        return true;
+
+    }
+
+
+
+
+    //保存并发布
+    function banner_add_pushlish(){
+        $('#status').val(1);
+        generateAndCommitFormData();
+    }
+    //仅仅保存
+    function banner_add_save() {
+        $('#status').val(2);
+        generateAndCommitFormData();
+    }
+
+
+    //异步提交图片
+    function ajaxFileUpload(imgtype){
+        var url='/upload/img/'+imgtype;
+        $.ajaxFileUpload({
+            url:url,
+            secureuri:false,
+            fileElementId : 'img',                       //文件选择框的id属性
+            dataType: 'JSON',                                     //服务器返回的格式，可以是json
+            success: function (data){
+                data = $.parseJSON(data.replace(/<.*?>/ig,""));
+                console.log(data);
+                if(data.code==0 ) {
+                    //关闭模态框
+                    $('#imgUploadModel').modal('hide');
+                    var index=$('#imgUploadModel input[name=imgIndex]').val();
+                    if(index==-1){//新增
+                        addImgAfterHandler(data.msg,index);
+                    }else{//替换
+                        replaceImgAfterHandler(data.msg,index);
+                    }
+                }else if(data.code==-1){
+                    alert("上传图片失败，请重试或联系管理员");
+                }
+            },
+            error: function (data, status, e){
+                console.log(data);
+                console.log(status);
+                console.log(e);
+                alert("上传失败");
+            }
+        });
+
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

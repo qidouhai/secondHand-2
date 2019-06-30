@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>确认订单</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/global.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/styles/webuploader.css"/>
+    <link rel="stylesheet" type="text/css" href="/styles/demo.css"/>
+    <link href="/styles/font-awesome.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/styles/jquery.spinner.css" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+    <style>
+        .order_title{
+            line-height: 25px;
+            color: #333333;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .user_info{
+            border-bottom: 1px solid #dbdbdb;
+            padding-bottom: 5px;
+            margin-bottom: 5px;
+        }
+
+        .address_info{
+            width: 237px;
+            height: 105px;
+            padding: 11px 15px;
+            background-image: url("/images/order_address_selected_bg.png");
+        }
+
+
+        .address_info .wrap span{
+            padding-left: 7px;
+        }
+
+        .order_info_div{
+            margin-top: 40px;
+            width: 100%;
+
+        }
+
+        #order_info_header{
+            padding-left: 0px;
+        }
+        #order_info_header li{
+            float: left;
+            list-style-type: none;
+            margin-right: 1%;
+            width: 24%;
+            border-bottom: 3px #b2d1ff solid;
+            text-align: center;
+            height: 24px;
+            line-height: 24px;
+            vertical-align: bottom;
+            color: #6c6c6c;
+        }
+
+
+        .unit{
+            width: 100%;
+            padding-top: 10px;
+            overflow: hidden;
+        }
+        .unit >div{
+            float: left;
+            width: 24%;
+            margin-right: 1%;
+        }
+        .goods_link img{
+            float: left;
+        }
+        .goods_name{
+            padding-left: 63px;
+        }
+        .goods_price{
+            text-align: center;
+        }
+        .goods_total_price{
+            text-align: center;
+            font-weight: bold;
+            color: red;
+        }
+        .spinner{
+            display: block;
+            width: 70px;
+            margin: 0 auto;
+        }
+        .spinner input{
+            width: 40px;
+            text-align: center;
+        }
+
+        .mr10px span{
+            margin-right: 10px;
+        }
+
+        .payInfo-wrapper{
+            text-align: right;
+            position: relative;
+            overflow: hidden;
+            height: 158px;
+            margin-top: 20px;
+        }
+
+        .payInfo-shadow{
+            width: 419px;
+            height: 119px;
+            border: 1px solid #f40;
+            padding: 10px;
+            padding-left: 20px;
+            position: absolute;
+            right: 1%;
+
+
+        }
+        .payInfo-shadow .title{
+            font-weight: 700;
+            color: #333;
+        }
+
+        .payInfo-wrapper .message{
+            width: 400px;
+            float: left;
+
+        }
+
+        .payInfo-price{
+            height: 39px;
+        }
+        .payInfo-price .price_flag{
+            font-size: 26px;
+            margin-right: 4px;
+            color: #999;
+        }
+        .payInfo-price .order_total_price{
+            color: #f40;
+            font: 700 26px tahoma;
+        }
+
+        #commit_order{
+            display: inline-block;
+            width: 182px;
+            height: 39px;
+            position: relative;
+            vertical-align: middle;
+            line-height: 39px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            background: #f40;
+            color: #fff;
+            position: absolute;
+            bottom: 0px;
+            right: 1%;
+            border: 0;
+        }
+
+        .order_info_wrapper{
+            clear: both;
+            overflow: hidden;
+        }
+        .info_left{
+            float: left;
+        }
+
+        .info_right{
+            float:left;
+            margin-left: 400px;
+        }
+    </style>
+
+</head>
+<body>
+<div th:replace="fragment/header :: #header"></div>
+<div class="container" style="margin-top: 50px;">
+    <!--<div class="row">
+        <div class="order_title">请选择收货地址</div>
+        <div>
+            <div class="address_info">
+                <div class="user_info">陈思聪</div>
+                <div class="wrap">湖南理工学院<span>南院</span><span>13栋</span><span>204号</span><div>15576064301</div></div>
+            </div>
+            <input type="hidden" name="address_id" value="1"/>
+        </div>
+    </div>-->
+    <div class="order_info_wrapper">
+        <div class="info_left">
+            <div class=" order_title ">
+                订单号：<span th:text="${vo.get('order').id}"></span>
+            </div>
+            <div class=" order_title ">
+                订单创建时间：<span th:text="${#dates.format(vo.get('order').created, 'yyyy-MM-dd HH:mm:ss')}"></span>
+            </div>
+            <div class=" order_title">
+                付款方式:
+                <span th:if="${vo.get('order').payType==1}">货到付款</span>
+                <span th:if="${vo.get('order').payType==2}">在线付款</span>
+            </div>
+            <div class=" order_title">
+                订单状态:
+                <span th:if="${vo.get('order').status==1}">等待买家付款</span>
+                <span th:if="${vo.get('order').status==2}">等待卖家发货</span>
+                <span th:if="${vo.get('order').status==3}">卖家已发货</span>
+                <span th:if="${vo.get('order').status==4}">订单完成</span>
+                <span th:if="${vo.get('order').status==7}">订单已取消</span>
+            </div>
+            <div class=" order_title">
+                订单总金额:
+                <span th:text="${#numbers.formatDecimal(vo.get('order').money/100.0,0,2)}">货到付款</span>
+            </div>
+        </div>
+        <div class="info_right">
+            <div class=" order_title ">
+                买家昵称：<span th:text="${vo.get('order').buyerNick}"></span>
+            </div>
+            <div class=" order_title ">
+                收货人：<span th:text="${vo.get('address').userName}"></span>
+            </div>
+            <div class=" order_title ">
+                收货人电话：<span th:text="${vo.get('buyer').phone}"></span>
+            </div>
+            <div class=" order_title ">
+                收货地址：
+                <span class="mr10px"><span>湖南理工学院</span><span th:text="${vo.get('address').area+'院'}">南院</span><span th:text="${vo.get('address').hostelId}+'栋'">13栋</span><span th:text="${vo.get('address').houseId}+'宿舍'">204号</span></span>
+            </div>
+            <div class=" order_title ">
+                卖家：<span th:text="${vo.get('seller').name}"></span>
+            </div>
+            <div class=" order_title ">
+                卖家电话：<span th:text="${vo.get('seller').phone}"></span>
+            </div>
+        </div>
+    </div>
+    <div class="order_title">买家留言：
+        <span th:text="${vo.get('order').buyerMessage==''?'空':vo.get('order').buyerMessage}"></span>
+    </div>
+    <div class="row order_info_div" >
+        <div class="order_title">订单物品信息</div>
+        <div id="order_info">
+            <ul id="order_info_header">
+                <li>物品</li>
+                <li>单价</li>
+                <li>数量</li>
+                <li>小计</li>
+            </ul>
+
+            <div id="order_info_content" th:with="orderItems=${vo.get('order').orderItems}">
+                <div class="unit" th:each="orderItem:${orderItems}" th:object="${orderItem}">
+                    <div>
+                        <a href="#" th:href="@{/goods/{id}(id=*{id})}" class="goods_link">
+                            <img th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${orderItem.goodsImg}+'?x-oss-process=style/medium_goods_size'" src="/images/TB2GlENdKLM8KJjSZFqXXa7.jpg"  width="50px" height="50px"/>
+                            <p class="goods_name" th:text="*{goodsName}">geeyear2018效率手册日程本记</p>
+                            <input type="hidden" name="goods_id" value="1" th:value="*{goodsId}"/>
+                        </a>
+
+                    </div>
+                    <div class="goods_price" th:text="*{#numbers.formatDecimal(goodsPrice/100.0,0,2)}">88.8</div>
+                    <div>
+                        <div data-trigger="spinner" class="spinner">
+                            <a href="javascript:;" data-spin="down" style="display: none">-</a>
+                            <input type="text" value="11" data-rule="quantity" th:value="*{num}" style="border: 0"/>
+                            <a href="javascript:;" data-spin="up" style="display: none">+</a>
+                        </div>
+                    </div>
+                    <div class="goods_total_price" th:text="*{#numbers.formatDecimal(totalPrice/100.0,0,2)}">265.86</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+<div th:replace="fragment/footer :: #footer"></div>
+
+</body>
+
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<script src="/scripts/jquery.spinner.js"></script>
+<script>
+    /*<![CDATA[*/
+
+    $(function () {
+        //初始化数值微调器
+
+        //初始化数值微调器
+        $(".spinner")
+            .spinner('delay', 200) //delay in ms
+            .spinner('changed', function (e, newVal, oldVal) {
+                // trigger lazed, depend on delay option.
+                var tr=$(e.target).parent().parent().parent();
+                //异步请求此商品的库存
+                var goodsId=tr.find("div:eq(0) input").val();
+                $.get('/goods/inventory/'+goodsId,null,function (result) {
+                    if(result.code==1){
+                        alert("商品库存获取失败，请稍后重试");
+                    }else{
+                        var inventory=result.msg;
+                        if(newVal>inventory){
+                            $(e.target).val(oldVal);
+                            alert("商品库存量只有"+result.msg+"件");
+                        }else{
+                            //重新计算此商品的总额
+                            tr.find("div:eq(4)").text((parseInt(parseFloat(tr.find("div:eq(1)").text())*100)*newVal/100).toFixed(2));
+                            //重新计算订单总金额
+                            resetOrderPrice();
+
+                        }
+                    }
+                })
+
+
+            });
+
+    })
+
+    function resetOrderPrice(){
+        var price=0;
+        $.each($('.goods_total_price'),function (i,item) {
+            var cur=parseInt(parseFloat($(item).text())*100);
+            console.log(cur);
+            price=price+cur;
+
+
+        })
+        $('.order_total_price').text((price/100).toFixed(2));
+    }
+
+
+    function commitOrder(){
+        //获取所有选中商品id及其购买数量
+        var goodsIdInputs=$('input[name=goods_id]');
+        var orderItems=new Array();
+        $.each(goodsIdInputs,function(i,item){
+            var orderItem=new Object();
+            orderItem.goodsId=$(item).val();
+            orderItem.num=$(item).parent().parent().parent().find("div:eq(2) input").val();
+            console.log(orderItem);
+            orderItems.push(orderItem);
+        });
+        var order=new Object();
+        //组装订单对象
+        order.payType=$('input[name=payType]:checked').val();
+        order.addressId=$('input[name=addressId]').val();
+        order.money=parseInt(parseFloat($('.order_total_price').text())*100);
+        order.buyerMessage=$('textarea[name=buyer_message]').val();
+        order.orderItems=orderItems;
+        var jsonValue=JSON.stringify(order);
+        console.log(jsonValue);
+
+        $.ajax({
+            url:'/order',
+            type:'post',
+            contentType:'application/json',
+            datatype:'json',
+            data:JSON.stringify(order),
+            success:function (result) {
+                if(result.code==0){
+                    var orderArr=result.msg;
+                    if(order.payType=='1'){
+                        window.location.href='/order/success?orderIds='+orderArr.join(",");
+                    }else{
+                        window.location.href='/order/preCombinedPayment?orderIds='+orderArr.join(",");
+                    }
+                }else{
+                    alert(result.msg);
+                }
+            }
+
+        })
+    }
+    /*]]>*/
+</script>
+</html>

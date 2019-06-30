@@ -40,11 +40,13 @@ public class UploadController extends BaseController{
                         fileName.substring(fileName.lastIndexOf("/")),
                         fileName.substring(fileName.lastIndexOf("/"))
                 );
+            }else{
+                String fileName = ossService.saveImage(multipartFile,"img/goods/");
+                return new EasyResult(0,fileName);
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new EasyResult(1,"上传错误，"+e.getMessage());
         }
-        return new EasyResult(1,"上传非法操作");
     }
 }

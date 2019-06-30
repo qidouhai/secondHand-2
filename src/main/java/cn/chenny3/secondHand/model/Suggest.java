@@ -5,6 +5,7 @@ public class Suggest extends Base {
     private String title;
     private String content;
     private int userId;
+    private User user;
     private int status;
 
     public int getId() {
@@ -45,5 +46,13 @@ public class Suggest extends Base {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

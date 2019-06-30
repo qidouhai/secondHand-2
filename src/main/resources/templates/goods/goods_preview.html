@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>物品信息预览</title>      <!-- Bootstrap -->
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/global.css" rel="stylesheet"/>
+
+    <link href="/styles/shop_detail.css" rel="stylesheet"/>
+    <link href="/styles/font-awesome.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/styles/comment/style.css"/>
+    <link rel="stylesheet" href="/styles/comment/comment.css"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->   </head>
+
+<style>
+.date-dz-pl{
+    display: none;
+}
+    #previewTitle{
+        height: 50px;
+        line-height: 50px;
+        font-size: 24px;
+        text-align: center;
+        vertical-align: center;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+    }
+</style>
+<body>
+<!--<div th:replace="fragment/header :: #header"></div>-->
+
+<div id="content">
+    <div id="previewTitle">
+        物品信息预览
+    </div>
+    <input type="hidden" name="curUserId"  th:value="${vo.get('user')!=null?vo.get('user').id:0}" />
+    <ol class="breadcrumb">
+        <li><span  th:text="${vo.get('topCategory').categoryName}"
+              >闲置数码</span></li>
+        <li><span th:text="${vo.get('tag').categoryName}" >笔记本</span></li>
+        <li class="active">当前</li>
+    </ol>
+    <div id="topbar">
+        <div id="seller-info">
+            <img src="/images/touxiang.jpg"
+                 th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${vo.get('owner').headUrl}+'?x-oss-process=style/40_size'"/>
+            <span id="name" th:text="${vo.get('owner').name}">马云</span>
+        </div>
+        <div id="see" class="other">
+            <h5>宝贝浏览次数</h5>
+            <span th:text="${vo.get('goods').viewNum}">15</span>
+        </div>
+        <div class="other">
+            <h5>最近编辑</h5>
+            <span th:text="${#dates.format(vo.get('goods').created, 'yyyy年MM月dd日 HH:mm:ss')}">2018-01-10 16:25</span>
+        </div>
+        <div class="report">
+           <!-- <a href="#" th:href="${vo.get('goods').id}">举报该宝贝</a>-->
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="slide" id="single_lb">
+            <a href="javascript:void(0);" class="prev"><img src="/images/slide/prev.png"/></a>
+            <a href="javascript:void(0);" class="next"><img src="/images/slide/next.png"/></a>
+            <ul class="big">
+                <li th:each="image:${vo.get('goods').imageArr}"><img
+                        th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${image}"
+                        src="/images/slide/a1.jpg"/></li>
+                <li th:remove="all"><img src="/images/slide/a2.jpg"/></li>
+                <li th:remove="all"><img src="/images/slide/a3.jpg"/></li>
+                <li th:remove="all"><img src="/images/slide/a4.jpg"/></li>
+                <li th:remove="all"><img src="/images/slide/a5.jpg"/></li>
+            </ul>
+
+            <ol class="small">
+                <li th:each="image:${vo.get('goods').imageArr}"><img th:style="${imageStat.index} eq 0?'opacity:1':''"
+                                                                     th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${image}"
+                                                                     src="/images/slide/a1.jpg"/></li>
+                <li th:remove="all"><img src="/images/slide/a2.jpg"/></li>
+                <li th:remove="all"><img src="/images/slide/a3.jpg"/></li>
+                <li th:remove="all"><img src="/images/slide/a4.jpg"/></li>
+                <li th:remove="all"><img src="/images/slide/a5.jpg"/></li>
+            </ol>
+        </div>
+        <div class="detail">
+            <input type="hidden" id="entityId" th:value="${vo.get('goods').id}"/>
+            <input type="hidden" id="entityType" value="1"/>
+            <input type="hidden" id="userId" th:value="${vo.get('owner').id}"/>
+            <input type="hidden" id="isLogin" th:value="${vo.get('user') ne null}"/>
+            <div class="name"><span th:text="${vo.get('goods').goodsName}">联想笔记本电脑</span>
+                <div class="sell_out" th:text="'库存量:'+${vo.get('goods').inventory}+'件'">已出售</div>
+            </div>
+            <div class="price_wrap">
+                <span class="price" th:text="${#numbers.formatDecimal(vo.get('goods').price/100.0,0,2)}+'￥'">3299.28</span>
+                <s th:if="${vo.get('goods').bargain } eq 0">可讲价</s>
+                <span th:if="${vo.get('goods').bargain}  eq 1">可讲价</span>
+            </div>
+            <div class="postion" th:with="address=${vo.get('address')}">
+                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                <span>湖南理工学院</span>
+                <span th:text="${address.area}">南院</span>
+                <span th:text="${address.hostelId}">13</span>栋
+                <span th:text="${address.houseId}">204</span>
+            </div>
+            <div class="seller-info">>&nbsp;卖家信息</div>
+            <div class="contact">
+                <img src="/images/contact/qq.png"/>
+                <span th:text="${vo.get('owner').qq}">1017097573</span>
+            </div>
+            <div class="contact">
+                <img src="/images/contact/wechat.png"/>
+                <span th:text="${vo.get('owner').wechat}">wexin_csc</span>
+            </div>
+            <div class="contact">
+                <img src="/images/contact/alipay.png"/>
+                <span th:text="${vo.get('owner').alipay}">15576064301</span>
+            </div>
+            <div class="contact">
+                <img src="/images/contact/phone.png"/>
+                <span th:text="${vo.get('owner').phone}">15576064301</span>
+            </div>
+
+
+            <div class="other_shop" style="display: none">
+                <div class="title">
+                    <h5>卖家的其它闲置(30)</h5>
+                    <a href="#" th:href="${vo.get('goods').id}">更多</a>
+                </div>
+                <div class="shop_list">
+                    <ul>
+                        <li>
+                            <img src="/images/TB2GlENdKLM8KJjSZFqXXa7.jpg" alt="shop_img"/>
+                            <div>
+                                <a href="#">专业组装性价比全新电脑 9成新以上</a>
+                                <span class="shop_list_price">1.00</span>
+                            </div>
+                        </li>
+                        <li>
+                            <img src="/images/TB2GlENdKLM8KJjSZFqXXa7.jpg" alt="shop_img"/>
+                            <div>
+                                <a href="#">专业组装性价比全新电脑 9成新以上</a>
+                                <span class="shop_list_price">1.00</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">宝贝介绍</a>
+            </li>
+            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">留言</a></li>
+            <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">安全保障</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="home" th:utext="${vo.get('goods').detail}">
+                全新批发主板~型号:映泰-A320MD-PRO~289元这是全新的~别拿二手价来比~邮费5元~一个TB帐号只限拍一次。
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">
+                <!--
+    此评论textarea文本框部分使用的https://github.com/alexdunphy/flexText此插件
+-->
+                <div class="commentAll">
+                    <!--评论区域 begin-->
+                    <!--<div class="reviewArea clearfix">
+                        <textarea class="content comment-input" placeholder="Please enter a comment&hellip;"
+                                  onkeyup="keyUP(this)"></textarea>
+                        <a href="javascript:;" class="plBtn">评论</a>
+                    </div>-->
+                    <!--评论区域 end-->
+                    <!--回复区域 begin-->
+                    <div class="comment-show">
+
+                    </div>
+                    <!--回复区域 end-->
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="messages">
+                如遇到以下情况可能是诈骗行为：1.宝贝价格异常低；2.卖家要求QQ沟通；3.卖家要求直接汇款。 寻求防骗经验。
+                <img src="/images/aqbz.png" width="750" height="518"/>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="fragment/footer :: #footer"></div>
+<footer id="footer" th:remove="all">
+    <div>Copyright © 2014-2018 闲鱼-大学生二手交易平台 chenny3.cn All Rights Reserved. 备案号：闽ICP备15012807号-1</div>
+</footer>
+
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<script src="/scripts/single_lb.js"></script>
+<script src="/scripts/move1.js"></script>
+<script type="text/javascript" src="/scripts/jquery.flexText.js"></script>
+<script type="text/javascript" src="/scripts/comment.js"></script>
+<script>
+    /*<![CDATA[*/
+    $(function () {
+        //初始化评论
+        initCommentData();
+
+    });
+
+    //收藏代码
+    function collect(obj) {
+        if($('#isLogin').val()=='false'){
+            requiredLogin();
+            return ;
+        }
+        var url = "/goods/collect/" + $('#entityId').val();
+        if ($('#collectFlag').val() == 'true') {//取消收藏
+            $.ajax({
+                'url': url,
+                'type': "delete",
+                'dataType': 'json',
+                'success': function (result) {
+                    if (result.code == 0) {//成功
+                        //修改标志
+                        $('#collectFlag').val('false');
+                        //修改文字
+                        $($(obj).find('span')[0]).text('收藏');
+                        //修改图片
+                        $($(obj).find('img')[0]).attr('src', '/images/util/un_collect.png');
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        } else { //收藏
+            $.post(url, null, function (result) {
+                if (result.code == 0) {//成功
+                    //修改标志
+                    $('#collectFlag').val('true');
+                    //修改文字
+                    $($(obj).find('span')[0]).text('取消收藏');
+                    //修改图片
+                    $($(obj).find('img')[0]).attr('src', '/images/util/collect.png');
+                } else {
+                    alert(result.msg);
+                }
+            }, 'json');
+        }
+    }
+
+    //点赞代码
+    function hot(obj) {
+        if($('#isLogin').val()=='false'){
+            requiredLogin();
+            return ;
+        }
+        var url = "/goods/hot/" + $('#entityId').val();
+        if ($('#hotFlag').val() == 'true') {//取消代码
+            $.ajax({
+                'url': url,
+                'type': "delete",
+                'dataType': 'json',
+                'success': function (result) {
+                    if (result.code == 0) {//成功
+                        //修改标志
+                        $('#hotFlag').val('false');
+                        //修改文字
+                        $($(obj).find('span')[0]).text('点赞');
+                        //修改图片
+                        $($(obj).find('img')[0]).attr('src', '/images/util/un_top.png');
+                    } else {
+                        alert(result.msg);
+                    }
+                }
+            });
+        } else { //代码
+            $.post(url, null, function (result) {
+                if (result.code == 0) {//成功
+                    //修改标志
+                    $('#hotFlag').val('true');
+                    //修改文字
+                    $($(obj).find('span')[0]).text('取消点赞');
+                    //修改图片
+                    $($(obj).find('img')[0]).attr('src', '/images/util/top.png');
+                } else {
+                    alert(result.msg);
+                }
+            }, 'json');
+        }
+    }
+
+    function requiredLogin() {
+        alert('请先登录');
+    }
+
+    //加入购物车
+    $('#addCart').click(function (e) {
+        if($('#isLogin').val()=='false'){
+            requiredLogin();
+            return;
+        }
+        //卖家不能够买自己发布的物品
+        if($('input[name=curUserId]').val()==$('#userId').val()){
+            alert('用户不能添加自己发布的物品到购物车');
+            return ;
+        }
+
+        var flag=true;
+        //检查物品库存量
+        $.ajax({
+            url:'/goods/inventory/'+$('#entityId').val(),
+            type:'get',
+            dataType:'json',
+            success:function (result) {
+                var inventory=result.msg;
+                if(inventory<=0){
+                    alert('物品无货');
+                    flag=false;
+                }
+            },
+            async: false
+        })
+
+
+        if(!flag){
+            return ;
+        }
+
+        //添加购物车
+        $.post('/cart',{
+            goodsId:$('#entityId').val(),
+            num:1
+        },function (result) {
+            if(result.code==1){
+                alert(result.msg);
+            }else{
+                alert("成功加入购物车");
+            }
+        })
+    });
+
+    //立即购买
+    $('#buyNow').click(function (e) {
+        if($('#isLogin').val()=='false'){
+            requiredLogin();
+            return;
+        }
+        //卖家不能够买自己发布的物品
+        if($('input[name=curUserId]').val()==$('#userId').val()){
+            alert('用户不能购买自己发布商品');
+            return ;
+        }
+
+        var flag=true;
+        //检查物品库存量
+        $.ajax({
+            url:'/goods/inventory/'+$('#entityId').val(),
+            type:'get',
+            dataType:'json',
+            success:function (result) {
+                var inventory=result.msg;
+                if(inventory<=0){
+                    alert('物品无货');
+                    flag=false;
+                }
+
+            },
+            async: false
+        })
+
+        if(!flag){
+            return ;
+        }
+
+
+        //生成订单
+        window.location.href='/order/create?goodsIds='+$('#entityId').val()+"&nums=1";
+    })
+
+    /*]]>*/
+</script>
+</body>
+</html>

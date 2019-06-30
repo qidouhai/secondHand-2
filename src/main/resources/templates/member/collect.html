@@ -29,17 +29,17 @@
     </tr>
     <tr th:if="${goodsList ne null and #arrays.length(goodsList) ne 0}" th:each="goods:${goodsList}">
         <td style="font-family:'宋体';">
-            <div class="sm_img"><a href="#" th:href="'/goods/'+${goods.id}" style="margin-top: 0px"><img src="images/simg.jpg"
+            <div class="sm_img"><a href="#" th:href="'/goods/'+${goods.id}" style="margin-top: 0px" target="_blank"><img src="images/simg.jpg"
                                      th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${goods.imageArr[0]}+'?x-oss-process=style/48_size'"
                                      width="48"
                                      height="48" style="margin-top: 0px"/></a></div>
-            <a th:href="'/goods/'+${goods.id}" href="#" th:text="${goods.goodsName}">法颂浪漫梦境50ML 香水女士持久清新淡香 送2ML小样3只</a>
+            <a th:href="'/goods/'+${goods.id}" href="#" th:text="${goods.goodsName}" target="_blank">法颂浪漫梦境50ML 香水女士持久清新淡香 送2ML小样3只</a>
         </td>
         <td align="center" th:text="'￥'+${#numbers.formatDecimal(goods.price/100.0,0,2)}">￥456.00</td>
         <td align="center">
-            <a href="javascript:void(0)">立即购买</a>&nbsp; &nbsp;
-            <a href="javascript:void(0)" style="color:#ff4e00;">加入购物车</a>&nbsp; &nbsp;
-            <a href="javascript:void(0)" onclick="cancelCollect(this)">删除</a>
+          <!--  <a href="javascript:void(0)">立即购买</a>&nbsp; &nbsp;
+            <a href="javascript:void(0)" style="color:#ff4e00;">加入购物车</a>&nbsp; &nbsp;-->
+            <a href="javascript:void(0)" onclick="cancelCollect(this)">取消收藏</a>
             <input type="hidden" th:value="${goods.id}"/>
         </td>
     </tr>

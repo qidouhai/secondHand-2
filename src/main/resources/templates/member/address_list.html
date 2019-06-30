@@ -18,13 +18,13 @@
 <p></p>
 <div class="mem_tit">收货地址</div>
 <div class="address">
-    <div class="a_close"><a href="#"><img src="/images/member/a_close.png"/></a></div>
+    <div class="a_close" style="display: none"><a href="#"><img src="/images/member/a_close.png"/></a></div>
     <table border="0" class="add_t" align="center" style="width:98%; margin:10px auto;" cellspacing="0"
            cellpadding="0">
         <tbody>
         <tr>
             <td align="right" width="100">收货人姓名：</td>
-            <td th:text="${vo.get('user').name}">杨杨</td>
+            <td th:text="${vo.get('address').userName}">杨杨</td>
         </tr>
         <tr>
             <td align="right">详细地址：</td>
@@ -48,7 +48,7 @@
     </table>
 
     <p align="right">
-        <a href="#" style="color:#ff4e00;">设为默认</a>&nbsp; &nbsp; &nbsp; &nbsp; <a href="#"
+        <a href="#" style="color:#ff4e00;display: none">设为默认</a>&nbsp; &nbsp; &nbsp; &nbsp; <a href="#"
                                                                                   style="color:#ff4e00;">编辑</a>&nbsp;
         &nbsp; &nbsp; &nbsp;
     </p>

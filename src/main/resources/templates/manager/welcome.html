@@ -1,0 +1,93 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/manager/common/header::commonHeader('我的桌面')"></head>
+<body>
+<div class="page-container" th:with="loginRecords=${vo.get('lastLoginRecord')}">
+	<p class="f-20 text-success">欢迎使用大学校园二手物品交易平台后台管理系统！</p>
+	<p>登录次数：<span th:text="${vo.get('loginRecordCount')}"></span> </p>
+	<p th:if="${!#lists.isEmpty(loginRecords) and #lists.size(loginRecords)>1}">上次登录IP：<span th:text="${loginRecords[1].ip}">222.35.131.79.1</span>  上次登录时间：<span th:text="${#dates.format(loginRecords[1].loginTime, 'yyyy年MM月dd日 HH:mm:ss')}">2014-6-14 11:19:55</span></p>
+
+	<table class="table table-border table-bordered table-bg mt-20">
+		<thead>
+			<tr>
+				<th colspan="2" scope="col">服务器信息</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>服务器IP地址</td>
+				<td th:text="${vo.get('ipAddress')=='0:0:0:0:0:0:0:1'?'127.0.0.1':vo.get('ipAddress')}">192.168.1.1</td>
+			</tr>
+			<tr>
+				<td>服务器端口 </td>
+				<td th:text="${vo.get('port')}">80</td>
+			</tr>
+			<tr>
+				<td>项目所在文件夹 </td>
+				<td th:text="${vo.get('userDir')}">D:\WebSite\HanXiPuTai.com\XinYiCMS.Web\</td>
+			</tr>
+			<tr>
+				<td>服务器操作系统 </td>
+				<td th:text="${vo.get('osName')}">Microsoft Windows NT 5.2.3790 Service Pack 2</td>
+			</tr>
+			<tr>
+				<td>服务器操作系统架构 </td>
+				<td th:text="${vo.get('osArch')}">Microsoft Windows NT 5.2.3790 Service Pack 2</td>
+			</tr>
+			<tr>
+				<td>系统所在文件夹 </td>
+				<td th:text="${vo.get('userDir')}">C:\WINDOWS\system32</td>
+			</tr>
+			<tr>
+				<td>服务器的语言种类 </td>
+				<td th:text="${vo.get('language')}+'-'+${vo.get('country')}">Chinese (People's Republic of China)</td>
+			</tr>
+			<tr>
+				<td>服务器当前时间 </td>
+				<td th:text="${#dates.format(vo.get('curTime'), 'yyyy年MM月dd日 HH:mm:ss')}">2014-6-14 12:06:23</td>
+			</tr>
+			<tr>
+				<td>逻辑驱动器 </td>
+				<td th:text="${vo.get('diskInfo')}">C:\D:\</td>
+			</tr>
+			<tr>
+				<td>CPU 总数 </td>
+				<td th:text="${vo.get('processorsCount')}">4</td>
+			</tr>
+			<tr>
+				<td>JDK版本 </td>
+				<td th:text="${vo.get('jdkVersion')}">3.29M</td>
+			</tr>
+			<tr>
+				<td>JVM信息 </td>
+				<td th:text="${vo.get('jvmImplName')+' '+vo.get('jvmImplVersion')}">3.29M</td>
+			</tr>
+			<tr>
+				<td>JVM内存总量 </td>
+				<td th:text="${vo.get('memTotal')/1024/1024+'M'}">52480M</td>
+			</tr>
+
+			<tr>
+				<td>JVM剩余内存 </td>
+				<td th:text="${vo.get('memFree')/1024/1024+'M'}">51.46M</td>
+			</tr>
+			<tr>
+				<td>当前SessionID </td>
+				<td th:text="${vo.get('sessionId')}">gznhpwmp34004345jz2q3l45</td>
+			</tr>
+			<tr>
+				<td>当前系统用户名 </td>
+				<td th:text="${vo.get('username')}">NETWORK SERVICE</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<!--<footer class="footer mt-20">
+	<div class="container">
+
+	</div>
+</footer>-->
+<div th:include="/manager/common/footer::commonFooter"></div>
+
+</body>
+</html>

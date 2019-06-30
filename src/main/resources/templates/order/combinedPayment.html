@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>大学校园二手物品交易平台</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/styles/global.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="/styles/webuploader.css"/>
+    <link rel="stylesheet" type="text/css" href="/styles/demo.css"/>
+    <link href="/styles/font-awesome.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/styles/jquery.spinner.css" />
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+    <style>
+        .order_title{
+            line-height: 25px;
+            color: #333333;
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .order_price{
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+
+</head>
+<body>
+<div th:replace="fragment/header :: #header"></div>
+<div class="container" style="margin-top: 50px;">
+
+    <div class="row" th:each="order:${vo.get('orderList')}">
+        <div class="order_title">支付订单</div>
+        <div style="font-size: 18px;">订单已创建，共需支付<span class="order_price" th:text="${#numbers.formatDecimal(vo.get('paymentMoney')/100.0,0,2)}">999995.8</span>元。</div>
+        <div style="font-size: 18px;">你当前的余额为：<span class="order_price" th:text="${#numbers.formatDecimal(vo.get('userMoney')/100.0,0,2)}"></span>元。</div>
+        <div style="font-size: 18px;" th:if="${vo.get('paymentMoney') le vo.get('userMoney')}">请点击<button onclick="comfirm_payment()">确认支付</button>进行支付！</div>
+        <div style="font-size: 18px;" th:if="${vo.get('paymentMoney') gt vo.get('userMoney')}">账户余额不足，点进行<a href="/member#user" style="background: red;color: white">充值</a>后再付款！</div>
+        <input name="order_id" type="hidden" th:value="${order.id}"/>
+    </div>
+
+
+
+
+</div>
+<div th:replace="fragment/footer :: #footer"></div>
+
+</body>
+
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<script src="/scripts/jquery.spinner.js"></script>
+<script>
+    /*<![CDATA[*/
+    function comfirm_payment() {
+        var orderIds=new Array();
+        $.each($('input[name=order_id]'),function (i, item) {
+            orderIds.push($(item).val());
+        })
+        console.log(orderIds.join(","));
+        window.location.href='/order/combinedPayment?orderIds='+orderIds.join(",");
+    }
+
+    /*]]>*/
+</script>
+</html>

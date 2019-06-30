@@ -51,13 +51,13 @@ public class GoodsController extends BaseController {
     @Autowired
     private EventProducer eventProducer;
 
-    @PermissionAnnotation(roles = RoleType.Admin)
+    @PermissionAnnotation(roles = RoleType.All)
     @RequestMapping(value = "addView", method = RequestMethod.GET)
     public String addView(Model model) {
         return "/goods/goods_add";
     }
 
-    @PermissionAnnotation(name="发布商品",description = "",roles = {RoleType.Admin})
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public EasyResult addGoods(@Valid Goods goods, BindingResult bindingResult) {
@@ -66,8 +66,11 @@ public class GoodsController extends BaseController {
             if (bindingResult.hasErrors()) {
                 return new EasyResult(1, objectErrorsToString(bindingResult));
             }
-            goods.setOwnerId(userHolder.get().getId());
-            goodsService.addGoods(goods);
+            goodsService.saveOrUpdateGoods(goods);
+            if(goods.getId()>0){
+                //清除缓存
+                redisUtils.del(RedisKeyUtils.getCacheGoodsKey(goods.getId()));
+            }
             return new EasyResult(0, goods.getId());
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,7 +97,12 @@ public class GoodsController extends BaseController {
                 redisUtils.set(RedisKeyUtils.getCacheGoodsKey(id),SecondHandUtil.getJsonString(goods));
             }
 
+
             if (goods != null) {
+                //物品处于取消发布状态(草稿状态),并且访问的用户不是卖主，不允许查看， 跳转到404
+                if(goods.getStatus()==2&&(userHolder.get()==null||userHolder.get().getId()!=goods.getOwnerId())){
+                    return "/404";
+                }
                 //临时修改前台展示商品的访问量，将真正的更新操作交由异步线程默默处理
                 goods.setViewNum(goods.getViewNum() + 1);
                 //异步的更新商品访问量
@@ -128,10 +136,11 @@ public class GoodsController extends BaseController {
                 model.addAttribute("vo", viewObject);
                 return "/goods/goods_detail";
             }
-            return "redirect:/404.html";
+            return "redirect:/404";
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
-            return "redirect:/404.html";
+            return "redirect:/error";
         }
     }
 
@@ -315,5 +324,91 @@ public class GoodsController extends BaseController {
             logger.error(e.getMessage());
             return new EasyResult(1,"查询商品库存出错");
         }
+    }
+
+    @RequestMapping(value = "cancelPublish/{goodsId}",method = RequestMethod.POST)
+    @ResponseBody
+    public EasyResult cancelPublish(@PathVariable int goodsId){
+        try {
+            goodsService.updateStatus(goodsId,2);
+            redisUtils.del(RedisKeyUtils.getCacheGoodsKey(goodsId));
+            return new EasyResult(0,"取消发布商品成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return new EasyResult(1,"取消发布商品失败");
+        }
+    }
+
+    @RequestMapping(value = "publish/{goodsId}",method = RequestMethod.POST)
+    @ResponseBody
+    public EasyResult publish(@PathVariable int goodsId){
+        try {
+            goodsService.updateStatus(goodsId,1);
+            redisUtils.del(RedisKeyUtils.getCacheGoodsKey(goodsId));
+            return new EasyResult(0,"发布商品成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return new EasyResult(1,"发布商品失败");
+        }
+    }
+
+    @RequestMapping(value = "preUpdate/{goodsId}",method = RequestMethod.GET)
+    public String preUpdate(@PathVariable int goodsId,Model model){
+        int userId = userHolder.get().getId();
+        Goods goods = goodsService.selectGoods(goodsId);
+        if(goods.getOwnerId()!=userId){
+            return "error";
+        }
+        model.addAttribute("vo",new ViewObject().put("goods",goods).put("subCategories",categoryService.selectCategoriesByParentId(goods.getCategoryId())));
+        return "/goods/goods_edit";
+    }
+
+
+    /**
+     * 预览物品信息
+     * @param goodsId
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "preview/{goodsId}",method = RequestMethod.GET)
+    public String preview(@PathVariable int goodsId,Model model){
+        Goods goods = goodsService.selectGoods(goodsId);
+        User user = userHolder.get();
+        if(goods==null){
+            model.addAttribute("vo",new ViewObject().put("msg","物品已被删除或不存在"));
+            return "/error";
+        }
+        if(user==null||user.getId()!=goods.getOwnerId()){
+            model.addAttribute("vo",new ViewObject().put("msg","只有物品卖家本人才能预览此物品信息"));
+            return "/error";
+        }
+
+        //查询商品归属人
+        User owner = userService.selectUser(goods.getOwnerId());
+        //抹掉安全相关信息
+        owner.setPassword("");
+        owner.setSalt("");
+        //查询商品归属人地址信息
+        Address address = addressService.select(owner.getAddressId());
+
+        ViewObject viewObject = new ViewObject().
+                put("goods", goods).
+                put("owner", owner).
+                put("address", address).
+                put("topCategory", categoryService.selectCategory(goods.getCategoryId())).
+                put("tag", categoryService.selectCategory(goods.getSubCategoryId()));
+
+        model.addAttribute("vo", viewObject);
+        return "/goods/goods_preview";
+    }
+
+
+    @RequestMapping(value = "publishStatus/{goodsId}",method = RequestMethod.GET)
+    @ResponseBody
+    public EasyResult queryGoodsPublishStatus(@PathVariable int goodsId){
+        Goods goods = goodsService.selectGoods(goodsId);
+        return new EasyResult(0,goods.getStatus());
     }
 }

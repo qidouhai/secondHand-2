@@ -1,0 +1,150 @@
+﻿<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/manager/common/header::commonHeader('删除的用户')"></head>
+<body >
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 用户中心 <span
+        class="c-gray en">&gt;</span> 删除的用户 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px"
+                                              href="javascript:location.replace(location.href);" title="刷新"><i
+        class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-hover table-bg table-sort"></table>
+    </div>
+</div>
+
+<div th:include="/manager/common/footer::commonFooter"></div>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/scripts/hui/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="/scripts/hui/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/scripts/hui/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var dataTable;
+    $(function () {
+        dataTable=$('.table-sort').DataTable({
+            "ajax": {
+                "url": "member/list?isDel=1",
+                //默认为data,这里定义为空，则只需要传不带属性的数据
+                "dataSrc": "data",
+                "type":"post"
+            },
+            "processing": true,
+            "serverSide": true,
+            "searching":false,//本地搜索
+            "columns": [
+                {  "data": null,
+                    "title":"<input type='checkbox'  id='checkall' />"},
+                { "data": "id" ,"title":"id"},
+                { "data": "name" ,"title":"用户名"},
+                { "data": "sex" ,"title":"性别"},
+                { "data": "phone" ,"title":"手机"},
+                { "data": "email" ,"title":"邮箱"},
+                { "data": "address" ,"title":"地址"},
+                { "data": "createTime" ,"title":"加入时间"},
+                { "data": "status" ,"title":"状态"},
+                { "data": null ,"title":"操作"}
+            ],
+            "columnDefs": [{
+                "targets": 0,
+                "orderable":false,
+                "render": function(data, type, row, meta) {
+                    return '<input type="checkbox" name="checklist" value="' + row.id + '" onclick="checkBoxClick()" />'
+                }
+            },{
+                "targets": 1,
+                "orderable":false
+            },{
+                "targets": 2,
+                "orderable":false
+            },{
+                "targets": 3,
+                "orderable":false,
+                "render": function(data, type, row, meta) {
+                    return row.sex!=null?row.sex:'未知';
+                }
+            },{
+                "targets": 4,
+                "orderable":false
+            },{
+                "targets": 5,
+                "orderable":false
+            },{
+                "targets": 6,
+                "orderable":false,
+                "render": function(data, type, row, meta) {
+                    return row.address.indexOf("null")?row.address:'未知';
+                }
+            },{
+                "targets": 7,
+                "orderable":false
+            },{
+                "targets": 8,
+                "orderable":false,
+                "render": function(data, type, row, meta) {
+                        return '<span class="label label-danger radius">已删除</span>';
+                }
+            },{
+                "targets":9,
+                "orderable":false,
+                "render":function (data,type,row,meta) {
+                    return '<a style="text-decoration:none" href="javascript:;" onClick="member_huanyuan(this,\''+row.id+'\')" title="还原"><i class="Hui-iconfont">&#xe66b;</i></a> ';
+                }
+            }]
+
+        });
+
+
+        //初始化全选按钮
+        $('#checkall').click(function (event) {
+            $.each( $('input[name=checklist]:enabled'),function(i,item){
+                item.checked=event.target.checked;
+            })
+        });
+
+        //datatable每次异步加载完 触发的事件
+        dataTable.on('xhr.dt', function ( e, settings, json, xhr ) {
+            $('#recordCount').text(json.recordsTotal);
+        } );
+
+    });
+
+    function checkBoxClick() {
+        $('#checkall').attr('checked',false);
+    }
+
+
+    /*用户-还原*/
+    function member_huanyuan(obj,id){
+        layer.confirm('确认要激活此用户吗？',function(index){
+
+            $.ajax({
+                type:'post',
+                url:'/manager/member/enable/'+id,
+                dataType:'json',
+                success:function (data) {
+                    //关闭layer
+                    layer.close(index);
+                    if(data.code==0){
+                        layer.msg("重新激活成功");
+                        dataTable.ajax.reload(null,false);
+                    }else{
+                        if(data.msg!='请先在后台登录！'){
+                            layer.msg("重新激活失败");
+                        }else{
+                            layer.msg(data.msg);
+                        }
+
+                    }
+                },
+                async:false
+            })
+
+
+        });
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/manager/common/header::commonHeader('版图管理')">
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 建议管理 <span class="c-gray en">&gt;</span> 建议反馈 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> </span> <span class="r">共有数据：<strong id="recordCount"></strong> 条</span> </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort"></table>
+    </div>
+</div>
+
+<div th:include="/manager/common/footer::commonFooter"></div>
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/scripts/hui/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="/scripts/hui/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/scripts/hui/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var dataTable;
+    $(document).ready(function () {
+        //datatable初始化
+        dataTable=$('.table-sort').DataTable({
+            "ajax": {
+                "url": "suggest/list",
+                //默认为data,这里定义为空，则只需要传不带属性的数据
+                "dataSrc": "data",
+                "type":"get"
+            },
+            "processing": true,
+            "serverSide": true,
+            "searching":false,//本地搜索
+            "columns": [
+                {  "data": null,
+                    "title":"<input type='checkbox'  id='checkall' />"},
+                { "data": "id" ,"title":"id"},
+                { "data": "userName" ,"title":"建议人"},
+                { "data": "title" ,"title":"建议标题"},
+                { "data": "content" ,"title":"建议内容"},
+                { "data": "createTime" ,"title":"发表时间"},
+                { "data": null ,"title":"操作"}
+            ],
+            "columnDefs": [{
+                "targets": 0,
+                "orderable":false,
+                "render": function(data, type, row, meta) {
+                    if(row.status==0){
+                        return '<input type="checkbox" name="checklist" value="' + row.id + '" onclick="checkBoxClick()" disabled="disabled"/>'
+                    }else{
+                        return '<input type="checkbox" name="checklist" value="' + row.id + '" onclick="checkBoxClick()" />'
+                    }
+                }
+            },
+                {
+                    "targets": 1,
+                    "orderable":false
+                },
+                {
+                    "targets": 2,
+                    "orderable":false,
+                    "render":function(data,type,row,meta){
+                        return '<u style="cursor: pointer"  onclick="member_show(\''+row.userName+'\',\'member/info\',\''+row.userId+'\',\'380\',\'510\')">'+row.userName+'</u>'
+                    }
+
+                },   {
+                    "targets": 3,
+                    "orderable":false,
+                    "render":function(data,type,row,meta){
+                        return '<u onclick="suggest_show(this)" style="cursor: pointer">'+row.title+'</u>'
+                    }
+
+                },
+                {
+                    "targets": 4,
+                    "orderable":false
+                },
+                {
+                    "targets": 5,
+                    "orderable":false
+                },
+                {
+                    "targets": 6,
+                    "orderable":false,
+                    "render":function (data, type,row,meta) {
+                        if(row.status==1){//已发布
+                            return '<a style="text-decoration:none" onClick="suggest_show(this)" href="javascript:;" title="查看"><i class="Hui-iconfont">&#xe709;</i></a><a style="text-decoration:none" class="ml-5" onClick="suggest_del(this,\''+row.id+'\')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a> ';
+                        }
+
+                    }
+                }]
+        });
+
+        //初始化全选按钮
+        $('#checkall').click(function (event) {
+            $.each( $('input[name=checklist]:enabled'),function(i,item){
+                item.checked=event.target.checked;
+            })
+        });
+
+        //datatable每次异步加载完 触发的事件
+        dataTable.on('xhr.dt', function ( e, settings, json, xhr ) {
+            $('#recordCount').text(json.recordsTotal);
+            $('#checkall').attr('checked',false);
+        } );
+    });
+
+    /*用户-查看*/
+    function member_show(title, url, id, w, h) {
+        layer_show(title, url+"/"+id, w, h);
+    }
+
+    function checkBoxClick() {
+        $('#checkall').attr('checked',false);
+    }
+
+    function suggest_show(obj) {
+        //当前行公告的id
+       var curId= $(obj).parent().parent().find("td:eq(1)").text();
+        //当前表格所有公告的id的数组
+       var ids=new Array();
+       $.each($('.table-sort tr'),function(i,item){
+          if(i>0){
+              ids.push($(item).find('td:eq(1)').text());
+          }
+       });
+        //查找当前公告id在数组ids中的位置
+        var pos=-1;
+        for(var i=0;i<ids.length;i++){
+            if(curId==ids[i]){
+                pos=i;
+                break;
+            }
+        }
+
+
+        layer.open({
+            type: 1,
+            title:'【建议】'+dataTable.column( 3 ).data()[pos],
+            area:['900px'],
+            skin: 'layui-layer-demo', //样式类名
+            closeBtn: 0, //不显示关闭按钮
+            anim: 2,
+            shadeClose: true, //开启遮罩关闭
+            content: '<div style="padding:8px 25px;height: 500px;overflow-y: scroll">'+dataTable.column( 4 ).data()[pos]+'</div>'
+        });
+    }
+
+    //批量删除
+    function datadel(){
+        //获取所有选中行的id
+        var checkedIds=new Array();
+        $.each($(dataTable.table().body()).find('input[name=checklist]'),function (i,input) {
+            if(input.checked){
+                checkedIds.push(input.value);
+            }
+        })
+
+        if(checkedIds.length==0){
+            layer.alert("没有一行被选中!");
+        }
+
+        layer.confirm('确认要删除选中的行吗？', function (index) {
+            $.ajax({
+                type: 'post',
+                url: '/manager/suggest/delete/',
+                data:{'ids':checkedIds.join(",")},
+                dataType: 'json',
+                success: function (data) {
+                    //关闭layer
+                    layer.close(index);
+                    if (data.code == 0) {
+                        layer.msg(data.msg);
+                        $('#checkall').attr('checked',false);
+                        dataTable.ajax.reload(null,false);
+                    } else {
+                        layer.msg(data.msg);
+                    }
+
+
+                },
+                async: false
+            })
+        });
+    }
+
+
+    /*建议-单个删除*/
+    function suggest_del(obj,id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            $.ajax({
+                type: 'post',
+                url: '/manager/suggest/delete/',
+                data:{'ids':id},
+                dataType: 'json',
+                success: function (data) {
+                    //关闭layer
+                    layer.close(index);
+                    if (data.code == 0) {
+                        layer.msg(data.msg);
+                        dataTable.ajax.reload();
+                    } else {
+                        layer.msg(data.msg);
+                    }
+                },
+                async: false
+            })
+
+
+        });
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

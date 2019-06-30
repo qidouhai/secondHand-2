@@ -20,21 +20,7 @@ public class CategoryController extends BaseController {
     @Autowired
     CategoryService categoryService;
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public EasyResult add(@Valid Category category, BindingResult bindingResult) {
-        try {
-            if (bindingResult.hasErrors()) {
-                return new EasyResult(1, objectErrorsToString(bindingResult));
-            }
-            categoryService.addCategory(category);
 
-            return new EasyResult(0, "添加成功");
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return new EasyResult(1, "添加失败");
-        }
-    }
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody

@@ -98,7 +98,7 @@
     </style>
 </head>
 <body id="cartBody" style="position: relative; padding-bottom: 47px;">
-<div class="mem_tit">我的闲置</div>
+<div class="mem_tit">我的购物车</div>
 <table id="myCart" class="table">
     <tr>
         <th>全选<input type="checkbox" id="selectAll"/></th>
@@ -119,11 +119,9 @@
         <td class="tb3_td2">已选商品 <label id="num" style="color:#ff5500;font-size:14px; font-weight:bold;">0</label>
             件
         </td>
-        <td class="tb3_td3">合计(不含运费):<span>￥</span><span style=" color:#ff5500;"><label id="price"
-                                                                                        style="color:#ff5500;font-size:14px; font-weight:bold;">0.00</label></span>
+        <td class="tb3_td3">合计(不含运费):<span>￥</span><span style=" color:#ff5500;"><label id="price" style="color:#ff5500;font-size:14px; font-weight:bold;">0.00</label></span>
         </td>
-        <td class="tb3_td4"><span id="jz1" style="display: none;">结算</span><a href="#" style="display: block;"
-                                                                              class="jz2" id="jz2">结算</a></td>
+        <td class="tb3_td4"><a href="javascript:void(0);" onclick="goOrder()" style="display: block;" class="jz2" id="jz2">结算</a></td>
     </tr>
     </tbody>
 </table>
@@ -192,6 +190,8 @@
                                     }
                                     })
                             }
+                            //更新购物车总金额
+                            resetPriceAndNum();
                         }
                     }
                 })
@@ -281,7 +281,7 @@
                 var total = result.total;
                 $.each(result.rows, function (index, item) {
                     var html = "<tr><td><input type=\"checkbox\" name=\"goods_id\" value=\"" + item.goodsId + "\"/></td>\n" +
-                        "            <td><div class=\"sm_img\"><a href=\"/goods/" + item.goodsId + "\" style=\"margin-top: 0px\" target=\"_blank\"><img src=\"http://secondhand-oss.oss-cn-beijing.aliyuncs.com/" + item.goodsImage + "?x-oss-process=style/48_size\" width=\"48\" height=\"48\" style=\"margin-top: 0px\"></a></div><a href=\"/goods/" + item.goodsId + "\" style=\"font-size: 12px;\" target=\"_blank\">" + item.goodsName + "</a></td>\n" +
+                        "            <td><div class=\"sm_img\"><a href=\"/goods/" + item.goodsId + "\" style=\"margin-top: 0px\" target=\"_blank\"><img src=\"http://secondhand-oss.oss-cn-beijing.aliyuncs.com/" + item.goodsImage + "?x-oss-process=style/48_size\" width=\"48\" height=\"48\" style=\"margin-top: 0px\"></a></div><a href=\"/goods/" + item.goodsId + "\" style=\"font-size: 12px;\" target=\"_blank\" id=\"goodsName"+item.goodsId+"\">" + item.goodsName + "</a></td>\n" +
                         "            <td><span style='color: #000;font-weight: bold'>￥" + (item.goodsPrice * 1.0 / 100).toFixed(2) + "</span></td>\n" +
                         "            <td><div data-trigger=\"spinner\" class='spinner'>\n" +
                         "  <a href=\"javascript:;\" data-spin=\"down\">-</a>\n" +
@@ -312,13 +312,96 @@
             var cur=parseInt(parseFloat($(item).parent().parent().find("td:eq(4)").text().split("￥")[1])*100);
             console.log(cur);
             price=price+cur;
-
-
         })
         $('#price').text((price/100).toFixed(2));
     }
 
 
+    function goOrder(){
+        //获取所有选中商品id及其购买数量
+        var goodsIdInputs=$('input[name=goods_id]:checked');
+        if(goodsIdInputs==null||goodsIdInputs.length==0){
+            alert('没有任何一件商品被选中');
+            return ;
+        }
+        var goodsIdsArr=new Array();
+        var numArr=new Array();
+        var flag=true;
+
+        //检查物品状态
+        for(var i=0;i<goodsIdInputs.length;i++){
+            var goodsId=$(goodsIdInputs[i]).val();
+            $.ajax({
+                url:'/goods/publishStatus/'+goodsId,
+                type:'get',
+                dataType:'json',
+                success:function (result) {
+                    var status=result.msg;
+                    var goodsName=$('#goodsName'+goodsId).text();
+                    if(status==0){
+                        alert(goodsName+'物品已被卖家删除，无法结算。请从购物车中删除');
+                        flag=false;
+
+                    }
+                    if(status==2){
+                        alert(goodsName+'物品已被卖家下架，无法结算，请从购物车中删除');
+                        flag=false;
+                    }
+                },
+                async: false
+            })
+
+            if(flag==false){
+                return ;
+            }
+        }
+
+        //检查物品库存量
+        for(var i=0;i<goodsIdInputs.length;i++){
+            var goodsId=$(goodsIdInputs[i]).val();
+            $.ajax({
+                url:'/goods/inventory/'+goodsId,
+                type:'get',
+                dataType:'json',
+                success:function (result) {
+                    var inventory=result.msg;
+                    var goodsName=$('#goodsName'+goodsId).text();
+                    if(inventory==0){
+                        alert(goodsName+'物品无货');
+                        flag=false;
+                        return;
+                    }
+                    if(num>inventory){
+                        alert(goodsName+'物品存货不足，只剩余'+inventory+'件存货！');
+                        flag=false;
+                        return;
+                    }
+                },
+                async: false
+            })
+
+            if(flag==false){
+                return;
+            }
+        }
+
+        if(!flag){
+            return ;
+        }
+
+        $.each(goodsIdInputs,function(i,item){
+            var goodsId=$(item).val();
+            var num=$(item).parent().parent().find("td:eq(3) input").val();
+            goodsIdsArr.push(goodsId);
+            numArr.push(num);
+        });
+
+
+        console.log(goodsIdsArr.join(","));
+        console.log(numArr.join(","));
+
+        window.parent.location.href='/order/create?goodsIds='+goodsIdsArr.join(",")+"&nums="+numArr.join(",");
+    }
     /*]]>*/
 </script>
 </html>

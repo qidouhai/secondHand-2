@@ -40,7 +40,9 @@ public class PassportInterceptor implements HandlerInterceptor{
             if (vo == null) {
                 vo = new ViewObject();
             }
-            vo.put("user",userHolder.get());
+            if(vo.get("user")==null){
+                vo.put("user",userHolder.get());
+            }
             modelAndView.addObject("vo",vo);
         }
     }

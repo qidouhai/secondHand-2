@@ -68,7 +68,9 @@ public class RedisUtils {
     }
 
     public String get(String key) {
-        return getOpsForValue().get(key);
+        String s = getOpsForValue().get(key);
+        //RedisConnectionUtils.unbindConnection(redisTemplate.getConnectionFactory());
+        return s;
     }
 
     public void del(String key) {

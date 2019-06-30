@@ -23,9 +23,11 @@ public class RedisConfiguration {
     @Bean
     public RedisConnectionFactory jedisConnectionFactory() {
         JedisPoolConfig poolConfig = new JedisPoolConfig();
-        poolConfig.setMaxTotal(properties.getPool().getMaxActive());
+        //poolConfig.setMaxTotal(properties.getPool().getMaxActive());
+        poolConfig.setMaxTotal(-1);
         poolConfig.setMaxIdle(properties.getPool().getMaxIdle());
-        poolConfig.setMaxWaitMillis(properties.getPool().getMaxWait());
+       poolConfig.setMaxWaitMillis(properties.getPool().getMaxWait());
+        //poolConfig.setMaxWaitMillis(5000);
         poolConfig.setTestOnBorrow(true);
         poolConfig.setTestOnCreate(true);
         poolConfig.setTestWhileIdle(true);

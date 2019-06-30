@@ -33,6 +33,9 @@ public class CartServiceImpl implements CartService {
                cartDao.updateStatus(cartAtDB.getGoodsId(),cartAtDB.getUserId(),1);
                cartAtDB.setNum(cart.getNum());
                cartAtDB.setUpdated(new Date());
+               cartAtDB.setGoodsPrice(cart.getGoodsPrice());
+               cartAtDB.setGoodsName(cart.getGoodsName());
+               cartAtDB.setGoodsImage(cart.getGoodsImage());
                cartDao.updateCart(cartAtDB);
            }else{
                cartAtDB.setUpdated(new Date());

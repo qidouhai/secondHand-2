@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.chenny3.secondHand.dao.ContentDao">
+    <sql id="table">content</sql>
+
+    <select id="selectCount" resultType="int">
+        select count(1) from content where entity_type=#{entityType}
+        <if test="statusArr neq null and statusArr.length neq 0">
+            and status in
+            <foreach collection="statusArr" item="statusId" separator="," open="(" close=")">
+                #{statusId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectContents" resultType="content">
+        select id,title,image,content,entity_type,author_id,status,created,updated from content
+        where entity_type=#{entityType}
+        <if test="statusArr neq null and statusArr.length neq 0">
+            and status in
+            <foreach collection="statusArr" item="statusId" separator="," open="(" close=")">
+                #{statusId}
+            </foreach>
+        </if>
+        order by created desc
+        limit #{start},#{offset}
+    </select>
+
+
+    <update id="updateContent">
+      update  <include refid="table"/>
+        <set>
+            <if test="title != null">
+              title=#{title},
+            </if>
+            <if test="image != null">
+              image=#{image},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="entityType != null">
+                entity_type=#{entityType},
+            </if>
+            <if test="authorId != null">
+                author_id=#{authorId},
+            </if>
+
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="updated != null">
+                updated=#{updated}
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+
+    <update id="batchUpdateStatus">
+        update <include refid="table"/>
+        <set>
+            status= #{status}
+        </set>
+        <where>
+            id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+    </update>
+</mapper>

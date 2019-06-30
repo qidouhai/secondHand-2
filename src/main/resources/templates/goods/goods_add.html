@@ -23,7 +23,7 @@
     <script type="text/javascript" charset="utf-8" src="/scripts/ueditor/lang/zh-cn/zh-cn.js"></script>
 </head>
 <body>
-<div th:replace="fragment/header :: #header"></div>
+<!--<div th:replace="fragment/header :: #header"></div>-->
 <div class="container" style="margin-top: 50px;">
     <div class="row">
         <form class="form-horizontal">
@@ -130,6 +130,7 @@
 <script type="text/javascript" src="/scripts/webuploader.js"></script>
 <script type="text/javascript" src="/scripts/demo.js"></script>
 <script>
+    /*<![CDATA[*/
     $(document).ready(function(){
         bindKeyEvent($("#inputPrice"),/\d+\.?\d{0,2}/);
         bindKeyEvent($("#inputInventory"),/\d+/);
@@ -182,7 +183,7 @@
                 $.each(arr,function (i,item) {
                     var option=$("<option></option>");
                     option.val(item.id);
-                    option.text(item.categoryName);
+                    option.text(item.name);
                     $('#inputGoodsTag').append(option);
                     //重设preId;
                     preId=categoryId;
@@ -205,6 +206,10 @@
     });
     //提交商品信息
     function generateAndCommitFormData() {
+        if(!validForm()){
+            return ;
+        }
+
         //金额单位由元 转化为 分
         $('#hiddenPrice').val(parseInt($("#inputPrice").val()*100));
         //获取富文本编辑器的内容
@@ -220,5 +225,43 @@
             }
         },'json');
     }
+
+
+    function validForm(){
+        if($('#inputGoodsName').val()==''){
+            alert('请输入物品名称');
+            return false;
+        }
+        if($('#inputPrice').val()==''){
+            alert('请输入物品价格');
+            return false;
+        }if($('#imageInput').val()==''){
+            alert('请上传物品图片');
+            return false;
+        }
+        if($('#inputInventory').val()==''){
+            alert('请输入物品库存');
+            return false;
+        }
+        var radioGroup=$('input[name=bargain]');
+        var checkedFlag=false;
+        for(var i=0;i<radioGroup.length;i++){
+            if(radioGroup[i].checked==true){
+                checkedFlag=true;
+            }
+        }
+        if(checkedFlag==false){
+            alert('请选择物品是否支持讲价单选按钮');
+            return false;
+        }
+
+        if(ue.getContent()==''){
+            alert("请输入物品详细介绍");
+            return false;
+        }
+        return true;
+
+    }
+    /*]]>*/
 </script>
 </html>

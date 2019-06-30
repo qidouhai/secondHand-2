@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private AddressService addressService;
     @Value("${user.avatar.default}")
     private String defaultAvatar;
+    @Value("${user.money.default}")
+    private Integer defaultMoney;
 
     @Override
     public int addUser(User user) {
@@ -36,6 +39,7 @@ public class UserServiceImpl implements UserService {
         user.setSalt(salt);
         user.setPassword(SecondHandUtil.MD5(user.getPassword() + user.getSalt()));
         user.setStatus(1);
+        user.setMoney(defaultMoney);
         user.setAuthenticateId(0);
         user.setAddressId(0);
         user.setCreated(new Date());
@@ -46,6 +50,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User selectUser(int id) {
         return userDao.selectUser(id);
+    }
+
+    @Override
+    public User selectUser(String username) {
+        return userDao.selectUserByName(username);
     }
 
     @Override
@@ -145,5 +154,35 @@ public class UserServiceImpl implements UserService {
 
         //修改用户信息
         userDao.updateUser(user);
+    }
+
+    @Override
+    public List<User> selectUserList(int isDel,int start,int offset) {
+        return userDao.selectUserList(isDel,start,offset);
+    }
+
+    @Override
+    public int selectUserListCount(int isDel) {
+        return userDao.selectUserListCount(isDel);
+    }
+
+    @Override
+    public void batchUpdateStatus(int[] ids, int status) {
+         userDao.batchUpdateStatus(ids,status);
+    }
+
+    @Override
+    public int selectMoney(int id) {
+        return userDao.selectMoney(id);
+    }
+
+    @Override
+    public int rechargeMoney(int id, int money) {
+        return userDao.rechargeMoney(id,money);
+    }
+
+    @Override
+    public int consumeMoney(int id, int money) {
+        return userDao.consumeMoney(id,money);
     }
 }

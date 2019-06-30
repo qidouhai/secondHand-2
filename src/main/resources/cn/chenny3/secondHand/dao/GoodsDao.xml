@@ -145,4 +145,113 @@
             </where>
         </if>
     </select>
+
+    <select id="selectGoodsListByMgt" resultType="goods">
+        select goods.id,goods.goods_name,goods.category_id,cat.category_name,goods.sub_category_id,subCat.category_name sub_category_name,goods.price,goods.images,goods.owner_id,user.name owner_name,goods.status,goods.created
+        from goods
+            INNER JOIN category cat on goods.category_id=cat.id
+            inner join category subCat on goods.sub_category_id=subCat.id
+            inner join user on goods.owner_id=user.id
+        <where>
+            <if test="categoryId neq 0">
+                goods.category_id = #{categoryId}
+            </if>
+            <if test="subCategoryId neq 0">
+                and goods.sub_category_id=#{subCategoryId}
+            </if>
+            <if test="status >=0">
+                and goods.status = #{status}
+            </if>
+            <if test="status ==-1">
+                and goods.status >0
+            </if>
+            <if test="goodsName != null and goodsName !=''">
+                and goods.goods_name like CONCAT('%',#{goodsName},'%')
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and goods.created <![CDATA[>=]]> #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and goods.created <![CDATA[<=]]> #{endTime}
+            </if>
+        </where>
+        ORDER BY created desc
+        limit #{start},#{offset}
+    </select>
+
+    <select id="selectGoodsCountByMgt" resultType="int">
+        select count(1)
+        from goods
+        <where>
+            <if test="categoryId neq 0">
+                goods.category_id = #{categoryId}
+            </if>
+            <if test="subCategoryId neq 0">
+                and goods.sub_category_id=#{subCategoryId}
+            </if>
+            <if test="status >=0">
+                and goods.status = #{status}
+            </if>
+            <if test="status ==-1">
+                and goods.status >0
+            </if>
+            <if test="goodsName != null and goodsName !=''">
+                and goods.goods_name like CONCAT('%',#{goodsName},'%')
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and goods.created <![CDATA[>=]]> #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and goods.created <![CDATA[<=]]> #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <update id="batchUpdateStatus">
+        update <include refid="table"/>
+        <set>
+            status = #{status}
+        </set>
+        <where>
+            id in
+            <foreach collection="ids" item="goodsId" open="(" separator="," close=")">
+                #{goodsId}
+            </foreach>
+        </where>
+    </update>
+
+    <update id="updateGoods">
+        update <include refid="table"/>
+        <set>
+            <if test="goodsName != null and goodsName !=''">
+                goods_name=#{goodsName},
+            </if>
+            <if test="categoryId > 0">
+                category_id=#{categoryId},
+            </if>
+            <if test="subCategoryId > 0">
+                sub_category_id=#{subCategoryId},
+            </if>
+            <if test="price >= 0">
+                price=#{price},
+            </if>
+            <if test="images != null and images !=''">
+                images=#{images},
+            </if>
+            <if test="detail != null and detail !=''">
+                detail=#{detail},
+            </if>
+            <if test="inventory >=0">
+                inventory=#{inventory},
+            </if>
+            <if test="bargain >= 0">
+                bargain=#{bargain},
+            </if>
+            <if test="status >= 0">
+                status=#{status},
+            </if>
+            updated=#{updated}
+        </set>
+        where id=#{id}
+    </update>
 </mapper>

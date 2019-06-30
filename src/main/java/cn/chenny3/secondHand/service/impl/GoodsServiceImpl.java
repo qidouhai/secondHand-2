@@ -1,5 +1,6 @@
 package cn.chenny3.secondHand.service.impl;
 
+import cn.chenny3.secondHand.common.bean.UserHolder;
 import cn.chenny3.secondHand.dao.GoodsDao;
 import cn.chenny3.secondHand.model.Goods;
 import cn.chenny3.secondHand.service.GoodsService;
@@ -13,9 +14,12 @@ import java.util.List;
 public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private GoodsDao goodsDao;
+    @Autowired
+    private UserHolder userHolder;
 
     @Override
     public int addGoods(Goods goods) {
+        goods.setOwnerId(userHolder.get().getId());
         goods.setCreated(new Date());
         goods.setUpdated(goods.getCreated());
         return goodsDao.addGoods(goods);
@@ -91,6 +95,37 @@ public class GoodsServiceImpl implements GoodsService {
     public int selectInventory(int goodsId) {
         return goodsDao.selectInventory(goodsId);
     }
+
+    @Override
+    public int selectGoodsCountByCategory(int categoryId) {
+        return goodsDao.selectGoodsCountByCategory(categoryId);
+    }
+
+    @Override
+    public List<Goods> selectGoodsListByMgt(Integer categoryId, Integer subCategoryId, int status, String goodsName, String startTime, String endTime, int start, int offset) {
+        return goodsDao.selectGoodsListByMgt(categoryId, subCategoryId, status, goodsName, startTime, endTime, start, offset);
+    }
+
+    @Override
+    public int selectGoodsCountByMgt(Integer categoryId, Integer subCategoryId, int status, String goodsName, String startTime, String endTime) {
+        return goodsDao.selectGoodsCountByMgt(status, goodsName, startTime, endTime, categoryId, subCategoryId);
+    }
+
+    @Override
+    public void batchUpdateStatus(int[] ids, int status) {
+        goodsDao.batchUpdateStatus(ids, status);
+    }
+
+    @Override
+    public void saveOrUpdateGoods(Goods goods) {
+        if(goods.getId()==0){
+            addGoods(goods);
+        }else{
+            goods.setUpdated(new Date());
+            goodsDao.updateGoods(goods);
+        }
+    }
+
 
     @Override
     public List<Goods> selectGoodsList(Integer goodsIds[]) {

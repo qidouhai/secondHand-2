@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>错误提示</title>
+    <style>
+        *{
+            margin-top: 50px;
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div>
+    错误提示：<p th:text="${vo.get('msg')}"></p>
+</div>
+</body>
+</html>

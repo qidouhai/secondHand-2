@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>已售物品订单</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->     <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>     <![endif]-->
+    <link rel="stylesheet" href="/styles/jquery.spinner.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css"/>
+    <style>
+        .mem_tit {
+            width: 880px;
+            margin: 0px auto;
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            color: #333333;
+            font-size: 16px;
+        }
+
+
+        .tb_title{
+            width: 880px !important;
+            overflow: hidden;
+            padding-left: 0px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+            border: 1px solid #e8e8e8;
+            text-align: center;
+            height: 39px;
+            line-height: 39px;
+        }
+
+        .tb_title li{
+            float: left;
+            list-style-type: none;
+
+        }
+
+        #myCart tr td:nth-child(2) {
+            width: 360px;
+        }
+
+        #myCart tr td:nth-child(4) input {
+            width: 40px;
+            text-align: center;
+        }
+
+        .gwc_tb3 tr td {
+            font-size: 14px;
+        }
+
+        .order_List{
+            width: 880px !important;
+            margin: 0 auto;
+        }
+
+        .order_date{
+            font-weight: bold;
+            text-align: center;
+            margin-right: 10px;
+        }
+        .order_unit{
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+            color: #3c3c3c;
+            border: 1px solid #ececec;
+            margin-top: 10px;
+        }
+        .order_intro{
+            background-color: rgb(241,241,241);
+            height: 42px;
+            line-height: 42px;
+            padding-left: 20px;
+        }
+        .order_item{
+            padding: 20px;
+            overflow: hidden;
+        }
+        .order_item>div{
+            float: left;
+
+        }
+        .orderTitle a{
+            display: block;
+            overflow: hidden;
+        }
+
+        .orderTitle a *{
+            float: left;
+            display: inline-block;
+        }
+
+        .orderTitle a img{
+            margin-right: 10px;
+
+        }
+        .orderTitle a span{
+            width: 197px;
+            font-size: 12px;
+        }
+
+        .text_center{
+            text-align: center;
+        }
+        .item_payment{
+            font-weight: bold;
+        }
+        .item_status{
+            font-size: 12px;
+        }
+
+        .payment_now{
+            background-color: #ff4200;
+            color: #fff;
+            border: 1px solid #ff4200;
+            display: block;
+            margin: 0 auto;
+            width: 78px;
+            height: 26px;
+            line-height: 26px;
+            padding: 0 12px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+
+        .table_left{
+
+            width: 590px;
+        }
+
+        .table_left *{
+            float: left;
+        }
+
+        .table_right{
+
+        }
+    </style>
+</head>
+<body id="orderBody" style="position: relative; padding-bottom: 47px;">
+<div class="mem_tit">已出售订单</div>
+
+<ul class="tb_title">
+    <li style="width: 35%">宝贝</li>
+    <li style="width: 10%">单价</li>
+    <li style="width: 10%">数量</li>
+    <li style="width: 10%">实付款</li>
+    <li style="width: 10%">交易状态</li>
+    <li style="width: 23%">交易操作</li>
+</ul>
+<div class="order_List" th:with="orderList=${vo.get('orderList')}">
+    <div class="order_unit" th:each="order:${orderList}" th:object="${order}">
+        <div class="order_intro">
+            <span class="order_date" th:text="*{#dates.format(created, 'yyyy-MM-dd HH:mm:ss')}">2018-05-06</span>
+            <span style="margin-right: 10px;"><label>订单号：</label><span class="order_id" th:text="*{id}">201805070058130000100002</span></span>
+            <span style="margin-right: 10px;"><label>支付类型：</label><span th:text="${order.payType==1?'货到付款':'在线付款'}">货到付款</span></span>
+            <span><label>总金额：</label><span th:text="*{#numbers.formatDecimal(money/100.0,0,2)}+'元'">59596</span></span>
+        </div>
+        <div class="order_item" th:each="orderItem:${order.orderItems}" th:object="${orderItem}">
+
+                <div class="orderTitle" style="width: 35%">
+                    <a href="#" th:href="'/goods/'+*{goodsId}" target="_blank"><img th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+*{goodsImg}" src="/images/TB2GlENdKLM8KJjSZFqXXa7.jpg" width="80" height="80"/><span th:text="*{goodsName}">华味亨山核桃味香瓜子500g葵瓜子葵花籽香瓜子果仁炒货零食品小吃</span></a>
+                </div>
+                <div class="item_price text_center" style="width: 10%">￥<span th:text="*{#numbers.formatDecimal(goodsPrice/100.0,0,2)}">959.26</span></div>
+                <div class="item_num text_center" style="width: 10%" th:text="*{num}">4</div>
+                <div class="item_payment text_center" style="width: 10%">￥<span th:text="*{#numbers.formatDecimal(totalPrice/100.0,0,2)}">3837.04</span></div>
+
+
+                <div class="item_status text_center" style="width: 12%">
+                    <div th:if="${order.status==1}">等待买家付款</div>
+                    <div th:if="${order.status==2}">等待发货</div>
+                    <div th:if="${order.status==3}">已发货</div>
+                    <div th:if="${order.status==4}">订单完成</div>
+                    <div th:if="${order.status==7}">订单已取消</div>
+
+                </div>
+                <div class="item_operation" style="width: 23%" th:if="${orderItemStat.index==0}">
+                    <a href="#" class="payment_now" th:if="${order.status==2}">发货</a>
+                    <a href="#" class="payment_now" th:if="${order.status gt 0 and order.status le 2}" style="margin-top: 10px;">取消订单</a>
+                    <a href="#" class="payment_now" th:href="'/order/detail/'+${order.id}" style="margin-top: 10px;" target="_blank">订单详情</a>
+                </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+</body>
+<script src="/scripts/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/scripts/bootstrap.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+<!-- Latest compiled and minified Locales -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+<script src="/scripts/member/cart.js"></script>
+
+<script>
+    /*<![CDATA[*/
+    $(function () {
+        resetIframeHeight();
+    })
+
+    function resetIframeHeight() {
+        window.parent.document.getElementById('external-frame').setAttribute("height", document.getElementById("orderBody").clientHeight);
+    }
+
+    /*]]>*/
+</script>
+</html>

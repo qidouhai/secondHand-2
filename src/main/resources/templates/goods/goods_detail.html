@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title>闲鱼-大学生二手交易平台</title>      <!-- Bootstrap -->
+    <title>大学校园二手物品交易平台</title>      <!-- Bootstrap -->
     <link href="/styles/bootstrap.min.css" rel="stylesheet"/>
     <link href="/styles/global.css" rel="stylesheet"/>
 
@@ -44,10 +44,11 @@
     </nav>
 </header>
 <div id="content">
+    <input type="hidden" name="curUserId"  th:value="${vo.get('user')!=null?vo.get('user').id:0}" />
     <ol class="breadcrumb">
         <li><a href="#" th:text="${vo.get('topCategory').categoryName}"
-               th:href="'/'+${vo.get('topCategory').id}">闲置数码</a></li>
-        <li><a href="#" th:text="${vo.get('tag').categoryName}" th:href="'/'+${vo.get('tag').id}">笔记本</a></li>
+               th:href="'/goods/list/'+${vo.get('topCategory').id}">闲置数码</a></li>
+        <li><a href="#" th:text="${vo.get('tag').categoryName}" th:href="'/goods/list/'+${vo.get('topCategory').id}+'/'+${vo.get('tag').id}">笔记本</a></li>
         <li class="active">当前</li>
     </ol>
     <div id="topbar">
@@ -65,7 +66,7 @@
             <span th:text="${#dates.format(vo.get('goods').created, 'yyyy年MM月dd日 HH:mm:ss')}">2018-01-10 16:25</span>
         </div>
         <div class="report">
-            <a href="#" th:href="${vo.get('goods').id}">举报该宝贝</a>
+           <!-- <a href="#" th:href="${vo.get('goods').id}">举报该宝贝</a>-->
         </div>
     </div>
     <div class="wrap">
@@ -132,10 +133,10 @@
             <div class="util">
                 <ul>
                     <li>
-                        <a href="javascript:void(0)" onclick="requiredLogin()">
+                        <!--<a href="javascript:void(0)" onclick="requiredLogin()">
                             <img src="/images/util/share.png" alt="分享"/>
                             <span>分享</span>
-                        </a>
+                        </a>-->
                     </li>
                     <li th:with="collectFlag=${vo.get('collectFlag')}">
                         <a href="javascript:void(0)" onclick="collect(this)">
@@ -158,10 +159,10 @@
                 </ul>
             </div>
             <div class="pay_method">
-                <a href="#" th:href="${vo.get('goods').id}"><img src="/images/util/online_payment.png"/>立即购买</a>
+                <a href="javascript:void(0)" id="buyNow" ><img src="/images/util/online_payment.png"/>立即购买</a>
                 <a href="javascript:void(0)" id="addCart" ><img src="/images/util/shopping_cart.png"/>加入购物车</a>
             </div>
-            <div class="other_shop">
+            <div class="other_shop" style="display: none">
                 <div class="title">
                     <h5>卖家的其它闲置(30)</h5>
                     <a href="#" th:href="${vo.get('goods').id}">更多</a>
@@ -242,7 +243,7 @@
 <script type="text/javascript" src="/scripts/jquery.flexText.js"></script>
 <script type="text/javascript" src="/scripts/comment.js"></script>
 <script>
-
+    /*<![CDATA[*/
     $(function () {
         //初始化评论
         initCommentData();
@@ -341,6 +342,34 @@
             requiredLogin();
             return;
         }
+        //卖家不能够买自己发布的物品
+        if($('input[name=curUserId]').val()==$('#userId').val()){
+            alert('用户不能添加自己发布的物品到购物车');
+            return ;
+        }
+
+        var flag=true;
+        //检查物品库存量
+        $.ajax({
+            url:'/goods/inventory/'+$('#entityId').val(),
+            type:'get',
+            dataType:'json',
+            success:function (result) {
+                var inventory=result.msg;
+                if(inventory<=0){
+                    alert('物品无货');
+                    flag=false;
+                }
+            },
+            async: false
+        })
+
+
+        if(!flag){
+            return ;
+        }
+
+        //添加购物车
         $.post('/cart',{
             goodsId:$('#entityId').val(),
             num:1
@@ -351,7 +380,47 @@
                 alert("成功加入购物车");
             }
         })
+    });
+
+    //立即购买
+    $('#buyNow').click(function (e) {
+        if($('#isLogin').val()=='false'){
+            requiredLogin();
+            return;
+        }
+        //卖家不能够买自己发布的物品
+        if($('input[name=curUserId]').val()==$('#userId').val()){
+            alert('用户不能购买自己发布商品');
+            return ;
+        }
+
+        var flag=true;
+        //检查物品库存量
+        $.ajax({
+            url:'/goods/inventory/'+$('#entityId').val(),
+            type:'get',
+            dataType:'json',
+            success:function (result) {
+                var inventory=result.msg;
+                if(inventory<=0){
+                    alert('物品无货');
+                    flag=false;
+                }
+
+            },
+            async: false
+        })
+
+        if(!flag){
+            return ;
+        }
+
+
+        //生成订单
+        window.location.href='/order/create?goodsIds='+$('#entityId').val()+"&nums=1";
     })
+
+    /*]]>*/
 </script>
 </body>
 </html>

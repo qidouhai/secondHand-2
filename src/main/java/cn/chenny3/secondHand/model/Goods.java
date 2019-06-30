@@ -12,15 +12,17 @@ public class Goods extends Base{
     private String goodsName;
     @Min(1)
     private int categoryId;
+    private String categoryName;
     @Min(1)
     private int subCategoryId;
+    private String subCategoryName;
     @Min(0)
     private int price;
     @NotNull
     private String images;
     @NotNull
     private String detail;
-    @Min(1)
+    @Min(0)
     private int inventory;
     @Max(1)
     @Min(0)
@@ -33,6 +35,7 @@ public class Goods extends Base{
     private int hotNum;
     @Min(0)
     private int ownerId;
+    private String ownerName;
     @Max(2)
     @Min(0)
     private int status;//0 删除 ; 1 发布 ; 2 仅仅保存
@@ -151,6 +154,30 @@ public class Goods extends Base{
     @JsonIgnore
     public String[] getImageArr(){
         return images==null?null:images.split(";");
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getSubCategoryName() {
+        return subCategoryName;
+    }
+
+    public void setSubCategoryName(String subCategoryName) {
+        this.subCategoryName = subCategoryName;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
     @Override

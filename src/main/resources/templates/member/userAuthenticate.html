@@ -201,6 +201,7 @@
         $.post('/member/authenticate/confirm',null,function (result) {
             if(result.code==0){
                 alert(result.msg);
+                window.location.href="/member/supplement"
             }else{
                 alert(result.msg);
                 window.location.reload();

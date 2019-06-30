@@ -52,6 +52,11 @@ function initCommentData() {
 
 //点击评论创建评论条
 $('.commentAll').on('click', '.plBtn', function () {
+    if($('input[name=curUserId]').val()==0){
+        alert('请先登录');
+        return ;
+    }
+
     var myDate = new Date();
     //获取当前年
     var year = myDate.getFullYear();
@@ -79,7 +84,7 @@ $('.commentAll').on('click', '.plBtn', function () {
             'parentId': 0,
             'entityId': entityId,
             'entityType': entityType,
-            'fromUser.id': 2,
+            'fromUser.id': $('input[name=curUserId]').val(),
             'toUser.id': toUserId
         },
         function (result) {
@@ -97,7 +102,10 @@ $('.commentAll').on('click', '.plBtn', function () {
 });
 //点击回复动态创建回复块
 $('.comment-show').on('click', '.pl-hf', function () {
-    //todo:清除页面上已有的动态评论块
+    if($('input[name=curUserId]').val()==0){
+        alert('请先登录');
+        return ;
+    }
 
     //获取回复人的名字
     var fhName = $(this).parents('.date-dz-right').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').html();
@@ -125,6 +133,10 @@ $('.comment-show').on('click', '.pl-hf', function () {
 });
 //评论回复块创建
 $('.comment-show').on('click', '.hf-pl', function () {
+    if($('input[name=curUserId]').val()==0){
+        alert('请先登录');
+        return ;
+    }
     var oThis = $(this);
     console.log(oThis);
     var myDate = new Date();
@@ -165,7 +177,7 @@ $('.comment-show').on('click', '.hf-pl', function () {
                 'parentId': conversationId,
                 'entityId': entityId,
                 'entityType': entityType,
-                'fromUser.id': 2,
+                'fromUser.id': $('input[name=curUserId]').val(),
                 'toUser.id': toUserId
             },
             function (result) {

@@ -3,7 +3,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.chenny3.secondHand.dao.UserDao">
     <sql id="table">user</sql>
-
+    <resultMap id="userListMap" type="User">
+       <association property="address" javaType="Address">
+           <id property="id" column="address_id"></id>
+           <result property="area" column="area"></result>
+           <result property="hostelId" column="hostel_id"></result>
+           <result property="houseId" column="house_id"></result>
+       </association>
+        <association property="userAuthenticate" javaType="UserAuthenticate">
+            <result property="sex" column="sex"></result>
+        </association>
+    </resultMap>
 
     <update id="updateUser">
         UPDATE
@@ -44,5 +54,70 @@
         WHERE id=#{id}
     </update>
 
+    <select id="selectUserList" resultMap="userListMap">
+        SELECT
+        USER .id,
+        user.name,
+        phone,
+        email,
+        qq,
+        wechat,
+        alipay,
+        role,
+        authenticate_id,
+        address_id,
+        user.status,
+        user.created,
+        address.id address_id,
+        address.area,
+        address.hostel_id,
+        address.house_id,
+        auth.sex
+        FROM
+        user
+        LEFT JOIN address ON user.address_id = address.id
+        LEFT JOIN user_authenticate auth on user.authenticate_id = auth.id
+        where user.role <![CDATA[ <> ]]> 0
+        <choose>
+            <when test="isDel==1">
+                and user.status=0
+            </when>
+            <otherwise>
+                and user.status <![CDATA[ <> ]]> 0
+            </otherwise>
+        </choose>
+        ORDER BY
+        user.created DESC
+        limit #{start}, #{offset}
+    </select>
 
+    <select id="selectUserListCount" resultType="int">
+        SELECT
+        count(1)
+        FROM
+        user
+        where user.role <![CDATA[ <> ]]> 0
+        <choose>
+            <when test="isDel==1">
+                and status=0
+            </when>
+            <otherwise>
+                and status <![CDATA[ <> ]]> 0
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <update id="batchUpdateStatus">
+        update <include refid="table"/>
+        <set>
+            status = #{status}
+        </set>
+        <where>
+            id in
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </where>
+    </update>
 </mapper>

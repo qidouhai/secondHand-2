@@ -9,10 +9,7 @@ import cn.chenny3.secondHand.common.utils.RedisKeyUtils;
 import cn.chenny3.secondHand.common.bean.vo.ViewObject;
 import cn.chenny3.secondHand.controller.BaseController;
 import cn.chenny3.secondHand.model.*;
-import cn.chenny3.secondHand.service.GoodsService;
-import cn.chenny3.secondHand.service.LoginRecordService;
-import cn.chenny3.secondHand.service.UserAuthenticateService;
-import cn.chenny3.secondHand.service.UserService;
+import cn.chenny3.secondHand.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +34,10 @@ public class MemberController extends BaseController {
     private GoodsService goodsService;
     @Autowired
     UserHolder userHolder;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String view() {
@@ -52,10 +53,10 @@ public class MemberController extends BaseController {
         UserAuthenticate userAuthenticate = authenticateService.selectAuthenticate(user.getAuthenticateId());
         ViewObject viewObject = new ViewObject().
                 put("loginRecords", loginRecords).
-                put("userAuthenticateInfo", userAuthenticate);
+                put("userAuthenticateInfo", userAuthenticate).
+                put("user",userService.selectUser(userHolder.get().getId()));
         model.addAttribute("vo", viewObject);
         return "member/user";
-
     }
 
     @RequestMapping(value = {"collect", "collect/{curPage}", "collect/{curPage}/{pageSize}"}, method = RequestMethod.GET)
@@ -164,14 +165,15 @@ public class MemberController extends BaseController {
 
     /**
      * 用户信息补充页面
+     *
      * @param model
      * @return
      */
-    @RequestMapping(value="supplement",method = RequestMethod.GET)
+    @RequestMapping(value = "supplement", method = RequestMethod.GET)
     public String supplementView(Model model) {
-        try{
+        try {
             return "/member/informationSupplement";
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -182,9 +184,65 @@ public class MemberController extends BaseController {
      * 购物车页面
      */
     @RequestMapping(value = "cart")
-    public String cart(){
+    public String cart() {
         return "/member/cart";
     }
 
+    /**
+     * 宣传图管理
+     * @return
+     */
+    @RequestMapping(value = "banner")
+    public String bannerMgt(){
+        return "/member/banner";
+    }
+
+    /**
+     * 我的闲置页面
+     * @return
+     */
+
+    @RequestMapping(value = {"order/list", "order/list/{curPage}", "order/list/{curPage}/{pageSize}"}, method = RequestMethod.GET)
+    public String orderList(@PathVariable(required = false) Integer curPage,
+                            @PathVariable(required = false) Integer pageSize,
+                            Model model) {
+        //当前页，页大小初始化
+        if (curPage == null) {
+            curPage = 1;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+
+        //模型数据初始化
+        PageHelper<Order> pageHelper = new PageHelper<>();
+        pageHelper.setCurPage(curPage);
+        pageHelper.setPageSize(pageSize);
+
+        model.addAttribute("vo", new ViewObject().put("pageHelper", pageHelper));
+        int userId = userHolder.get().getId();
+        //查询内容数量
+        int count = orderService.selectCountByUserId(userId);
+        pageHelper.setCount(count);
+
+        if (count == 0) {
+            return "/member/order";
+        }
+        List<Order> contents = orderService.selectOrderListByUserId(userId, curPage, pageSize);
+        pageHelper.setContents(contents);
+        return "/member/order";
+    }
+
+    /**
+     * 展示用户出售的订单
+     * @return
+     */
+    @RequestMapping(value = "/sellOrderList",method=RequestMethod.GET)
+    public String sellOrderList(Model model){
+        int sellerId = userHolder.get().getId();
+        List<Order> orders = orderService.selectOrderListBySellerId(sellerId);
+        model.addAttribute("vo",new ViewObject().put("orderList",orders));
+        return "/member/order_sell";
+    }
 
 }

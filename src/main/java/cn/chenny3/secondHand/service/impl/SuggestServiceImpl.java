@@ -56,4 +56,19 @@ public class SuggestServiceImpl implements SuggestService{
     public int selectCountByUserId(int userId, int status) {
         return suggestDao.selectCountByUserId(userId, status);
     }
+
+    @Override
+    public List<Suggest> selectSuggestListByMgt(int start, int offset) {
+        return suggestDao.selectSuggestListByMgt(start,offset);
+    }
+
+    @Override
+    public int selectSuggestCountByMgt() {
+        return suggestDao.selectSuggestCountByMgt();
+    }
+
+    @Override
+    public void batchUpdateStatus(int[] ids, int status) {
+        suggestDao.batchUpdateStatus(ids,status);
+    }
 }

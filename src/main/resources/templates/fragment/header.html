@@ -4,16 +4,16 @@
 <body>
 <header id="header" th:with="uri=${#httpServletRequest.getRequestURI()}">
     <nav>
-        <a id="logo" href="/"></a>
+        <a id="logo" href="/">大学校园二手物品交易平台</a>
         <ul id="topnav" class="top_nav top_ul">
-
+            <li><a href="/goods/list">全部分类</a> </li>
             <li th:each="category : ${vo.get('categories')}">
-                <a th:text="${category.categoryName}" th:href="${#strings.equalsIgnoreCase(uri,'/')||#strings.equalsIgnoreCase(uri,'/index')||#strings.equalsIgnoreCase(uri,'/index.html')?'#'+categoryStat.index:'/goods/list/'+categoryStat.index}"></a>
+                <a th:text="${category.categoryName}" th:href="${#strings.equalsIgnoreCase(uri,'/')||#strings.equalsIgnoreCase(uri,'/index')||#strings.equalsIgnoreCase(uri,'/index.html')?'#'+categoryStat.index:'/goods/list/'+categoryStat.count}"></a>
 
             </li>
         </ul>
         <ul class="top_url top_ul" th:if="${vo.get('user') ne null}">
-            <li><a href="/goods/addView">发布闲置</a></li>
+            <li><a href="/goods/addView">发布物品</a></li>
             <li class="info" style="position: absolute"><img src="http://secondhand-oss.oss-cn-beijing.aliyuncs.com/img/avatar/893205a3a15e4780a60e5d7c4f583b34.jpg?x-oss-process=style/40_size" th:src="'http://secondhand-oss.oss-cn-beijing.aliyuncs.com/'+${vo.get('user').headUrl+'?x-oss-process=style/40_size'}" style="width: 30px;height: 30px;border-radius: 20px;margin-right: 5px;"/><a href="javascript:void(0)" th:text="${vo.get('user').name}">个人中心</a></li>
         </ul>
         <ul class="top_url top_ul" th:unless="${vo.get('user') ne null}">

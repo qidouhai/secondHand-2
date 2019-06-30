@@ -7,4 +7,5 @@ import java.util.List;
 public interface LoginRecordService {
     int addLoginRecord(LoginRecord loginRecord);
     List<LoginRecord> selectLastLoginRecord(int userId);
+    int selectLoginCount(int userId);
 }

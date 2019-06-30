@@ -72,4 +72,34 @@ public interface GoodsDao {
 
     @Select({"select inventory from "+TABLE_NAME+" where id=#{goodsId}"})
     int selectInventory(@Param("goodsId") int goodsId);
+
+    @Update({"update ",TABLE_NAME," set inventory = inventory- #{inventory} where id=#{goodsId}"})
+    void decreaseInventory(@Param("goodsId") int goodsId,@Param("inventory") int inventory);
+
+    @Update({"update ",TABLE_NAME," set inventory = inventory+ #{inventory} where id=#{goodsId}"})
+    void increaseInventory(@Param("goodsId") int goodsId,@Param("inventory") int inventory);
+
+    @Select({"select count(*) from ",TABLE_NAME," where (category_id=#{categoryId} or sub_category_id=#{categoryId}) and status =1  "})
+    int selectGoodsCountByCategory(@Param("categoryId") int categoryId);
+
+    List<Goods> selectGoodsListByMgt(@Param("categoryId")int categoryId,
+                                     @Param("subCategoryId")int subCategoryId,
+                                     @Param("status") int status,
+                                     @Param("goodsName") String goodsName,
+                                     @Param("startTime") String startTime,
+                                     @Param("endTime") String endTime,
+                                     @Param("start")int start,
+                                     @Param("offset")int offset);
+
+    int selectGoodsCountByMgt( @Param("status") int status,
+                               @Param("goodsName") String goodsName,
+                               @Param("startTime") String startTime,
+                               @Param("endTime") String endTime,
+                               @Param("categoryId")int categoryId,
+                               @Param("subCategoryId")int subCategoryId);
+
+    void batchUpdateStatus(@Param("ids") int ids[],@Param("status") int status);
+
+
+    void updateGoods(Goods goods);
 }

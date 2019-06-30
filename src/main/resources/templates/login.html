@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8"/>
-    <title>Sign Up Login</title>
+    <title>大学校园二手物品交易平台</title>
     <link rel="stylesheet" href="/styles/login.css"/>
     <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet"/>
     <link rel='stylesheet prefetch' href='https://fonts.googleapis.com/icon?family=Material+Icons'/>
@@ -18,16 +18,16 @@
             <div class="cont_info_log_sign_up">
                 <div class="col_md_login">
                     <div class="cont_ba_opcitiy">
-                        <h2>LOGIN</h2>
+                        <h2>登录</h2>
                         <p>登录面板</p>
-                        <button class="btn_login" onclick="cambiar_login()">LOGIN</button>
+                        <button class="btn_login" onclick="cambiar_login()">登录</button>
                     </div>
                 </div>
                 <div class="col_md_sign_up">
                     <div class="cont_ba_opcitiy">
-                        <h2>SIGN UP</h2>
+                        <h2>注册</h2>
                         <p>注册面板</p>
-                        <button class="btn_sign_up" onclick="cambiar_sign_up()">SIGN UP</button>
+                        <button class="btn_sign_up" onclick="cambiar_sign_up()">注册</button>
                     </div>
                 </div>
             </div>
@@ -37,21 +37,21 @@
             <div class="cont_forms">
                 <div class="cont_img_back_"><img src="/images/login_background.jpg" alt=""/></div>
                 <div class="cont_form_login"><a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
-                    <h2>LOGIN</h2>
+                    <h2>登录</h2>
                     <form id="loginForm" action="#" method="post">
-                        <input type="text" name="id" placeholder="id/学号/邮箱/手机号"/>
-                        <input type="password" name="password" placeholder="password"/>
-                        <button type="button" class="btn_login" id="login">LOGIN</button>
+                        <input type="text" name="name" placeholder="用户名"/>
+                        <input type="password" name="password" placeholder="密码"/>
+                        <button type="button" class="btn_login" id="login">登录</button>
                     </form>
                 </div>
                 <div class="cont_form_sign_up"><a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
-                    <h2>SIGN UP</h2>
+                    <h2>注册</h2>
                     <form id="registerForm" action="" method="post" >
                         <input type="text" name="name" placeholder="name"/>
                         <input type="text" name="email" placeholder="email"/>
                         <input type="text" name="phone" placeholder="phone"/>
                         <input type="password" name="password" placeholder="password"/>
-                        <button type="button"  class="btn_sign_up" id="register">SIGN UP</button>
+                        <button type="button"  class="btn_sign_up" id="register">注册</button>
                     </form>
                 </div>
             </div>
@@ -63,6 +63,12 @@
 <script>
     /*<![CDATA[*/
     $(function () {
+        if(self!=top){
+            window.parent.location=window.location;
+
+        }
+
+
         var mao=window.location.hash;
         if(mao==null||mao==''){
             mao='#login';
@@ -100,14 +106,14 @@
     }
 
     var loginInputArr = new Array(
-        {inputId: 'id', inputName: 'id',inputIndex:0},
-        {inputId: 'password', inputName: 'password',inputIndex:0});
+        {inputId: 'name', inputName: 'name',inputIndex:0,name:'用户名'},
+        {inputId: 'password', inputName: 'password',inputIndex:0,name:'密码'});
 
     var registerInputArr = new Array(
-        {inputId: 'name', inputName: 'name',inputIndex:0},
-        {inputId: 'email', inputName: 'email',inputIndex:0},
-        {inputId: 'phone', inputName: 'phone',inputIndex:0},
-        {inputId: 'password', inputName: 'password',inputIndex:1});
+        {inputId: 'name', inputName: 'name',inputIndex:0,name:'用户名'},
+        {inputId: 'email', inputName: 'email',inputIndex:0,name:'邮箱'},
+        {inputId: 'phone', inputName: 'phone',inputIndex:0,name:'手机号'},
+        {inputId: 'password', inputName: 'password',inputIndex:1,name:'密码'});
 
     function checkNotNull(arr) {
         var flag = true;
@@ -116,6 +122,7 @@
             console.log($(selector).val());
             if ($(selector).val() == '' || $(selector).val() == null) {
                 flag = false;
+                alert(arr[i].name+"不能为空");
                 $(selector).focus();
                 return flag;
             }

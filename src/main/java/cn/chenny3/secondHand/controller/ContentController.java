@@ -7,42 +7,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping("/content")
 public class ContentController extends BaseController {
     @Autowired
     private ContentService contentService;
 
     private ObjectMapper objectMapper=new ObjectMapper();
 
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public EasyResult addContent(@Valid Content content, BindingResult bindingResult) {
-        EasyResult easyResult = null;
-        try {
-            if (bindingResult.hasErrors()) {
-                easyResult = new EasyResult(1,objectErrorsToString(bindingResult));
-            }
-
-            contentService.addContent(content);
-            easyResult = new EasyResult(0,String.valueOf(content.getId()));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            easyResult = new EasyResult(1,"保存错误");
-        }
-        return easyResult;
-    }
-
-    @RequestMapping(value = "/list/{entityType}/{curPage}/{pageSize}", method = RequestMethod.GET)
+    @RequestMapping(value = "/content/list/{entityType}/{curPage}/{pageSize}", method = RequestMethod.GET)
     @ResponseBody
     public EasyResult selectContent(@PathVariable("entityType") int entityType,
                                     @PathVariable(value = "curPage", required = false) int curPage,
@@ -70,7 +49,7 @@ public class ContentController extends BaseController {
         return easyResult;
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/content/{id}", method = RequestMethod.GET)
     @ResponseBody
     public EasyResult selectContent(@PathVariable(value = "id") int id) {
         EasyResult easyResult = null;
@@ -86,4 +65,5 @@ public class ContentController extends BaseController {
         }
         return easyResult;
     }
+
 }

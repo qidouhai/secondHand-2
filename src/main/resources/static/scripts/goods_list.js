@@ -40,9 +40,14 @@ function goPage(curPage){
     if(href.indexOf('?')>0){
         var index=href.indexOf('curPage');
         if(index>0){
-            href=href.substring(0,index-1);
+            href=href.substring(0,index);
         }
-        href+='&curPage='+curPage;
+       if(index==href.indexOf('?')+1){
+           href+='curPage='+curPage;
+       }else{
+           href+='&curPage='+curPage;
+       }
+
     }else{
         href+='?curPage='+curPage;
     }

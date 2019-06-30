@@ -1,16 +1,26 @@
 package cn.chenny3.secondHand.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class Category extends Base{
     private int id;
     @NotNull
+    @JsonProperty(value = "name")
     private String categoryName;
     @Min(0)
+    @JsonIgnore
     private int parentId;
+    @JsonIgnore
     private int status;
+    @JsonIgnore
     private int sortOrder;
+
     private int isParent;
 
     public int getId() {

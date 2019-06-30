@@ -1,7 +1,10 @@
 package cn.chenny3.secondHand.service.impl;
 
+import cn.chenny3.secondHand.common.bean.UserHolder;
 import cn.chenny3.secondHand.dao.AddressDao;
+import cn.chenny3.secondHand.dao.UserAuthenticateDao;
 import cn.chenny3.secondHand.model.Address;
+import cn.chenny3.secondHand.model.UserAuthenticate;
 import cn.chenny3.secondHand.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,10 @@ import java.util.Date;
 public class AddressServiceImpl implements AddressService {
     @Autowired
     private AddressDao addressDao;
+    @Autowired
+    private UserAuthenticateDao userAuthenticateDao;
+    @Autowired
+    private UserHolder userHolder;
 
     @Override
     public int add(Address address) {
@@ -29,7 +36,13 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address select(int id) {
-        return addressDao.select(id);
+
+        Address address = addressDao.select(id);
+        if(userHolder.get()!=null){
+            UserAuthenticate userAuthenticate = userAuthenticateDao.selectAuthenticate(userHolder.get().getAuthenticateId());
+            address.setUserName(userAuthenticate.getName());
+        }
+        return address;
     }
 
     @Override
